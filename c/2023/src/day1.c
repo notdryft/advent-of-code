@@ -79,8 +79,8 @@ int part2(char *filename) {
 }
 
 int main() {
-  //return part1("inputs/day1/part1_test");
-  //return part1("inputs/day1/data");
-  //return part2("inputs/day1/part2_test");
-  return part2("inputs/day1/data");
+  //return part1("../../inputs/2023/day1/part1_test");
+  //return part1("../../inputs/2023/day1/data");
+  //return part2("../../inputs/2023/day1/part2_test");
+  return part2("../../inputs/2023/day1/data");
 }
