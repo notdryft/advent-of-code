@@ -23,6 +23,22 @@ int array_get(Array *array, size_t index) {
   return array->data[index];
 }
 
+int array_first(Array *array) {
+  if (array->size > 0) {
+    return array->data[0];
+  }
+  return -1;
+}
+
+int array_last(Array *array) {
+  if (array->size > 0) {
+    return array->data[array->size - 1];
+  }
+  return -1;
+}
+
+//
+
 void array_push(Array *array, int value) {
   if (array->size + 1 > array->capacity) {
     array->capacity = array->capacity * 2;

@@ -24,7 +24,7 @@ int part1(char *filename) {
         array_push(array, value);
       }
     }
-    sum += array->data[0] * 10 + array->data[array->size - 1];
+    sum += array_first(array) * 10 + array_last(array);
     array_free(array);
   }
 
@@ -66,7 +66,7 @@ int part2(char *filename) {
         if (c == 'n' && (i+3) < len && buffer[i+1] == 'i' && buffer[i+2] == 'n' && buffer[i+3] == 'e') array_push(array, 9);
       }
     }
-    sum += array->data[0] * 10 + array->data[array->size - 1];
+    sum += array_first(array) * 10 + array_last(array);
     array_print(array);
     array_free(array);
   }
