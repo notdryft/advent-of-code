@@ -24,6 +24,11 @@ int array_get(Array *array, size_t index) {
 }
 
 void array_push(Array *array, int value) {
+  if (array->size + 1 > array->capacity) {
+    array->capacity = array->capacity * 2;
+    array->data = realloc(array->data, sizeof(int) * array->capacity);
+  }
+
   array->data[array->size] = value;
   array->size = array->size + 1;
 }

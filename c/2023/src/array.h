@@ -1,7 +1,7 @@
 #ifndef ARRAY
 #define ARRAY
 
-#define ARRAY_DEFAULT_CAPACITY 100
+#define ARRAY_DEFAULT_CAPACITY 2
 
 typedef struct _array {
   size_t capacity;
