@@ -13,7 +13,9 @@ objdir = $(topdir)/obj
 libdir = $(topdir)/lib
 bindir = $(topdir)/bin
 
-all: day1
+days = 2
+
+all: $(patsubst %,day%,$(shell seq 1 1 $(days)))
 
 $(objdir)/%.o: $(srcdir)/%.c 
 	$(cc) -c -fPIC -o$@ $^ $(cflags)
@@ -24,16 +26,10 @@ $(libdir)/libaoc.so: $(objdir)/array.o $(objdir)/string.o
 %_test: $(srcdir)/%_test.c $(libdir)/libaoc.so
 	$(cc) -o$(bindir)/$@ -L$(libdir) -laoc $^ $(clags)
 
-day1: $(srcdir)/day1.c $(libdir)/libaoc.so
+day%: $(srcdir)/day%.c $(libdir)/libaoc.so
 	$(cc) -o$(bindir)/$@ -L$(libdir) -laoc $^ $(cflags)
 
-mem-day1: day1
-	$(vg) $(bindir)/$^ $(vflags)
-
-day2: $(srcdir)/day2.c $(libdir)/libaoc.so
-	$(cc) -o$(bindir)/$@ -L$(libdir) -laoc $^ $(cflags)
-
-mem-day2: day2
+mem-day%: day%
 	$(vg) $(bindir)/$^ $(vflags)
 
 clean:
