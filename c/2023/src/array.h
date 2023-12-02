@@ -3,7 +3,7 @@
 
 #define ARRAY_DEFAULT_CAPACITY 2
 
-typedef struct _array {
+typedef struct {
   size_t capacity;
   size_t size;
   int *data;
