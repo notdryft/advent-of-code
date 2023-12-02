@@ -23,6 +23,9 @@ $(objdir)/array.o: $(srcdir)/array.c
 $(libdir)/libarray.a: $(objdir)/array.o
 	$(ar) -rc $@ $^
 
+array_test: $(srcdir)/array_test.c $(libdir)/libarray.a
+	$(cc) -o$(bindir)/$@ -L$(libdir) -larray $^ $(clags)
+
 day1: $(srcdir)/day1.c $(libdir)/libarray.a
 	$(cc) -o$(bindir)/$@ -L$(libdir) -larray $^ $(cflags)
 

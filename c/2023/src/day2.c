@@ -4,8 +4,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "array.h"
-
 const unsigned int MAX_LENGTH = 256;
 
 int part1(char *filename) {

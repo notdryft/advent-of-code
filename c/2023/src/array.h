@@ -6,24 +6,37 @@
 typedef struct {
   size_t capacity;
   size_t size;
-  int *data;
+  size_t stride;
+  void *items;
 } Array;
 
-Array *array_new();
+Array *array_new(size_t stride);
 void array_free(Array *array);
 
-//
+// gets
 
-int array_get(Array *array, size_t index);
-int array_first(Array *array);
-int array_last(Array *array);
+void *array_get(Array *array, size_t index);
+void *array_first(Array *array);
+void *array_last(Array *array);
 
-//
+// sets
 
-void array_push(Array *array, int value);
+void array_push(Array *array, void *value);
 
-//
+// int arrays
 
-void array_print(Array *array);
+#define int_array_new() array_new(sizeof(int))
+
+#define int_array_get(array, index) *(char *) array_get(array, index)
+#define int_array_first(array) *(char *) array_first(array)
+#define int_array_last(array) *(char *) array_last(array)
+
+#define int_array_push(array, value) \
+  do { \
+    __auto_type tmp = value; \
+    array_push(array, &tmp); \
+  } while (0)
+
+void int_array_print(Array *array);
 
 #endif
