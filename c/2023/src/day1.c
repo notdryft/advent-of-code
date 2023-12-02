@@ -9,7 +9,7 @@ const unsigned int MAX_LENGTH = 256;
 int part1(char *filename) {
   FILE *fp = fopen(filename, "r");
   if (fp == NULL) {
-    printf("Error: could not open file %s", filename);
+    fprintf(stderr, "Error: could not open file %s", filename);
     return 1;
   }
 
@@ -38,7 +38,7 @@ int part1(char *filename) {
 int part2(char *filename) {
   FILE *fp = fopen(filename, "r");
   if (fp == NULL) {
-    printf("Error: could not open file %s", filename);
+    fprintf(stderr, "Error: could not open file %s", filename);
     return 1;
   }
 
@@ -47,7 +47,7 @@ int part2(char *filename) {
   char buffer[MAX_LENGTH];
   while (fgets(buffer, MAX_LENGTH, fp)) {
     Array *digits = array_new();
-    size_t len = strlen(buffer) - 1; // /n counts but not \0
+    size_t len = strlen(buffer) - 1; // \n counts but not \0
     for (size_t i = 0; buffer[i] != '\n'; i++) {
       char c = buffer[i];
       if (c >= '1' && c <= '9') {

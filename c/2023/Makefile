@@ -29,6 +29,12 @@ day1: $(srcdir)/day1.c $(libdir)/libarray.a
 mem-day1: day1
 	$(vg) $(bindir)/$< ($vflags)
 
+day2: $(srcdir)/day2.c $(libdir)/libarray.a
+	$(cc) -o$(bindir)/$@ -L$(libdir) -larray $^ $(cflags)
+
+mem-day2: day2
+	$(vg) $(bindir)/$< ($vflags)
+
 clean:
 	$(rm) $(rmflags) \
 		$(objdir)/*.o \
