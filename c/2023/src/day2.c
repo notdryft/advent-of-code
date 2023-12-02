@@ -56,7 +56,7 @@ int part1(char *filename) {
                 }
                 regoff_t end = match[g].rm_eo;
                 char copy[end - start + 1];
-                strncpy(copy, token3 + start, end);
+                strncpy(copy, token3 + start, end - start);
                 copy[end - start] = 0;
                 if (g == 1) {
                   n = atoi(copy);
@@ -139,7 +139,7 @@ int part2(char *filename) {
                 }
                 regoff_t end = match[g].rm_eo;
                 char copy[end - start + 1];
-                strncpy(copy, token3 + start, end);
+                strncpy(copy, token3 + start, end - start);
                 copy[end - start] = 0;
                 if (g == 1) {
                   n = atoi(copy);
