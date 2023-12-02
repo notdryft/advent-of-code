@@ -25,8 +25,29 @@ void int_array_tests() {
   array_free(longs);
 }
 
+void string_array_tests() {
+  Array *strings = string_array_new();
+  string_array_print(strings);
+
+  string_array_push(strings, "seven");
+  string_array_print(strings);
+  printf("first = \"%s\", last = \"%s\"\n", string_array_first(strings), string_array_last(strings));
+
+  string_array_push(strings, "three");
+  string_array_print(strings);
+  printf("first = \"%s\", last = \"%s\"\n", string_array_first(strings), string_array_last(strings));
+
+  printf("result = [ \"%s\", \"%s\" ]\n", string_array_get(strings, 0), string_array_get(strings, 1));
+
+  array_free(strings);
+}
+
 int main() {
+  printf("// ints\n");
   int_array_tests();
+
+  printf("// strings\n");
+  string_array_tests();
 
   return 0;
 }

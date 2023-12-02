@@ -51,7 +51,7 @@ void array_push(Array *array, void *value) {
   array->size += 1;
 }
 
-// int arrays
+// ints
 
 void int_array_print(Array *array) {
   if (array->stride != sizeof(int)) {
@@ -71,6 +71,31 @@ void int_array_print(Array *array) {
       printf(" %d", item);
     } else {
       printf(" %d,", item);
+    }
+  }
+  printf(" ] }\n");
+}
+
+// strings
+
+void string_array_print(Array *array) {
+  if (array->stride != sizeof(char *)) {
+    fprintf(
+      stderr,
+      "Error: trying to print an Array<char *> with sizeof(%zu) from a Array<!char *> with sizeof(%zu)\n",
+      sizeof(char *),
+      array->stride
+    );
+    return;
+  }
+
+  printf("Array{ capacity = %zu, size = %zu, stride = %zu, data = [", array->capacity, array->size, array->stride);
+  for (size_t i = 0; i < array->size; i++) {
+    char *item = string_array_get(array, i);
+    if (i == array->size - 1) {
+      printf(" \"%s\"", item);
+    } else {
+      printf(" \"%s\"", item);
     }
   }
   printf(" ] }\n");

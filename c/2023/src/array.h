@@ -23,7 +23,7 @@ void *array_last(Array *array);
 
 void array_push(Array *array, void *value);
 
-// int arrays
+// ints
 
 #define int_array_new() array_new(sizeof(int))
 
@@ -38,5 +38,17 @@ void array_push(Array *array, void *value);
   } while (0)
 
 void int_array_print(Array *array);
+
+// strings
+
+#define string_array_new() array_new(sizeof(char *))
+
+#define string_array_get(array, index) (char *) array_get(array, index)
+#define string_array_first(array) (char *) array_first(array)
+#define string_array_last(array) (char *) array_last(array)
+
+#define string_array_push(array, value) array_push(array, value)
+
+void string_array_print(Array *array);
 
 #endif
