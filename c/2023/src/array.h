@@ -1,6 +1,8 @@
 #ifndef ARRAY
 #define ARRAY
 
+#include <stddef.h>
+
 #define ARRAY_DEFAULT_CAPACITY 2
 
 typedef struct {
@@ -10,45 +12,33 @@ typedef struct {
   void *items;
 } Array;
 
-Array *array_new(size_t stride);
+Array *_array_new(size_t stride);
+#define array_new(type) _array_new(sizeof(type))
+
 void array_free(Array *array);
 
 // gets
 
-void *array_get(Array *array, size_t index);
-void *array_first(Array *array);
-void *array_last(Array *array);
+void *_array_get(Array *array, size_t index);
+#define array_get(array, index) *(char *) _array_get(array, index)
+
+void *_array_first(Array *array);
+#define array_first(array) *(char *) _array_first(array)
+
+void *_array_last(Array *array);
+#define array_last(array) *(char *) _array_last(array)
 
 // sets
 
-void array_push(Array *array, void *value);
-
-// ints
-
-#define int_array_new() array_new(sizeof(int))
-
-#define int_array_get(array, index) *(char *) array_get(array, index)
-#define int_array_first(array) *(char *) array_first(array)
-#define int_array_last(array) *(char *) array_last(array)
-
-#define int_array_push(array, value) \
+void _array_push(Array *array, void *value);
+#define array_push(array, value) \
   do { \
     __auto_type tmp = value; \
-    array_push(array, &tmp); \
+    _array_push(array, &tmp); \
   } while (0)
 
+// pretty printer
+
 void int_array_print(Array *array);
-
-// strings
-
-#define string_array_new() array_new(sizeof(char *))
-
-#define string_array_get(array, index) (char *) array_get(array, index)
-#define string_array_first(array) (char *) array_first(array)
-#define string_array_last(array) (char *) array_last(array)
-
-#define string_array_push(array, value) array_push(array, value)
-
-void string_array_print(Array *array);
 
 #endif

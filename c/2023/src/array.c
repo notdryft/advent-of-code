@@ -4,7 +4,7 @@
 
 #include "array.h"
 
-Array *array_new(size_t stride) {
+Array *_array_new(size_t stride) {
   Array *array = (Array *) malloc(sizeof(Array));
   array->capacity = 0;
   array->size = 0;
@@ -21,18 +21,18 @@ void array_free(Array *array) {
 
 // gets
 
-void *array_get(Array *array, size_t index) {
+void *_array_get(Array *array, size_t index) {
   return array->items + array->stride * index;
 }
 
-void *array_first(Array *array) {
+void *_array_first(Array *array) {
   if (array->size > 0) {
     return array->items;
   }
   return NULL;
 }
 
-void *array_last(Array *array) {
+void *_array_last(Array *array) {
   if (array->size > 0) {
     return array->items + array->stride * (array->size - 1);
   }
@@ -41,7 +41,7 @@ void *array_last(Array *array) {
 
 // sets
 
-void array_push(Array *array, void *value) {
+void _array_push(Array *array, void *value) {
   if (array->size + 1 > array->capacity) {
     array->capacity = array->capacity == 0 ? ARRAY_DEFAULT_CAPACITY : array->capacity * 2;
     array->items = realloc(array->items, array->stride * array->capacity);
@@ -51,7 +51,7 @@ void array_push(Array *array, void *value) {
   array->size += 1;
 }
 
-// ints
+// pretty printer
 
 void int_array_print(Array *array) {
   if (array->stride != sizeof(int)) {
@@ -66,36 +66,11 @@ void int_array_print(Array *array) {
 
   printf("Array{ capacity = %zu, size = %zu, stride = %zu, data = [", array->capacity, array->size, array->stride);
   for (size_t i = 0; i < array->size; i++) {
-    int item = int_array_get(array, i);
+    int item = array_get(array, i);
     if (i == array->size - 1) {
       printf(" %d", item);
     } else {
       printf(" %d,", item);
-    }
-  }
-  printf(" ] }\n");
-}
-
-// strings
-
-void string_array_print(Array *array) {
-  if (array->stride != sizeof(char *)) {
-    fprintf(
-      stderr,
-      "Error: trying to print an Array<char *> with sizeof(%zu) from a Array<!char *> with sizeof(%zu)\n",
-      sizeof(char *),
-      array->stride
-    );
-    return;
-  }
-
-  printf("Array{ capacity = %zu, size = %zu, stride = %zu, data = [", array->capacity, array->size, array->stride);
-  for (size_t i = 0; i < array->size; i++) {
-    char *item = string_array_get(array, i);
-    if (i == array->size - 1) {
-      printf(" \"%s\"", item);
-    } else {
-      printf(" \"%s\"", item);
     }
   }
   printf(" ] }\n");

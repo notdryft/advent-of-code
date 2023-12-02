@@ -1,7 +1,5 @@
 cc = gcc
-cflags = -O2 -Wall -W 
-
-ar = ar
+cflags = -O3 -Wall -W
 
 rm = @rm
 rmflags = -vf
@@ -17,32 +15,32 @@ bindir = $(topdir)/bin
 
 all: day1
 
-$(objdir)/array.o: $(srcdir)/array.c
-	$(cc) -c -o$@ $< $(cflags)
+$(objdir)/%.o: $(srcdir)/%.c 
+	$(cc) -c -fPIC -o$@ $^ $(cflags)
 
-$(libdir)/libarray.a: $(objdir)/array.o
-	$(ar) -rc $@ $^
+$(libdir)/libaoc.so: $(objdir)/array.o $(objdir)/string.o
+	$(cc) -shared -o$@ $^
 
-array_test: $(srcdir)/array_test.c $(libdir)/libarray.a
-	$(cc) -o$(bindir)/$@ -L$(libdir) -larray $^ $(clags)
+%_test: $(srcdir)/%_test.c $(libdir)/libaoc.so
+	$(cc) -o$(bindir)/$@ -L$(libdir) -laoc $^ $(clags)
 
-day1: $(srcdir)/day1.c $(libdir)/libarray.a
-	$(cc) -o$(bindir)/$@ -L$(libdir) -larray $^ $(cflags)
+day1: $(srcdir)/day1.c $(libdir)/libaoc.so
+	$(cc) -o$(bindir)/$@ -L$(libdir) -laoc $^ $(cflags)
 
 mem-day1: day1
-	$(vg) $(bindir)/$< ($vflags)
+	$(vg) $(bindir)/$^ $(vflags)
 
-day2: $(srcdir)/day2.c $(libdir)/libarray.a
-	$(cc) -o$(bindir)/$@ -L$(libdir) -larray $^ $(cflags)
+day2: $(srcdir)/day2.c $(libdir)/libaoc.so
+	$(cc) -o$(bindir)/$@ -L$(libdir) -laoc $^ $(cflags)
 
 mem-day2: day2
-	$(vg) $(bindir)/$< ($vflags)
+	$(vg) $(bindir)/$^ $(vflags)
 
 clean:
 	$(rm) $(rmflags) \
-		$(objdir)/*.o \
+		$(objdir)/*.{dylib,o,so} \
 		$(libdir)/*.a
 
 mrproper: clean
 	$(rm) $(rmflags) \
-		$(bindir)/day*
+		$(bindir)/{*_test,day*} \
