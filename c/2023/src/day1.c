@@ -4,7 +4,7 @@
 
 #include "array.h"
 
-const unsigned int MAX_LENGTH = 256;
+const unsigned int BUFFER_LENGTH = 256;
 
 int part1(char *filename) {
   FILE *fp = fopen(filename, "r");
@@ -15,8 +15,8 @@ int part1(char *filename) {
 
   int sum = 0;
 
-  char buffer[MAX_LENGTH];
-  while (fgets(buffer, MAX_LENGTH, fp)) {
+  char buffer[BUFFER_LENGTH];
+  while (fgets(buffer, BUFFER_LENGTH, fp)) {
     Array *digits = array_new(int);
     for (int i = 0; buffer[i] != '\n'; i++) {
       int value = buffer[i] - '0';
@@ -44,8 +44,8 @@ int part2(char *filename) {
 
   int sum = 0;
 
-  char buffer[MAX_LENGTH];
-  while (fgets(buffer, MAX_LENGTH, fp)) {
+  char buffer[BUFFER_LENGTH];
+  while (fgets(buffer, BUFFER_LENGTH, fp)) {
     Array *digits = array_new(int);
     size_t len = strlen(buffer) - 1; // \n counts but not \0
     for (size_t i = 0; buffer[i] != '\n'; i++) {

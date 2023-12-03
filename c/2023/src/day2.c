@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-const unsigned int MAX_LENGTH = 256;
+const unsigned int BUFFER_LENGTH = 256;
 
 int part1(char *filename) {
   FILE *fp = fopen(filename, "r");
@@ -29,8 +29,8 @@ int part1(char *filename) {
     return 1;
   }
 
-  char buffer[MAX_LENGTH];
-  while (fgets(buffer, MAX_LENGTH, fp)) {
+  char buffer[BUFFER_LENGTH];
+  while (fgets(buffer, BUFFER_LENGTH, fp)) {
     char *p_token_save;
     char *token = strtok_r(buffer, ":", &p_token_save);
     while (token != NULL) {
@@ -111,8 +111,8 @@ int part2(char *filename) {
     return 1;
   }
 
-  char buffer[MAX_LENGTH];
-  while (fgets(buffer, MAX_LENGTH, fp)) {
+  char buffer[BUFFER_LENGTH];
+  while (fgets(buffer, BUFFER_LENGTH, fp)) {
     char *p_token_save;
     char *token = strtok_r(buffer, ":", &p_token_save);
     while (token != NULL) {
