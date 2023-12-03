@@ -1,3 +1,4 @@
+#include <assert.h>
 #include <regex.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -84,13 +85,13 @@ int part1(char *filename) {
       token = strtok_r(NULL, ":", &p_token_save);
     }
   }
-
-  printf("sum: %d\n", sum);
   
   fclose(fp);
   regfree(&regex);
 
-  return 0;
+  printf("sum: %d\n", sum);
+
+  return sum;
 }
 
 int part2(char *filename) {
@@ -168,17 +169,19 @@ int part2(char *filename) {
     }
   }
 
-  printf("sum: %d\n", sum);
-  
   fclose(fp);
   regfree(&regex);
 
-  return 0;
+  printf("sum: %d\n", sum);
+  
+  return sum;
 }
 
 int main() {
-  //return part1("../../inputs/2023/day2/part1_test");
-  //return part1("../../inputs/2023/day2/data");
-  //return part2("../../inputs/2023/day2/part2_test");
-  return part2("../../inputs/2023/day2/data");
+  //assert(part1("../../inputs/2023/day2/part1_test") == 8);
+  //assert(part1("../../inputs/2023/day2/data") == 2913);
+  //assert(part2("../../inputs/2023/day2/part2_test") == 2286);
+  assert(part2("../../inputs/2023/day2/data") == 55593);
+
+  return 0;
 }

@@ -27,7 +27,7 @@ bool is_gear_symbol(char c) {
   return c == '*';
 }
 
-int part1(char *filename, int expected) {
+int part1(char *filename) {
   FILE *fp = fopen(filename, "r");
   if (fp == NULL) {
     fprintf(stderr, "Error: could not open file %s", filename);
@@ -88,12 +88,11 @@ int part1(char *filename, int expected) {
   fclose(fp);
 
   printf("sum = %d\n", sum);
-  assert(sum == expected);
 
-  return 0;
+  return sum;
 }
 
-int part2(char *filename, int expected) {
+int part2(char *filename) {
   FILE *fp = fopen(filename, "r");
   if (fp == NULL) {
     fprintf(stderr, "Error: could not open file %s", filename);
@@ -224,19 +223,19 @@ int part2(char *filename, int expected) {
     printf("%s\n", string_array_get(lines, i));
   }
 
-  string_array_free(lines);
-  
   fclose(fp);
+  string_array_free(lines);
 
   printf("sum = %d\n", sum);
-  assert(sum == expected);
 
-  return 0;
+  return sum;
 }
 
 int main() {
-  //return part1("../../inputs/2023/day3/part1_test", 4361);
-  //return part1("../../inputs/2023/day3/data", 556367);
-  //return part2("../../inputs/2023/day3/part2_test", 467835);
-  return part2("../../inputs/2023/day3/data", 89471771);
+  //assert(part1("../../inputs/2023/day3/part1_test") == 4361);
+  //assert(part1("../../inputs/2023/day3/data") == 556367);
+  //assert(part2("../../inputs/2023/day3/part2_test") == 467835);
+  assert(part2("../../inputs/2023/day3/data") == 89471771);
+
+  return 0;
 }

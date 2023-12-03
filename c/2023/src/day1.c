@@ -1,3 +1,4 @@
+#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -27,12 +28,12 @@ int part1(char *filename) {
     sum += array_first(digits) * 10 + array_last(digits);
     array_free(digits);
   }
-
-  printf("sum: %d\n", sum);
   
   fclose(fp);
 
-  return 0;
+  printf("sum: %d\n", sum);
+
+  return sum;
 }
 
 int part2(char *filename) {
@@ -70,17 +71,19 @@ int part2(char *filename) {
     int_array_print(digits);
     array_free(digits);
   }
-
-  printf("sum: %d\n", sum);
   
   fclose(fp);
 
-  return 0;
+  printf("sum: %d\n", sum);
+
+  return sum;
 }
 
 int main() {
-  //return part1("../../inputs/2023/day1/part1_test");
-  //return part1("../../inputs/2023/day1/data");
-  //return part2("../../inputs/2023/day1/part2_test");
-  return part2("../../inputs/2023/day1/data");
+  //assert(part1("../../inputs/2023/day1/part1_test") == 142);
+  //assert(part1("../../inputs/2023/day1/data") == 55488);
+  //assert(part2("../../inputs/2023/day1/part2_test") == 281);
+  assert(part2("../../inputs/2023/day1/data") == 55614);
+
+  return 0;
 }
