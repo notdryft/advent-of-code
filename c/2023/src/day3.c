@@ -30,7 +30,7 @@ bool is_gear_symbol(char c) {
 int part1(char *filename) {
   FILE *fp = fopen(filename, "r");
   if (fp == NULL) {
-    fprintf(stderr, "Error: could not open file %s", filename);
+    fprintf(stderr, "Error: could not open file %s\n", filename);
     return 1;
   }
 
