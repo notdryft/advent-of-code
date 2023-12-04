@@ -30,6 +30,7 @@ void string_array_print(StringArray *array);
 // utils
 
 char *string_copy(char *content);
+char *substring(char *content, size_t pos, size_t len);
 StringArray *string_split(char *content, char *delimiter);
 
 #endif

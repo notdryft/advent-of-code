@@ -75,18 +75,26 @@ char *string_copy(char *content) {
   return content_copy;
 }
 
+char *substring(char *content, size_t so, size_t len) {
+  char result[len + 1];
+  strncpy(result, content + so, len);
+  result[len] = '\0';
+
+  return string_copy(result);
+}
+
 StringArray *string_split(char *content, char *delimiter) {
-  char *content_copy = string_copy(content);
+  char *copy = string_copy(content);
   StringArray *strings = string_array_new();
 
-  char *token = strtok(content_copy, delimiter);
+  char *token = strtok(copy, delimiter);
   while (token != NULL) {
     string_array_push(strings, token);
 
     token = strtok(NULL, delimiter);
   }
 
-  free(content_copy);
+  free(copy);
 
   return strings;
 }
