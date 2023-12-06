@@ -237,7 +237,7 @@ int part2(char *filename) {
         for (size_t entry_index = 0; entry_index < map_size && !found_entry; entry_index++) {
           AlmanachEntry entry = map[entry_index];
           if (entry.source_type == entry_type) {
-          if (entry.source <= seed_to_location && seed_to_location < entry.source + entry.range) {
+            if (entry.source <= seed_to_location && seed_to_location < entry.source + entry.range) {
               found_entry = true;
               seed_to_location += entry.destination - entry.source;
             }
