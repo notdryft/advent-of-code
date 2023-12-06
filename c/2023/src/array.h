@@ -20,13 +20,13 @@ void array_free(Array *array);
 // gets
 
 void *_array_get(Array *array, size_t index);
-#define array_get(array, index) *(char *) _array_get(array, index)
+#define int_array_get(array, index) *(int *) _array_get(array, index)
 
 void *_array_first(Array *array);
-#define array_first(array) *(char *) _array_first(array)
+#define int_array_first(array) *(int *) _array_first(array)
 
 void *_array_last(Array *array);
-#define array_last(array) *(char *) _array_last(array)
+#define int_array_last(array) *(int *) _array_last(array)
 
 // sets
 

@@ -9,17 +9,6 @@
 
 const unsigned int BUFFER_LENGTH = 256;
 
-int get_max(Array* array) {
-  int max = -1;
-  for (size_t i = 0; i < array->size; i++) {
-    int n = array_get(array, i);
-    if (n > max) {
-      max = n;
-    }
-  }
-  return max;
-}
-
 Array *get_numbers(char *str) {
   Array *numbers = array_new(int);
   StringArray *split = string_split(str, " ");
@@ -37,7 +26,7 @@ Array *get_numbers(char *str) {
 
 bool array_contains(Array *array, int n) {
   for (size_t i = 0; i < array->size; i++) {
-    if (array_get(array, i) == n) {
+    if (int_array_get(array, i) == n) {
       return true;
     }
   }
@@ -82,7 +71,7 @@ int part1(char *filename) {
 
     int points = 0;
     for (size_t i = 0; i < winning_numbers->size; i++) {
-      int winning_number = array_get(winning_numbers, i);
+      int winning_number = int_array_get(winning_numbers, i);
       //printf("%d? %s\n", winning_number, array_contains(numbers, winning_number) ? "true" : "false");
       if (array_contains(numbers, winning_number)) {
         points = points == 0 ? 1 : points * 2;
@@ -154,7 +143,7 @@ int part2(char *filename) {
 
     int points = 0;
     for (size_t i = 0; i < winning_numbers->size; i++) {
-      int winning_number = array_get(winning_numbers, i);
+      int winning_number = int_array_get(winning_numbers, i);
       //printf("%d? %s\n", winning_number, array_contains(numbers, winning_number) ? "true" : "false");
       if (array_contains(numbers, winning_number)) {
         points++;

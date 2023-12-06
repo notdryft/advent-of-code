@@ -66,7 +66,7 @@ void int_array_print(Array *array) {
 
   printf("Array{ capacity = %zu, size = %zu, stride = %zu, data = [", array->capacity, array->size, array->stride);
   for (size_t i = 0; i < array->size; i++) {
-    int item = array_get(array, i);
+    int item = int_array_get(array, i);
     if (i == array->size - 1) {
       printf(" %d", item);
     } else {
