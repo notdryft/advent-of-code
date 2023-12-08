@@ -5,18 +5,10 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "math.h"
 #include "string.h"
 
 const unsigned int BUFFER_LENGTH = 1024;
-
-long long lcm(long long a, long long b) {
-  long long u = a, v = b;
-  while (u != v) {
-    if (u < v) u += a;
-    else v += b;
-  }
-  return u;
-}
 
 typedef struct _Node {
  char value[4];
