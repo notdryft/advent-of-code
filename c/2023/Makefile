@@ -1,5 +1,5 @@
 cc = gcc
-cflags = -O3 -Wall -W
+cflags = -O3 -std=c2x -Wall -W
 
 rm = @rm
 rmflags = -vf
