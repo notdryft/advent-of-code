@@ -88,10 +88,10 @@ int part1(char *filename) {
         printf("got unexpected source type %s\n", source_type_str);
         exit(42);
       }
-      printf("new source type: <%s> to <???> \n", source_type_str);
+      printf("new source type: <%s> to <?> \n", source_type_str);
     } else if (
       '0' <= buffer[0] && buffer[0] <= '9' && 
-      sscanf(buffer, "%s %s %s", &destination_str, &source_str, &range_str)
+      sscanf(buffer, "%s %s %s", destination_str, source_str, range_str)
     ) {
       long long destination = atoll(destination_str);
       long long source = atoll(source_str);
@@ -202,10 +202,10 @@ int part2(char *filename) {
         printf("got unexpected source type %s\n", source_type_str);
         exit(42);
       }
-      printf("new source type: <%s> to <???> \n", source_type_str);
+      printf("new source type: <%s> to <?> \n", source_type_str);
     } else if (
       '0' <= buffer[0] && buffer[0] <= '9' && 
-      sscanf(buffer, "%s %s %s", &destination_str, &source_str, &range_str)
+      sscanf(buffer, "%s %s %s", destination_str, source_str, range_str)
     ) {
       long long destination = atoll(destination_str);
       long long source = atoll(source_str);
@@ -254,7 +254,7 @@ int part2(char *filename) {
   free(pairs);
   free(map);
 
-  printf("location min = %d\n", location_min);
+  printf("location min = %llu\n", location_min);
 
   return location_min;
 }
