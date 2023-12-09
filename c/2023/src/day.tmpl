@@ -1,0 +1,40 @@
+#include <assert.h>
+#include <limits.h>
+#include <stdbool.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include "array.h"
+#include "string.h"
+
+const unsigned int BUFFER_LENGTH = 1024;
+
+int part1(char *filename) {
+  FILE *fp = fopen(filename, "r");
+  if (fp == NULL) {
+    fprintf(stderr, "Error: could not open file %s\n", filename);
+    return 1;
+  }
+
+  int sum = 0;
+
+  char buffer[BUFFER_LENGTH];
+  while (fgets(buffer, BUFFER_LENGTH, fp)) {
+    size_t buffer_len = strlen(buffer);
+    buffer[buffer_len - 1] = '\0';
+  }
+
+  fclose(fp);
+
+  return sum;
+}
+
+int main() {
+  assert(part1("../../inputs/2023/day$day/part1_test") == 0);
+  //assert(part1("../../inputs/2023/day$day/data") == 0);
+  //assert(part2("../../inputs/2023/day$day/part2_test") == 0);
+  //assert(part2("../../inputs/2023/day$day/data") == 0);
+
+  return 0;
+}

@@ -13,3 +13,5 @@ curl \
   -H "Cookie: $(cat .cookie)" \
   -o "$inputs/data" \
   https://adventofcode.com/2023/day/$day/input
+
+day=$day envsubst < src/day.tmpl > "src/day$day.c"
