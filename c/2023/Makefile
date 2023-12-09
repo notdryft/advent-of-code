@@ -34,8 +34,8 @@ mem-day%: day%
 
 clean:
 	$(rm) $(rmflags) \
-		$(objdir)/*.{dylib,o,so} \
-		$(libdir)/*.a
+		$(objdir)/*.o \
+		$(libdir)/*.{a,dylib,so}
 
 mrproper: clean
 	$(rm) $(rmflags) \
