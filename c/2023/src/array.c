@@ -9,36 +9,34 @@ Array *_array_new(size_t stride) {
   array->capacity = 0;
   array->size = 0;
   array->stride = stride;
-  array->items = (void **) malloc(sizeof(void *));
-  array->items[0] = NULL;
+  array->items = NULL;
 
   return array;
 }
 
 void array_free(Array *array) {
-  if (array->items[0] != NULL) {
-    free(array->items[0]);
+  if (array->items) {
+    free(array->items);
   }
-  free(array->items);
   free(array);
 }
 
 // gets
 
 void *_array_get(Array *array, size_t index) {
-  return array->items[0] + array->stride * index;
+  return array->items + array->stride * index;
 }
 
 void *_array_first(Array *array) {
   if (array->size > 0) {
-    return array->items[0];
+    return array->items;
   }
   return NULL;
 }
 
 void *_array_last(Array *array) {
   if (array->size > 0) {
-    return array->items[0] + array->stride * (array->size - 1);
+    return array->items + array->stride * (array->size - 1);
   }
   return NULL;
 }
@@ -47,7 +45,7 @@ void *_array_last(Array *array) {
 
 void _array_resize(Array *array) {
   array->capacity = array->capacity == 0 ? ARRAY_DEFAULT_CAPACITY : array->capacity * 2;
-  array->items[0] = realloc(array->items[0], array->stride * array->capacity);
+  array->items = realloc(array->items, array->stride * array->capacity);
 }
 
 void _array_push(Array *array, void *value) {
@@ -55,8 +53,8 @@ void _array_push(Array *array, void *value) {
     _array_resize(array);
   }
 
-  memcpy(array->items[0] + array->stride * array->size, value, array->stride);
-  array->size += 1;
+  memcpy(array->items + array->stride * array->size, value, array->stride);
+  array->size++;
 }
 
 void _array_set(Array *array, size_t index, void *value) {
@@ -65,10 +63,10 @@ void _array_set(Array *array, size_t index, void *value) {
     _array_resize(array);
   }
   if (overflow > array->size) {
-    memset(array->items[0] + array->stride * array->size, 0, array->stride * (index - array->size));
+    memset(array->items + array->stride * array->size, 0, array->stride * (index - array->size));
     array->size = overflow;
   }
-  memcpy(array->items[0] + array->stride * index, value, array->stride);
+  memcpy(array->items + array->stride * index, value, array->stride);
 }
 
 // utils

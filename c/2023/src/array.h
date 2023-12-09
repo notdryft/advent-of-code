@@ -10,7 +10,7 @@ typedef struct {
   size_t capacity;
   size_t size;
   size_t stride;
-  void **items;
+  void *items;
 } Array;
 
 Array *_array_new(size_t stride);
