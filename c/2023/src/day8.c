@@ -63,7 +63,7 @@ int part1(char *filename) {
     return 1;
   }
 
-  char instructions[BUFFER_LENGTH];
+  char instructions[BUFFER_LENGTH] = {0};
 
   size_t nodes_capacity = 1000;
   size_t nodes_size = 0;
@@ -129,7 +129,9 @@ int part1(char *filename) {
 
   printf("nodes = %zu\n", nodes_size);
   Node *node = find_node(nodes, "AAA", nodes_size);
+
   size_t instructions_len = strlen(instructions);
+  //printf("instructions(%zu) = %s\n", instructions_len, instructions);
 
   int steps = 0;
   bool stop = false;
@@ -161,7 +163,7 @@ long long part2(char *filename) {
     return 1;
   }
 
-  char instructions[BUFFER_LENGTH];
+  char instructions[BUFFER_LENGTH] = {0};
 
   size_t nodes_capacity = 1000;
   size_t nodes_size = 0;
@@ -229,6 +231,8 @@ long long part2(char *filename) {
   Nodes *ghost_nodes = find_nodes(nodes, 'A', nodes_size);
 
   size_t instructions_len = strlen(instructions);
+  //printf("instructions(%zu) = %s\n", instructions_len, instructions);
+
   int ghost_steps[ghost_nodes->size];
 
   for (size_t i = 0; i < ghost_nodes->size; i++) {

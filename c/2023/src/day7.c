@@ -21,7 +21,7 @@ enum HandType {
 
 typedef struct {
   enum HandType hand_type;
-  char *hand;
+  char hand[6];
   int bid;
   int jokers;
 } Hand;
@@ -128,9 +128,9 @@ int part1(char *filename) {
 
       Hand hand = {
         .hand_type = hand_type,
-        .hand = string_copy(hand_str),
         .bid = bid
       };
+      strncpy(hand.hand, hand_str, 5);
       hands[hands_size++] = hand;
     }
 
@@ -149,7 +149,6 @@ int part1(char *filename) {
   for (size_t i = 0; i < hands_size; i++) {
     Hand hand = hands[i];
     printf("hand = %s, bid = %d\n", hand.hand, hand.bid);
-    free(hand.hand);
 
     sum += hand.bid * (i + 1);
   }
@@ -260,10 +259,10 @@ int part2(char *filename) {
 
       Hand hand = {
         .hand_type = hand_type,
-        .hand = string_copy(hand_str),
         .bid = bid,
         .jokers = jokers
       };
+      strncpy(hand.hand, hand_str, 5),
       hands[hands_size++] = hand;
     }
 
@@ -284,7 +283,6 @@ int part2(char *filename) {
     if (hand.jokers > 0) {
       printf("hand = %s, type = %d, bid = %d\n", hand.hand, hand.hand_type, hand.bid);
     }
-    free(hand.hand);
 
     sum += hand.bid * (i + 1);
   }
