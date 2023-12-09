@@ -45,7 +45,7 @@ void string_array_push(StringArray *array, char *value) {
     array->items = realloc(array->items, array->stride * array->capacity);
   }
 
-  char *copy = string_copy(value);
+  char *copy = strdup(value);
   array->items[array->size++] = copy;
 }
 
@@ -66,25 +66,16 @@ void string_array_print(StringArray *array) {
 
 // utils
 
-char *string_copy(char *content) {
-  size_t content_len = strlen(content);
-  char *content_copy = (char *) malloc(sizeof(char) * (content_len + 1));
-  strncpy(content_copy, content, content_len);
-  content_copy[content_len] = '\0';
-
-  return content_copy;
-}
-
 char *substring(char *content, size_t so, size_t len) {
   char result[len + 1];
   strncpy(result, content + so, len);
   result[len] = '\0';
 
-  return string_copy(result);
+  return strdup(result);
 }
 
 StringArray *string_split(char *content, char *delimiter) {
-  char *copy = string_copy(content);
+  char *copy = strdup(content);
   StringArray *strings = string_array_new();
 
   char *token = strtok(copy, delimiter);
