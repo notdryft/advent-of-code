@@ -5,7 +5,6 @@
 #include <stdint.h>
 #include <string.h>
 
-#include "array.h"
 #include "string.h"
 
 const unsigned int BUFFER_LENGTH = 256;

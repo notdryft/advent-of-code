@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "array.h"
 #include "string.h"
 
 const unsigned int BUFFER_LENGTH = 256;
@@ -18,11 +19,8 @@ int part1(char *filename) {
 
   int result = 1;
 
-  size_t times_size = 0;
-  int times[10];
-
-  size_t distances_size = 0;
-  int distances[10];
+  Array *times = array_new(int);
+  Array *distances = array_new(int);
 
   char buffer[BUFFER_LENGTH];
   while (fgets(buffer, BUFFER_LENGTH, fp)) {
@@ -49,7 +47,7 @@ int part1(char *filename) {
       StringArray* times_split = string_split(times_str, " ");
       string_array_print(times_split);
       for (size_t i = 0; i < times_split->size; i++) {
-        times[times_size++] = atoi(string_array_get(times_split, i));
+        array_push(times, atoi(string_array_get(times_split, i)));
       }
 
       free(times_str);
@@ -63,7 +61,7 @@ int part1(char *filename) {
       StringArray* distances_split = string_split(distances_str, " ");
       string_array_print(distances_split);
       for (size_t i = 0; i < distances_split->size; i++) {
-        distances[distances_size++] = atoi(string_array_get(distances_split, i));
+        array_push(distances, atoi(string_array_get(distances_split, i)));
       }
 
       free(distances_str);
@@ -72,13 +70,13 @@ int part1(char *filename) {
     printf("\n");
   }
 
-  if (times_size != distances_size) {
+  if (times->size != distances->size) {
     exit(42);
   }
 
-  for (size_t i = 0; i < times_size; i++) {
-    int time = times[i];
-    int distance = distances[i];
+  for (size_t i = 0; i < times->size; i++) {
+    int time = int_array_get(times, i);
+    int distance = int_array_get(distances, i);
     printf("t = %d, d = %d\n", time, distance);
 
     int winning_count = 0;
@@ -103,6 +101,9 @@ int part1(char *filename) {
 
   fclose(fp);
 
+  array_free(times);
+  array_free(distances);
+
   printf("result = %d\n", result);
 
   return result;
@@ -117,11 +118,8 @@ int part2(char *filename) {
 
   long long result = 1;
 
-  size_t times_size = 0;
-  long long int times[10];
-
-  size_t distances_size = 0;
-  long long distances[10];
+  Array *times = array_new(long long);
+  Array *distances = array_new(long long);
 
   char buffer[BUFFER_LENGTH];
   while (fgets(buffer, BUFFER_LENGTH, fp)) {
@@ -148,7 +146,7 @@ int part2(char *filename) {
       StringArray* times_split = string_split(times_str, " ");
       string_array_print(times_split);
       for (size_t i = 0; i < times_split->size; i++) {
-        times[times_size++] = atoll(string_array_get(times_split, i));
+        array_push(times, atoll(string_array_get(times_split, i)));
       }
 
       free(times_str);
@@ -162,7 +160,7 @@ int part2(char *filename) {
       StringArray* distances_split = string_split(distances_str, " ");
       string_array_print(distances_split);
       for (size_t i = 0; i < distances_split->size; i++) {
-        distances[distances_size++] = atoll(string_array_get(distances_split, i));
+        array_push(distances, atoll(string_array_get(distances_split, i)));
       }
 
       free(distances_str);
@@ -171,13 +169,13 @@ int part2(char *filename) {
     printf("\n");
   }
 
-  if (times_size != distances_size) {
+  if (times->size != distances->size) {
     exit(42);
   }
 
-  for (size_t i = 0; i < times_size; i++) {
-    long long time = times[i];
-    long long distance = distances[i];
+  for (size_t i = 0; i < times->size; i++) {
+    long long time = ll_array_get(times, i);
+    long long distance = ll_array_get(distances, i);
     //printf("t = %d, d = %d\n", time, distance);
 
     long long winning_count = 0;
@@ -202,7 +200,10 @@ int part2(char *filename) {
 
   fclose(fp);
 
-  printf("result = %d\n", result);
+  array_free(times);
+  array_free(distances);
+
+  printf("result = %llu\n", result);
 
   return result;
 }

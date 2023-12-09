@@ -13,13 +13,16 @@ void int_array_tests() {
 
   array_push(ints, 7);
   int_array_print(ints);
-  printf("first = %d, last = %d\n", array_first(ints), array_last(ints));
+  printf("first = %d, last = %d\n", int_array_first(ints), int_array_last(ints));
 
   array_push(ints, 3);
   int_array_print(ints);
-  printf("first = %d, last = %d\n", array_first(ints), array_last(ints));
+  printf("first = %d, last = %d\n", int_array_first(ints), int_array_last(ints));
 
-  printf("result = [ %d, %d ]\n", array_get(ints, 0), array_get(ints, 1));
+  printf("result = [ %d, %d ]\n", int_array_get(ints, 0), int_array_get(ints, 1));
+
+  array_set(ints, 10, 42);
+  int_array_print(ints);
 
   array_free(ints);
   array_free(longs);
