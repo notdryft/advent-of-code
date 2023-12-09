@@ -109,11 +109,11 @@ void long_array_print(Array *array) {
 
   printf("Array{ capacity = %zu, size = %zu, stride = %zu, data = [", array->capacity, array->size, array->stride);
   for (size_t i = 0; i < array->size; i++) {
-    int item = int_array_get(array, i);
+    long item = long_array_get(array, i);
     if (i == array->size - 1) {
-      printf(" %d", item);
+      printf(" %ld", item);
     } else {
-      printf(" %d,", item);
+      printf(" %ld,", item);
     }
   }
   printf(" ] }\n");
@@ -132,11 +132,11 @@ void ll_array_print(Array *array) {
 
   printf("Array{ capacity = %zu, size = %zu, stride = %zu, data = [", array->capacity, array->size, array->stride);
   for (size_t i = 0; i < array->size; i++) {
-    int item = ll_array_get(array, i);
+    long long item = ll_array_get(array, i);
     if (i == array->size - 1) {
-      printf(" %d", item);
+      printf(" %lld", item);
     } else {
-      printf(" %d,", item);
+      printf(" %lld,", item);
     }
   }
   printf(" ] }\n");

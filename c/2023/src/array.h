@@ -31,8 +31,8 @@ void *_array_first(Array *array);
 
 void *_array_last(Array *array);
 #define int_array_last(array) *(int *) _array_last(array)
-#define long_array_last(array) *(int *) _array_last(array)
-#define ll_array_last(array) *(int *) _array_last(array)
+#define long_array_last(array) *(long *) _array_last(array)
+#define ll_array_last(array) *(long long *) _array_last(array)
 
 // sets
 
