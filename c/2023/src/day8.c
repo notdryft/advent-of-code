@@ -268,10 +268,10 @@ long long part2(char *filename) {
 }
 
 int main() {
-  //assert(part1("../../inputs/2023/day8/part1_1_test") == 2);
-  //assert(part1("../../inputs/2023/day8/part1_2_test") == 6);
-  //assert(part1("../../inputs/2023/day8/data") == 22411);
-  //assert(part2("../../inputs/2023/day8/part2_test") == 6);
+  assert(part1("../../inputs/2023/day8/part1_1_test") == 2);
+  assert(part1("../../inputs/2023/day8/part1_2_test") == 6);
+  assert(part1("../../inputs/2023/day8/data") == 22411);
+  assert(part2("../../inputs/2023/day8/part2_test") == 6);
   assert(part2("../../inputs/2023/day8/data") == 11188774513823);
 
   return 0;
