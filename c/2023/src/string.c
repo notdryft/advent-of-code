@@ -9,7 +9,7 @@ StringArray *string_array_new() {
   StringArray *array = (StringArray *) malloc(sizeof(StringArray));
   array->capacity = 0;
   array->size = 0;
-  array->stride = sizeof(char **);
+  array->stride = sizeof(char *);
   array->items = NULL;
 
   return array;
@@ -42,7 +42,7 @@ char *string_array_last(StringArray *array) {
 void string_array_push(StringArray *array, char *value) {
   if (array->size + 1 > array->capacity) {
     array->capacity = array->capacity == 0 ? ARRAY_DEFAULT_CAPACITY : array->capacity * 2;
-    array->items = realloc(array->items, array->stride * array->capacity);
+    array->items = (char **) realloc(array->items, array->stride * array->capacity);
   }
 
   char *copy = strdup(value);

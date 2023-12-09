@@ -9,7 +9,7 @@ Array *_array_new(size_t stride) {
   array->capacity = 0;
   array->size = 0;
   array->stride = stride;
-  array->items = malloc(sizeof(void **));
+  array->items = (void **) malloc(sizeof(void *));
   array->items[0] = NULL;
 
   return array;
@@ -38,7 +38,7 @@ void *_array_first(Array *array) {
 
 void *_array_last(Array *array) {
   if (array->size > 0) {
-    return *array->items + array->stride * (array->size - 1);
+    return array->items[0] + array->stride * (array->size - 1);
   }
   return NULL;
 }
