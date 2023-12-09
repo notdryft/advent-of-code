@@ -1,6 +1,7 @@
 #ifndef ARRAY
 #define ARRAY
 
+#include <stdbool.h>
 #include <stddef.h>
 
 #define ARRAY_DEFAULT_CAPACITY 2
@@ -49,6 +50,11 @@ void _array_set(Array *array, size_t index, void *value);
     __auto_type tmp = value; \
     _array_set(array, index, &tmp); \
   } while (0)
+
+// utils
+
+bool int_array_all(Array *array, int expected);
+bool int_array_contains(Array *array, int expected);
 
 // pretty printers
 

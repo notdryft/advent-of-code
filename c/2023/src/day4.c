@@ -24,16 +24,6 @@ Array *get_numbers(char *str) {
   return numbers;
 }
 
-bool array_contains(Array *array, int n) {
-  for (size_t i = 0; i < array->size; i++) {
-    if (int_array_get(array, i) == n) {
-      return true;
-    }
-  }
-
-  return false;
-}
-
 int part1(char *filename) {
   FILE *fp = fopen(filename, "r");
   if (fp == NULL) {
@@ -73,7 +63,7 @@ int part1(char *filename) {
     for (size_t i = 0; i < winning_numbers->size; i++) {
       int winning_number = int_array_get(winning_numbers, i);
       //printf("%d? %s\n", winning_number, array_contains(numbers, winning_number) ? "true" : "false");
-      if (array_contains(numbers, winning_number)) {
+      if (int_array_contains(numbers, winning_number)) {
         points = points == 0 ? 1 : points * 2;
         //printf("%d\n", points);
       }
@@ -145,7 +135,7 @@ int part2(char *filename) {
     for (size_t i = 0; i < winning_numbers->size; i++) {
       int winning_number = int_array_get(winning_numbers, i);
       //printf("%d? %s\n", winning_number, array_contains(numbers, winning_number) ? "true" : "false");
-      if (array_contains(numbers, winning_number)) {
+      if (int_array_contains(numbers, winning_number)) {
         points++;
         //printf("%d\n", points);
       }

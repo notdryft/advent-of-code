@@ -71,7 +71,27 @@ void _array_set(Array *array, size_t index, void *value) {
   memcpy(array->items[0] + array->stride * index, value, array->stride);
 }
 
-// pretty printer
+// utils
+
+bool int_array_all(Array *array, int expected) {
+  for (size_t i = 0; i < array->size; i++) {
+    if (int_array_get(array, i) != expected) {
+      return false;
+    }
+  }
+  return true;
+}
+
+bool int_array_contains(Array *array, int expected) {
+  for (size_t i = 0; i < array->size; i++) {
+    if (int_array_get(array, i) == expected) {
+      return true;
+    }
+  }
+  return false;
+}
+
+// pretty printers
 
 void int_array_print(Array *array) {
   if (array->stride != sizeof(int)) {

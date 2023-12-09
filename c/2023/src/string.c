@@ -49,21 +49,6 @@ void string_array_push(StringArray *array, char *value) {
   array->items[array->size++] = copy;
 }
 
-// pretty printer
-
-void string_array_print(StringArray *array) {
-  printf("Array{ capacity = %zu, size = %zu, stride = %zu, data = [", array->capacity, array->size, array->stride);
-  for (size_t i = 0; i < array->size; i++) {
-    char *item = string_array_get(array, i);
-    if (i == array->size - 1) {
-      printf(" \"%s\"", item);
-    } else {
-      printf(" \"%s\",", item);
-    }
-  }
-  printf(" ] }\n");
-}
-
 // utils
 
 char *substring(char *content, size_t so, size_t len) {
@@ -88,4 +73,43 @@ StringArray *string_split(char *content, char *delimiter) {
   free(copy);
 
   return strings;
+}
+
+Array *string_atoi(StringArray *array) {
+  Array *ints = array_new(int);
+  for (size_t i = 0; i < array->size; i++) {
+    array_push(ints, atoi(string_array_get(array, i)));
+  }
+  return ints;
+}
+
+Array *string_atol(StringArray *array) {
+  Array *longs = array_new(long);
+  for (size_t i = 0; i < array->size; i++) {
+    array_push(longs, atol(string_array_get(array, i)));
+  }
+  return longs;
+}
+
+Array *string_atoll(StringArray *array) {
+  Array *lls = array_new(long long);
+  for (size_t i = 0; i < array->size; i++) {
+    array_push(lls, atoll(string_array_get(array, i)));
+  }
+  return lls;
+}
+
+// pretty printer
+
+void string_array_print(StringArray *array) {
+  printf("Array{ capacity = %zu, size = %zu, stride = %zu, data = [", array->capacity, array->size, array->stride);
+  for (size_t i = 0; i < array->size; i++) {
+    char *item = string_array_get(array, i);
+    if (i == array->size - 1) {
+      printf(" \"%s\"", item);
+    } else {
+      printf(" \"%s\",", item);
+    }
+  }
+  printf(" ] }\n");
 }

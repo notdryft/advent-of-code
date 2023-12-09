@@ -3,6 +3,8 @@
 
 #include <string.h>
 
+#include "array.h"
+
 typedef struct {
   size_t capacity;
   size_t size;
@@ -23,13 +25,17 @@ char *string_array_last(StringArray *array);
 
 void string_array_push(StringArray *array, char *value);
 
-// pretty printer
-
-void string_array_print(StringArray *array);
-
 // utils
 
 char *substring(char *content, size_t pos, size_t len);
 StringArray *string_split(char *content, char *delimiter);
+
+Array *string_atoi(StringArray *array);
+Array *string_atol(StringArray *array);
+Array *string_atoll(StringArray *array);
+
+// pretty printer
+
+void string_array_print(StringArray *array);
 
 #endif
