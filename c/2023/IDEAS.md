@@ -13,3 +13,4 @@ https://www.reddit.com/r/adventofcode/comments/18b9ohu/2023_day_5_animated_part_
 day 6: binary search, int overflow 101
 day 7:
 day 8:
+day 9: sum of x in xs == 0 is NOT x == 0 for all x in xs...
