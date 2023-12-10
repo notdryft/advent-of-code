@@ -15,3 +15,5 @@ curl \
   https://adventofcode.com/2023/day/$day/input
 
 day=$day envsubst < src/day.tmpl > "src/day$day.c"
+
+gsed -i"" "s/days = [0-9]\+/days = $day/" Makefile
