@@ -13,7 +13,7 @@ objdir = $(topdir)/obj
 libdir = $(topdir)/lib
 bindir = $(topdir)/bin
 
-days = 9
+days = 10
 
 all: $(patsubst %,day%,$(shell seq 1 1 $(days)))
 
