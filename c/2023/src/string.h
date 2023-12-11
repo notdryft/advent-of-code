@@ -37,5 +37,6 @@ Array *string_atoll(StringArray *array);
 // pretty printer
 
 void string_array_print(StringArray *array);
+void string_array_print_raw(StringArray *array);
 
 #endif

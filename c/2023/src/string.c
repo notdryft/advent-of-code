@@ -113,3 +113,10 @@ void string_array_print(StringArray *array) {
   }
   printf(" ] }\n");
 }
+
+void string_array_print_raw(StringArray *array) {
+  for (size_t i = 0; i < array->size; i++) {
+    char *item = string_array_get(array, i);
+    printf("%s\n", item);
+  }
+}
