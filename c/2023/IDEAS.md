@@ -14,5 +14,5 @@ day 6: binary search, int overflow 101
 day 7:
 day 8:
 day 9: sum of x in xs == 0 is NOT x == 0 for all x in xs...
-day 10: winding number algorith, pnpoly didn't work?
+day 10: ray casting with edge case handling, winding number algorith, pnpoly didn't work?
 day 11: breadth first search overkill because we are in a grid
