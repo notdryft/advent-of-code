@@ -51,12 +51,48 @@ void string_array_push(StringArray *array, char *value) {
 
 // utils
 
+char *repeat(char *content, size_t times) {
+  size_t len = strlen(content);
+  size_t repeated_len = len * times + 1;
+  char *repeated = (char *) malloc(sizeof(char) * repeated_len);
+  memset(repeated, 0, sizeof(char) * repeated_len);
+  for (size_t i = 0; i < times; i++) {
+    strcat(repeated, content);
+  }
+  return repeated;
+}
+
+char *repeat_with_delimiter(char *content, size_t times, char *delimiter) {
+  size_t len = strlen(content);
+  size_t delimiter_len = strlen(delimiter);
+  size_t repeated_len = len * times + delimiter_len * times;
+  char *repeated = (char *) malloc(sizeof(char) * repeated_len);
+  memset(repeated, 0, sizeof(char) * repeated_len);
+  for (size_t i = 0; i < times; i++) {
+    strcat(repeated, content);
+    if (i < times - 1) {
+      strcat(repeated, delimiter);
+    }
+  }
+  return repeated;
+}
+
 char *substring(char *content, size_t so, size_t len) {
   char result[len + 1];
   strncpy(result, content + so, len);
   result[len] = '\0';
 
   return strdup(result);
+}
+
+StringArray *string_array_repeat(StringArray *array, size_t times) {
+  StringArray *repeated = string_array_new();
+  for (size_t i = 0; i < times; i++) {
+    for (size_t j = 0; j < array->size; j++) {
+      string_array_push(repeated, string_array_get(array, j));
+    }
+  }
+  return repeated;
 }
 
 StringArray *string_split(char *content, char *delimiter) {

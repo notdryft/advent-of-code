@@ -27,7 +27,10 @@ void string_array_push(StringArray *array, char *value);
 
 // utils
 
+char *repeat(char *content, size_t times);
+char *repeat_with_delimiter(char *content, size_t times, char *delimiter);
 char *substring(char *content, size_t pos, size_t len);
+StringArray *string_array_repeat(StringArray *array, size_t times);
 StringArray *string_split(char *content, char *delimiter);
 
 Array *string_atoi(StringArray *array);
