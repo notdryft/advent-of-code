@@ -8,7 +8,7 @@
 #include "array.h"
 #include "string.h"
 
-const unsigned int BUFFER_LENGTH = 1024;
+#define BUFFER_LENGTH 1024
 
 bool can_go_north(char c) {
   return c == 'S' || c == '|' || c == 'L' || c == 'J';
@@ -151,7 +151,7 @@ CoordsSet *traverse_steps(StringArray *schema, int **steps, size_t rows, size_t 
   Coord *coords = (Coord *) malloc(sizeof(Coord) * 10000);
 
   bool stop = false;
-  size_t x, y;
+  size_t x = 0, y = 0;
   for (size_t j = 0; j < rows && !stop; j++) {
     for (size_t i = 0; i < cols && !stop; i++) {
       if (steps[j][i] == 0) {
@@ -247,7 +247,7 @@ int part1(char *filename) {
 
   StringArray *schema = string_array_new();
 
-  char buffer[BUFFER_LENGTH];
+  char buffer[BUFFER_LENGTH] = {0};
   while (fgets(buffer, BUFFER_LENGTH, fp)) {
     size_t buffer_len = strlen(buffer);
     buffer[buffer_len - 1] = '\0';
@@ -267,7 +267,7 @@ int part1(char *filename) {
 
   printf("schema = %zux%zu\n", rows, cols);
 
-  size_t sx, sy;
+  size_t sx = 0, sy = 0;
   bool stop = false;
   for (size_t j = 0; j < rows && !stop; j++) {
     char *row = string_array_get(schema, j);
@@ -314,7 +314,7 @@ int part2(char *filename) {
 
   StringArray *schema = string_array_new();
 
-  char buffer[BUFFER_LENGTH];
+  char buffer[BUFFER_LENGTH] = {0};
   while (fgets(buffer, BUFFER_LENGTH, fp)) {
     size_t buffer_len = strlen(buffer);
     buffer[buffer_len - 1] = '\0';
@@ -334,7 +334,7 @@ int part2(char *filename) {
 
   printf("schema = %zux%zu\n", rows, cols);
 
-  size_t sx, sy;
+  size_t sx = 0, sy = 0;
   bool stop = false;
   for (size_t j = 0; j < rows && !stop; j++) {
     char *row = string_array_get(schema, j);

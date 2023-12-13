@@ -8,7 +8,7 @@
 #include "array.h"
 #include "string.h"
 
-const unsigned int BUFFER_LENGTH = 1024;
+#define BUFFER_LENGTH 1024
 
 bool arrangements_cmp(Array *a, Array *b) {
   if (a->size != b->size) {
@@ -172,7 +172,7 @@ int part1(char *filename) {
 
   StringArray *records = string_array_new();
 
-  char buffer[BUFFER_LENGTH];
+  char buffer[BUFFER_LENGTH] = {0};
   while (fgets(buffer, BUFFER_LENGTH, fp)) {
     size_t buffer_len = strlen(buffer);
     buffer[buffer_len - 1] = '\0';
@@ -216,7 +216,7 @@ unsigned long long part2(char *filename) {
 
   StringArray *records = string_array_new();
 
-  char buffer[BUFFER_LENGTH];
+  char buffer[BUFFER_LENGTH] = {0};
   while (fgets(buffer, BUFFER_LENGTH, fp)) {
     size_t buffer_len = strlen(buffer);
     buffer[buffer_len - 1] = '\0';

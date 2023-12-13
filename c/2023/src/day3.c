@@ -7,7 +7,7 @@
 
 #include "string.h"
 
-const unsigned int BUFFER_LENGTH = 256;
+#define BUFFER_LENGTH 1024
 
 bool is_digit(char c) {
   return '0' <= c && c <= '9';
@@ -35,7 +35,7 @@ int part1(char *filename) {
 
   StringArray *lines = string_array_new();
 
-  char buffer[BUFFER_LENGTH];
+  char buffer[BUFFER_LENGTH] = {0};
   while (fgets(buffer, BUFFER_LENGTH, fp)) {
     buffer[strlen(buffer) - 1] = '\0';
     string_array_push(lines, buffer);
@@ -103,7 +103,7 @@ int part2(char *filename) {
   size_t lol_x = SIZE_MAX;
   size_t lol_y = SIZE_MAX;
 
-  char buffer[BUFFER_LENGTH];
+  char buffer[BUFFER_LENGTH] = {0};
   while (fgets(buffer, BUFFER_LENGTH, fp)) {
     buffer[strlen(buffer) - 1] = '\0';
     string_array_push(lines, buffer);

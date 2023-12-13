@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-const unsigned int BUFFER_LENGTH = 256;
+#define BUFFER_LENGTH 1024
 
 int part1(char *filename) {
   FILE *fp = fopen(filename, "r");
@@ -30,7 +30,7 @@ int part1(char *filename) {
     return 1;
   }
 
-  char buffer[BUFFER_LENGTH];
+  char buffer[BUFFER_LENGTH] = {0};
   while (fgets(buffer, BUFFER_LENGTH, fp)) {
     char *p_token_save;
     char *token = strtok_r(buffer, ":", &p_token_save);
@@ -112,7 +112,7 @@ int part2(char *filename) {
     return 1;
   }
 
-  char buffer[BUFFER_LENGTH];
+  char buffer[BUFFER_LENGTH] = {0};
   while (fgets(buffer, BUFFER_LENGTH, fp)) {
     char *p_token_save;
     char *token = strtok_r(buffer, ":", &p_token_save);

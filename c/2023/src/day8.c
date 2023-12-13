@@ -8,7 +8,7 @@
 #include "math.h"
 #include "string.h"
 
-const unsigned int BUFFER_LENGTH = 1024;
+#define BUFFER_LENGTH 1024
 
 typedef struct _Node {
  char value[4];
@@ -69,7 +69,7 @@ int part1(char *filename) {
   size_t nodes_size = 0;
   Node **nodes = (Node **) malloc(sizeof(Node*) * nodes_capacity);
 
-  char buffer[BUFFER_LENGTH];
+  char buffer[BUFFER_LENGTH] = {0};
   if (fgets(buffer, BUFFER_LENGTH, fp)) {
     size_t buffer_len = strlen(buffer);
     buffer[buffer_len - 1] = '\0';
@@ -88,14 +88,14 @@ int part1(char *filename) {
       Node *node = find_node(nodes, value, nodes_size);
       if (node == NULL) {
         node = (Node *) malloc(sizeof(Node));
-        strncpy(node->value, value, 3);
+        strncpy(node->value, value, 4);
         nodes[nodes_size++] = node;
       }
 
       Node *left = find_node(nodes, left_str, nodes_size);
       if (left == NULL) {
         left = (Node *) malloc(sizeof(Node));
-        strncpy(left->value, left_str, 3);
+        strncpy(left->value, left_str, 4);
         nodes[nodes_size++] = left;
       }
       node->left = left;
@@ -103,7 +103,7 @@ int part1(char *filename) {
       Node *right = find_node(nodes, right_str, nodes_size);
       if (right == NULL) {
         right = (Node *) malloc(sizeof(Node));
-        strncpy(right->value, right_str, 3);
+        strncpy(right->value, right_str, 4);
         printf("copied node value: %s\n", node->value);
         nodes[nodes_size++] = right;
       }
@@ -169,7 +169,7 @@ long long part2(char *filename) {
   size_t nodes_size = 0;
   Node **nodes = (Node **) malloc(sizeof(Node*) * nodes_capacity);
 
-  char buffer[BUFFER_LENGTH];
+  char buffer[BUFFER_LENGTH] = {0};
   if (fgets(buffer, BUFFER_LENGTH, fp)) {
     size_t buffer_len = strlen(buffer);
     buffer[buffer_len - 1] = '\0';
@@ -188,14 +188,14 @@ long long part2(char *filename) {
       Node *node = find_node(nodes, value, nodes_size);
       if (node == NULL) {
         node = (Node *) malloc(sizeof(Node));
-        strncpy(node->value, value, 3);
+        strncpy(node->value, value, 4);
         nodes[nodes_size++] = node;
       }
 
       Node *left = find_node(nodes, left_str, nodes_size);
       if (left == NULL) {
         left = (Node *) malloc(sizeof(Node));
-        strncpy(left->value, left_str, 3);
+        strncpy(left->value, left_str, 4);
         nodes[nodes_size++] = left;
       }
       node->left = left;
@@ -203,7 +203,7 @@ long long part2(char *filename) {
       Node *right = find_node(nodes, right_str, nodes_size);
       if (right == NULL) {
         right = (Node *) malloc(sizeof(Node));
-        strncpy(right->value, right_str, 3);
+        strncpy(right->value, right_str, 4);
         printf("copied node value: %s\n", node->value);
         nodes[nodes_size++] = right;
       }
@@ -234,6 +234,7 @@ long long part2(char *filename) {
   //printf("instructions(%zu) = %s\n", instructions_len, instructions);
 
   int ghost_steps[ghost_nodes->size];
+  memset(ghost_steps, 0, sizeof(int) * ghost_nodes->size);
 
   for (size_t i = 0; i < ghost_nodes->size; i++) {
     Node *node = ghost_nodes->items[i];

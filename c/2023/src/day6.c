@@ -8,7 +8,7 @@
 #include "array.h"
 #include "string.h"
 
-const unsigned int BUFFER_LENGTH = 256;
+#define BUFFER_LENGTH 1024
 
 int part1(char *filename) {
   FILE *fp = fopen(filename, "r");
@@ -22,7 +22,7 @@ int part1(char *filename) {
   Array *times = array_new(int);
   Array *distances = array_new(int);
 
-  char buffer[BUFFER_LENGTH];
+  char buffer[BUFFER_LENGTH] = {0};
   while (fgets(buffer, BUFFER_LENGTH, fp)) {
     size_t buffer_len = strlen(buffer);
     buffer[buffer_len - 1] = '\0';
@@ -121,7 +121,7 @@ int part2(char *filename) {
   Array *times = array_new(long long);
   Array *distances = array_new(long long);
 
-  char buffer[BUFFER_LENGTH];
+  char buffer[BUFFER_LENGTH] = {0};
   while (fgets(buffer, BUFFER_LENGTH, fp)) {
     size_t buffer_len = strlen(buffer);
     buffer[buffer_len - 1] = '\0';

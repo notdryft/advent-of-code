@@ -5,7 +5,7 @@
 
 #include "array.h"
 
-const unsigned int BUFFER_LENGTH = 256;
+#define BUFFER_LENGTH 1024
 
 int part1(char *filename) {
   FILE *fp = fopen(filename, "r");
@@ -16,7 +16,7 @@ int part1(char *filename) {
 
   int sum = 0;
 
-  char buffer[BUFFER_LENGTH];
+  char buffer[BUFFER_LENGTH] = {0};
   while (fgets(buffer, BUFFER_LENGTH, fp)) {
     Array *digits = array_new(int);
     for (int i = 0; buffer[i] != '\n'; i++) {
@@ -45,7 +45,7 @@ int part2(char *filename) {
 
   int sum = 0;
 
-  char buffer[BUFFER_LENGTH];
+  char buffer[BUFFER_LENGTH] = {0};
   while (fgets(buffer, BUFFER_LENGTH, fp)) {
     Array *digits = array_new(int);
     size_t len = strlen(buffer) - 1; // \n counts but not \0

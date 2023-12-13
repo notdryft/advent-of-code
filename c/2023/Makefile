@@ -1,4 +1,4 @@
-cc = gcc
+cc = gcc-13
 cflags = -O3 -std=c2x -Wall -W
 
 rm = @rm

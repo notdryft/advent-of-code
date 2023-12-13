@@ -7,7 +7,7 @@
 
 #include "string.h"
 
-const unsigned int BUFFER_LENGTH = 256;
+#define BUFFER_LENGTH 1024
 
 enum HandType {
   HIGH_CARD, // 0
@@ -77,7 +77,7 @@ int part1(char *filename) {
   size_t hands_size = 0;
   Hand hands[1000];
 
-  char buffer[BUFFER_LENGTH];
+  char buffer[BUFFER_LENGTH] = {0};
   while (fgets(buffer, BUFFER_LENGTH, fp)) {
     size_t buffer_len = strlen(buffer);
     buffer[buffer_len - 1] = '\0';
@@ -89,7 +89,7 @@ int part1(char *filename) {
       printf("hand = %s, bid = %d\n", hand_str, bid);
 
       char sorted_hand_str[6];
-      strncpy(sorted_hand_str, hand_str, 5);
+      strncpy(sorted_hand_str, hand_str, 6);
 
       qsort(sorted_hand_str, strlen(sorted_hand_str), sizeof(char), card_reverse_cmp);
       printf("sorted hand = %s\n", sorted_hand_str);
@@ -130,7 +130,7 @@ int part1(char *filename) {
         .hand_type = hand_type,
         .bid = bid
       };
-      strncpy(hand.hand, hand_str, 5);
+      strncpy(hand.hand, hand_str, 6);
       hands[hands_size++] = hand;
     }
 
@@ -172,7 +172,7 @@ int part2(char *filename) {
   size_t hands_size = 0;
   Hand hands[1000];
 
-  char buffer[BUFFER_LENGTH];
+  char buffer[BUFFER_LENGTH] = {0};
   while (fgets(buffer, BUFFER_LENGTH, fp)) {
     size_t buffer_len = strlen(buffer);
     buffer[buffer_len - 1] = '\0';
@@ -184,7 +184,7 @@ int part2(char *filename) {
       printf("hand = %s, bid = %d\n", hand_str, bid);
 
       char sorted_hand_str[6];
-      strncpy(sorted_hand_str, hand_str, 5);
+      strncpy(sorted_hand_str, hand_str, 6);
 
       qsort(sorted_hand_str, strlen(sorted_hand_str), sizeof(char), card_reverse_cmp);
       printf("sorted hand = %s\n", sorted_hand_str);
@@ -262,7 +262,7 @@ int part2(char *filename) {
         .bid = bid,
         .jokers = jokers
       };
-      strncpy(hand.hand, hand_str, 5),
+      strncpy(hand.hand, hand_str, 6),
       hands[hands_size++] = hand;
     }
 

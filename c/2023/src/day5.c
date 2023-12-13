@@ -7,7 +7,7 @@
 
 #include "string.h"
 
-const unsigned int BUFFER_LENGTH = 256;
+#define BUFFER_LENGTH 1024
 
 enum AlmanachEntryType {
   SEED_TO_SOIL,
@@ -49,7 +49,7 @@ int part1(char *filename) {
   char destination_str[BUFFER_LENGTH];
   char range_str[BUFFER_LENGTH];
 
-  char buffer[BUFFER_LENGTH];
+  char buffer[BUFFER_LENGTH] = {0};
   while (fgets(buffer, BUFFER_LENGTH, fp)) {
     size_t buffer_len = strlen(buffer);
     buffer[buffer_len - 1] = '\0';
@@ -163,7 +163,7 @@ int part2(char *filename) {
   char destination_str[BUFFER_LENGTH];
   char range_str[BUFFER_LENGTH];
 
-  char buffer[BUFFER_LENGTH];
+  char buffer[BUFFER_LENGTH] = {0};
   while (fgets(buffer, BUFFER_LENGTH, fp)) {
     size_t buffer_len = strlen(buffer);
     buffer[buffer_len - 1] = '\0';
