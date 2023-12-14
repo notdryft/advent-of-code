@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "algos.h"
 #include "array.h"
 #include "string.h"
 
@@ -102,31 +103,6 @@ int load(StringArray *rocks) {
   return sum;
 }
 
-typedef struct {
-  size_t so;
-  size_t eo;
-} Cycle;
-
-// FIXME only detects a cycle after waiting long enough?
-Cycle *find_longest_cycle(Array *array) {
-  for (size_t i = 1000; i < array->size - 1; i++) {
-    for (size_t j = i + 1; j < array->size; j++) {
-      size_t ii = i, jj = j;
-      while (ii < array->size + 1 && jj < array->size && int_array_get(array, ii) == int_array_get(array, jj)) {
-        ii++;
-        jj++;
-      }
-      if (jj == array->size && jj - ii > 3) {
-        Cycle *c = (Cycle *) malloc(sizeof(Cycle));
-        c->so = i;
-        c->eo = j;
-        return c;
-      }
-    }
-  }
-  return NULL;
-}
-
 int part1(char *filename) {
   FILE *fp = fopen(filename, "r");
   if (fp == NULL) {
@@ -195,25 +171,20 @@ int part2(char *filename) {
     //printf("\n");
     int l = load(rocks);
     array_push(loads, l);
-    if (loads->size > 10000) {
-      c = find_longest_cycle(loads); 
-      if (c != NULL) {
-        break;
-      }
+    c = find_longest_cycle(loads, 2); 
+    if (c != NULL) {
+      break;
     }
   }
-  string_array_print_raw(rocks);
-  printf("\n");
+  //string_array_print_raw(rocks);
+  //printf("\n");
   int_array_print(loads);
 
   int sum = -1;
   if (c != NULL) {
-    int s = c->so;
-    int e = c->eo;
-    int l = e - s;
-    int r = s + (cycles - 1 - s) % l;
-    printf("%d %d %d %d %d\n", s, e, l, (cycles-s)%l, r);
-    sum = int_array_get(loads, r);
+    int n = c->start + (cycles - 1 - c->start) % c->period;
+    printf("start = %zu, period = %zu, result = %d\n", c->start, c->period, n);
+    sum = int_array_get(loads, n);
   }
 
   printf("sum = %d\n", sum);

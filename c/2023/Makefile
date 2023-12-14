@@ -20,7 +20,7 @@ all: $(patsubst %,day%,$(shell seq 1 1 $(days)))
 $(objdir)/%.o: $(srcdir)/%.c 
 	$(cc) -c -fPIC -o$@ $^ $(cflags)
 
-$(libdir)/libaoc.so: $(objdir)/array.o $(objdir)/map.o $(objdir)/math.o $(objdir)/string.o
+$(libdir)/libaoc.so: $(objdir)/algos.o $(objdir)/array.o $(objdir)/map.o $(objdir)/math.o $(objdir)/string.o
 	$(cc) -shared -o$@ $^
 
 %_test: $(srcdir)/%_test.c $(libdir)/libaoc.so
