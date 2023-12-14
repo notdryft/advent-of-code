@@ -18,7 +18,7 @@ day 10: ray casting with edge case handling, winding number algorith, pnpoly did
 day 11: breadth first search overkill because we are in a grid
 day 12: bf + dynamic programming
 day 13: hamming distance
-day 14: longest cycle detection
+day 14: cycle detection, floyd warshall / brent but needs a graph?
 
 Ref:
 - https://github.com/Bogdanp/awesome-advent-of-code
