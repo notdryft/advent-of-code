@@ -53,6 +53,8 @@ void _array_set(Array *array, size_t index, void *value);
 
 // utils
 
+int array_cmp(Array *array, size_t i, size_t j);
+
 bool int_array_all(Array *array, int expected);
 bool int_array_contains(Array *array, int expected);
 

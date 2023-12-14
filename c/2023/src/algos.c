@@ -9,7 +9,7 @@ Cycle *find_longest_cycle(Array *array, size_t min_period) {
     for (size_t j = i + 1; j < array->size; j++) {
       if ((array->size - i) % (j - i) == 0) {
         size_t ii = i, jj = j;
-        while (jj < array->size && int_array_get(array, ii) == int_array_get(array, jj)) {
+        while (jj < array->size && array_cmp(array, ii, jj) == 0) {
           ii++;
           jj++;
         }
