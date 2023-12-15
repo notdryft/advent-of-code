@@ -1,7 +1,11 @@
 #!/usr/bin/env bash
 
-day=$1
+if [[ $1 =~ [0-9]+ ]]; then
+  binary="day$1"
+else
+  binary="${1}_test"
+fi
 
 make mrproper && \
-  make "day$day" && \
-  "./bin/day$day"
+  make "$binary" && \
+  "./bin/$binary"

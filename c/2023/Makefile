@@ -5,7 +5,7 @@ rm = @rm
 rmflags = -vf
 
 vg = valgrind
-vflags = --leak-check=full
+vflags = --leak-check=full --show-leak-kinds=all
 
 topdir = .
 srcdir = $(topdir)/src
@@ -26,11 +26,14 @@ $(libdir)/libaoc.so: $(objdir)/algos.o $(objdir)/array.o $(objdir)/map.o $(objdi
 %_test: $(srcdir)/%_test.c $(libdir)/libaoc.so
 	$(cc) -o$(bindir)/$@ -L$(libdir) -laoc $^ $(clags)
 
+mem-%_test: %_test
+	$(vg) $(bindir)/$^ $(vflags)
+
 day%: $(srcdir)/day%.c $(libdir)/libaoc.so
 	$(cc) -o$(bindir)/$@ -L$(libdir) -laoc $^ $(cflags)
 
 mem-day%: day%
-	$(vg) $(bindir)/$^ $(vflags)
+	$(vg) $(vflags) $(bindir)/$^
 
 clean:
 	$(rm) $(rmflags) \
