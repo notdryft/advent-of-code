@@ -156,6 +156,8 @@ int part2(char *filename) {
     free(winning_numbers_buf);
   }
 
+  fclose(fp);
+
   int sum = array_sum(cards, card - 1);
   printf("sum = %d\n", sum);
 

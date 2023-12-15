@@ -54,6 +54,7 @@ void free_nodes(Node **nodes, size_t nodes_size) {
   for (size_t i = 0; i < nodes_size; i++) {
     free(nodes[i]);
   }
+  free(nodes);
 }
 
 int part1(char *filename) {
