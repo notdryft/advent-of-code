@@ -19,6 +19,7 @@ day 11: breadth first search overkill because we are in a grid
 day 12: bf + dynamic programming
 day 13: hamming distance
 day 14: cycle detection, floyd warshall / brent but needs a graph?
+day 15: rip bufread
 
 Ref:
 - https://github.com/Bogdanp/awesome-advent-of-code
