@@ -20,20 +20,20 @@ void array_free(Array *array);
 
 // gets
 
-void *_array_get(Array *array, size_t index);
-#define int_array_get(array, index) *(int *) _array_get(array, index)
-#define long_array_get(array, index) *(long *) _array_get(array, index)
-#define ll_array_get(array, index) *(long long *) _array_get(array, index)
+void *array_get(Array *array, size_t index);
+#define int_array_get(array, index) *(int *) array_get(array, index)
+#define long_array_get(array, index) *(long *) array_get(array, index)
+#define ll_array_get(array, index) *(long long *) array_get(array, index)
 
-void *_array_first(Array *array);
-#define int_array_first(array) *(int *) _array_first(array)
-#define long_array_first(array) *(long *) _array_first(array)
-#define ll_array_first(array) *(long long *) _array_first(array)
+void *array_first(Array *array);
+#define int_array_first(array) *(int *) array_first(array)
+#define long_array_first(array) *(long *) array_first(array)
+#define ll_array_first(array) *(long long *) array_first(array)
 
-void *_array_last(Array *array);
-#define int_array_last(array) *(int *) _array_last(array)
-#define long_array_last(array) *(long *) _array_last(array)
-#define ll_array_last(array) *(long long *) _array_last(array)
+void *array_last(Array *array);
+#define int_array_last(array) *(int *) array_last(array)
+#define long_array_last(array) *(long *) array_last(array)
+#define ll_array_last(array) *(long long *) array_last(array)
 
 // sets
 
@@ -50,6 +50,13 @@ void _array_set(Array *array, size_t index, void *value);
     __auto_type tmp = value; \
     _array_set(array, index, &tmp); \
   } while (0)
+
+// modifiers
+
+void array_remove_first(Array *array);
+void array_remove_last(Array *array);
+
+void array_remove(Array *array, size_t index);
 
 // utils
 

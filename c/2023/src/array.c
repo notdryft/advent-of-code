@@ -15,26 +15,28 @@ Array *_array_new(size_t stride) {
 }
 
 void array_free(Array *array) {
-  if (array->items) {
-    free(array->items);
+  if (array != NULL) {
+    if (array->items != NULL) {
+      free(array->items);
+    }
+    free(array);
   }
-  free(array);
 }
 
 // gets
 
-void *_array_get(Array *array, size_t index) {
+void *array_get(Array *array, size_t index) {
   return array->items + array->stride * index;
 }
 
-void *_array_first(Array *array) {
+void *array_first(Array *array) {
   if (array->size > 0) {
     return array->items;
   }
   return NULL;
 }
 
-void *_array_last(Array *array) {
+void *array_last(Array *array) {
   if (array->size > 0) {
     return array->items + array->stride * (array->size - 1);
   }
@@ -67,6 +69,23 @@ void _array_set(Array *array, size_t index, void *value) {
     array->size = overflow;
   }
   memcpy(array->items + array->stride * index, value, array->stride);
+}
+
+// modifiers
+
+inline void array_remove_first(Array *array) {
+  array_remove(array, 0);
+}
+
+inline void array_remove_last(Array *array) {
+  array->size--;
+}
+
+void array_remove(Array *array, size_t index) {
+  for (size_t i = index; i < array->size - 1; i++) {
+    memcpy(array->items + array->stride * i, array->items + array->stride * (i + 1), array->stride);
+  }
+  array->size--;
 }
 
 // utils

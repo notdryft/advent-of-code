@@ -19,13 +19,7 @@ typedef struct {
 typedef struct {
   size_t capacity;
   size_t size;
-  BoxItem **items;
-} BoxArray;
-
-typedef struct {
-  size_t capacity;
-  size_t size;
-  BoxArray **array; 
+  Array **arrays;
 } Map;
 
 int hash(char *str, size_t len) {
@@ -42,23 +36,19 @@ int hash(char *str, size_t len) {
 Map *map_new() {
   Map *map = (Map *) malloc(sizeof(Map));
   map->capacity = 256;
-  map->size = map->capacity;
-
-  map->array = (BoxArray **) malloc(sizeof(BoxArray *) * map->size);
-  for (size_t i = 0; i < map->size; i++) {
-    BoxArray *array = (BoxArray *) malloc(sizeof(BoxArray));
-    array->capacity = 4000;
-    array->size = 0;
-    array->items = (BoxItem **) malloc(sizeof(BoxItem *) * array->capacity);
-    map->array[i] = array; 
+  map->size = 0;
+  map->arrays = (Array **) malloc(sizeof(Array *) * map->capacity);
+  for (size_t i = 0; i < map->capacity; i++) {
+    map->arrays[map->size++] = array_new(BoxItem);
   }
 
   return map;
 }
 
-int map_array_find(BoxArray *array, char *instruction, size_t len) {
+int map_array_find(Array *array, char *instruction, size_t len) {
   for (size_t i = 0; i < array->size; i++) {
-    if (strncmp(array->items[i]->lens, instruction, len) == 0) {
+    BoxItem *item = (BoxItem *) array_get(array, i);
+    if (strncmp(item->lens, instruction, len) == 0) {
       return i;
     }
   }
@@ -67,40 +57,38 @@ int map_array_find(BoxArray *array, char *instruction, size_t len) {
 
 void map_add(Map *map, char *instruction, size_t len, int focal) {
   int h = hash(instruction, len);
-  BoxArray *array = map->array[h];
-  int position = map_array_find(array, instruction, len);
-  if (position != -1) {
-    array->items[position]->focal = focal;
-  } else {
-    BoxItem *item = (BoxItem *) malloc(sizeof(BoxItem));
-    memset(item->lens, 0, sizeof(char) * 32);
-    strncpy(item->lens, instruction, len);
+  Array *array = map->arrays[h];
+  int index = map_array_find(array, instruction, len);
+  if (index != -1) {
+    BoxItem *item = (BoxItem *) array_get(array, index);
     item->focal = focal;
+  } else {
+    BoxItem item = {
+      .focal = focal
+    };
+    memset(item.lens, 0, sizeof(char) * 32);
+    strncpy(item.lens, instruction, len + 1);
 
-    array->items[array->size++] = item;
+    array_push(array, item);
   }
 }
 
 void map_remove(Map *map, char *instruction, size_t len) {
   int h = hash(instruction, len);
-  BoxArray *array = map->array[h];
-  int position = map_array_find(array, instruction, len);
-  if (position != -1) {
-    free(array->items[position]);
-    for (size_t i = position; i < array->size - 1; i++) {
-      array->items[i] = array->items[i + 1];
-    }
-    array->items[array->size--] = NULL;
+  Array *array = map->arrays[h];
+  int index = map_array_find(array, instruction, len);
+  if (index != -1) {
+    array_remove(array, index);
   }
 }
 
 void map_print(Map *map) {
   for (size_t i = 0; i < map->size; i++) {
-    BoxArray *array = map->array[i];
+    Array *array = map->arrays[i];
     if (array->size > 0) {
       printf("Box %zu:", i);
       for (size_t j = 0; j < array->size; j++) {
-          BoxItem *item = array->items[j];
+          BoxItem *item = (BoxItem *) array_get(array, j);
           printf(" [%s %d]", item->lens, item->focal);
       }
       printf("\n");
@@ -110,13 +98,9 @@ void map_print(Map *map) {
 
 void map_free(Map *map) {
   for (size_t i = 0; i < map->size; i++) {
-    BoxArray *array = map->array[i];
-    for (size_t j = 0; j < array->size; j++) {
-      free(array->items[j]);
-    }
-    free(array->items);
+    array_free(map->arrays[i]);
   }
-  free(map->array);
+  free(map->arrays);
   free(map);
 }
 
@@ -168,7 +152,7 @@ int part2(char *filename) {
     buffer[buffer_len - 1] = '\0';
 
     StringArray *split = string_split(buffer, ",");
-    //printf("instructions = %zu\n", split->size);
+    printf("instructions = %zu\n", split->size);
 
     for (size_t i = 0; i < split->size; i++) {
       char *instruction_raw = string_array_get(split, i);
@@ -179,19 +163,19 @@ int part2(char *filename) {
         instruction[len - 2] = '\0';
         int focal = atoi(instruction + len - 1);
         len -= 2;
-        //printf("After \"%s=%d\":\n", instruction, focal);
+        printf("After \"%s=%d\" (%zu):\n", instruction, focal, len);
         
         map_add(map, instruction, len, focal);
       } else if (instruction[len - 1] == '-') {
         instruction[len - 1] = '\0';
         len--;
-        //printf("After \"%s-\":\n", instruction);
+        printf("After \"%s-\" (%zu):\n", instruction, len);
 
         map_remove(map, instruction, len);
       }
 
-      //map_print(map);
-      //printf("\n");
+      map_print(map);
+      printf("\n");
 
       free(instruction);
     }
@@ -202,9 +186,9 @@ int part2(char *filename) {
 
   int sum = 0;
   for (size_t i = 0; i < map->size; i++) {
-    BoxArray *array = map->array[i];
+    Array *array = map->arrays[i];
     for (size_t j = 0; j < array->size; j++) {
-      BoxItem *item = array->items[j];
+      BoxItem *item = (BoxItem *) array_get(array, j);
       int power = (i + 1) * (j + 1) * item->focal;
       //printf("sum += %d\n", power);
       sum += power;
