@@ -115,11 +115,18 @@ StringArray *string_split(char *content, char *delimiter) {
   char *copy = strdup(content);
   StringArray *strings = string_array_new();
 
-  char *token = strtok(copy, delimiter);
-  while (token != NULL) {
-    string_array_push(strings, token);
-
-    token = strtok(NULL, delimiter);
+  char *token = strstr(copy, delimiter);
+  if (token == NULL) {
+     string_array_push(strings, copy);
+  } else {
+    size_t delimiter_len = strlen(delimiter);
+    char *p = copy;
+    while ((token = strstr(p, delimiter)) != NULL) {
+      *token = '\0';
+      string_array_push(strings, p);
+      p = token + delimiter_len;
+    }
+    string_array_push(strings, p);
   }
 
   free(copy);
@@ -154,7 +161,7 @@ Array *string_atoll(StringArray *array) {
 // pretty printer
 
 void string_array_print(StringArray *array) {
-  printf("Array{ capacity = %zu, size = %zu, stride = %zu, data = [", array->capacity, array->size, array->stride);
+  printf("StringArray{ capacity = %zu, size = %zu, stride = %zu, data = [", array->capacity, array->size, array->stride);
   for (size_t i = 0; i < array->size; i++) {
     char *item = string_array_get(array, i);
     if (i == array->size - 1) {
