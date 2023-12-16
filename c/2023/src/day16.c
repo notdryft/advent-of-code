@@ -77,9 +77,8 @@ void traverse_rec(char **cavern, int **beams, size_t mx, size_t my, size_t x, si
 int traverse(char **cavern, size_t mx, size_t my, size_t sx, size_t sy, int direction) {
   int **beams = (int **) malloc(sizeof(int *) * my);
   for (size_t y = 0; y < my; y++) {
-    beams[y] = (int *) malloc(sizeof(int) * (mx + 1));
+    beams[y] = (int *) malloc(sizeof(int) * mx);
     memset(beams[y], 0, sizeof(int) * mx);
-    beams[y][mx] = '\0';
   }
 
   traverse_rec(cavern, beams, mx, my, sx, sy, direction);
