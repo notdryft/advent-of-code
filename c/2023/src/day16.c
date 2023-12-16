@@ -74,10 +74,8 @@ void traverse_rec(char **cavern, int **beams, size_t mx, size_t my, size_t x, si
   }
 }
 
-int traverse(char **cavern, size_t mx, size_t my, size_t sx, size_t sy, int direction) {
-  int **beams = (int **) malloc(sizeof(int *) * my);
+int traverse(char **cavern, int **beams, size_t mx, size_t my, size_t sx, size_t sy, int direction) {
   for (size_t y = 0; y < my; y++) {
-    beams[y] = (int *) malloc(sizeof(int) * mx);
     memset(beams[y], 0, sizeof(int) * mx);
   }
 
@@ -93,11 +91,6 @@ int traverse(char **cavern, size_t mx, size_t my, size_t sx, size_t sy, int dire
       }
     }
   }
-
-  for (size_t y = 0; y < my; y++) {
-    free(beams[y]);
-  }
-  free(beams);
 
   return sum;
 }
@@ -130,9 +123,18 @@ int part1(char *filename) {
   int direction = EAST;
   size_t sx = 0, sy = 0;
 
-  int sum = traverse(cavern->items, mx, my, sx, sy, direction);
+  int **beams = (int **) malloc(sizeof(int *) * my);
+  for (size_t y = 0; y < my; y++) {
+    beams[y] = (int *) malloc(sizeof(int) * mx);
+  }
+
+  int sum = traverse(cavern->items, beams, mx, my, sx, sy, direction);
   printf("sum = %d\n", sum);
 
+  for (size_t y = 0; y < my; y++) {
+    free(beams[y]);
+  }
+  free(beams);
   string_array_free(cavern);
 
   return sum;
@@ -163,24 +165,33 @@ int part2(char *filename) {
   size_t mx = strlen(cavern->items[0]);
   size_t my = cavern->size;
 
+  int **beams = (int **) malloc(sizeof(int *) * my);
+  for (size_t y = 0; y < my; y++) {
+    beams[y] = (int *) malloc(sizeof(int) * mx);
+  }
+
   int max = -1; 
   for (size_t sx = 0; sx < mx; sx++) {
-    int sum = traverse(cavern->items, mx, my, sx, 0, SOUTH);
+    int sum = traverse(cavern->items, beams, mx, my, sx, 0, SOUTH);
     max = sum > max ? sum : max;
   }
   for (size_t sy = 0; sy < my; sy++) {
-    int sum = traverse(cavern->items, mx, my, mx - 1, sy, WEST);
+    int sum = traverse(cavern->items, beams, mx, my, mx - 1, sy, WEST);
     max = sum > max ? sum : max;
   }
   for (size_t sx = 0; sx < mx; sx++) {
-    int sum = traverse(cavern->items, mx, my, sx, my - 1, NORTH);
+    int sum = traverse(cavern->items, beams, mx, my, sx, my - 1, NORTH);
     max = sum > max ? sum : max;
   }
   for (size_t sy = 0; sy < my; sy++) {
-    int sum = traverse(cavern->items, mx, my, 0, sy, EAST);
+    int sum = traverse(cavern->items, beams, mx, my, 0, sy, EAST);
     max = sum > max ? sum : max;
   }
 
+  for (size_t y = 0; y < my; y++) {
+    free(beams[y]);
+  }
+  free(beams);
   string_array_free(cavern);
 
   printf("max = %d\n", max);
