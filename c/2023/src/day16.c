@@ -15,9 +15,7 @@
 #define SOUTH 4
 #define EAST 8
 
-inline bool d(int mask, int d) {
-  return (mask & d) != 0;
-}
+#define mask_contains(mask, direction) ((mask & direction) != 0)
 
 void debug_beams(int **beams, size_t mx, size_t my) {
   for (size_t y = 0; y < my; y++) {
@@ -62,16 +60,16 @@ void traverse_rec(char **cavern, int **beams, size_t mx, size_t my, size_t x, si
     if (direction == NORTH || direction == SOUTH) direction = WEST | EAST;
   }
 
-  if (d(direction, NORTH) && y > 0 && !d(beams[y - 1][x], NORTH)) {
+  if (mask_contains(direction, NORTH) && y > 0 && !mask_contains(beams[y - 1][x], NORTH)) {
     traverse_rec(cavern, beams, mx, my, x, y - 1, NORTH);
   }
-  if (d(direction, WEST) && x > 0 && !d(beams[y][x - 1], WEST)) {
+  if (mask_contains(direction, WEST) && x > 0 && !mask_contains(beams[y][x - 1], WEST)) {
     traverse_rec(cavern, beams, mx, my, x - 1, y, WEST);
   }
-  if (d(direction, SOUTH) && y + 1 < my && !d(beams[y + 1][x], SOUTH)) {
+  if (mask_contains(direction, SOUTH) && y + 1 < my && !mask_contains(beams[y + 1][x], SOUTH)) {
     traverse_rec(cavern, beams, mx, my, x, y + 1, SOUTH);
   }
-  if (d(direction, EAST) && x + 1 < mx && !d(beams[y][x + 1], EAST)) {
+  if (mask_contains(direction, EAST) && x + 1 < mx && !mask_contains(beams[y][x + 1], EAST)) {
     traverse_rec(cavern, beams, mx, my, x + 1, y, EAST);
   }
 }
