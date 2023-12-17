@@ -89,16 +89,16 @@ int dijkstra(char **grid, int mx, int my, int mindist, int maxdist) {
     }
     visited[dim(x, y, dd)] = true;
 
-    for (int d = 0; d < 4; d++) {
-      if (d == dd || ((d + 2) % 4) == dd) {
+    for (int direction = 0; direction < 4; direction++) {
+      if (direction == dd || ((direction + 2) % 4) == dd) {
         continue;
       }
 
       int cost_acc = 0;
 
       for (int distance = 1; distance <= maxdist; distance++) {
-        int dx = x + directions[d][0] * distance;
-        int dy = y + directions[d][1] * distance;
+        int dx = x + directions[direction][0] * distance;
+        int dy = y + directions[direction][1] * distance;
 
         if (0 <= dx && dx < mx && 0 <= dy && dy < my) {
           cost_acc += grid[dy][dx] - '0';
@@ -109,17 +109,17 @@ int dijkstra(char **grid, int mx, int my, int mindist, int maxdist) {
           int new_cost = current->cost + cost_acc;
 
           //printf("costs(%d, %d, %d) = %d\n", dx, dy, d, costs[dim(dx, dy, d)]);
-          if (costs[dim(dx, dy, d)] < new_cost) {
+          if (costs[dim(dx, dy, direction)] <= new_cost) {
             continue;
           }
-          costs[dim(dx, dy, d)] = new_cost;
+          costs[dim(dx, dy, direction)] = new_cost;
 
           Q r = {
             .cost = new_cost,
             .state = {
               .x = dx,
               .y = dy,
-              .direction = d
+              .direction = direction
             }
           };
           //printf("cost = %d, x = %d, y = %d, d = %d\n", new_cost, dx, dy, new_direction);
