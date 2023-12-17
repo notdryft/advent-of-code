@@ -91,12 +91,70 @@ void dyn_array_tests() {
   array_free(items);
 }
 
+void array_priority_push(Array *array, Item value) {
+  if (array->size == 0) {
+    printf("push\n");
+    array_push(array, value);
+  } else {
+    bool stop = false;
+    size_t i = 0;
+    Item *other = (Item *) array_get(array, i++);
+    while (other->a < value.a && i <= array->size) {
+      other = (Item *) array_get(array, i++);
+    }
+    printf("insert at %zu (%zu)\n", i - 1, array->size);
+    array_insert(array, i - 1, value);
+  }
+}
+
+void array_priority_push_tests() {
+  Array *items = array_new(Item);
+  item_array_print(items);
+
+  array_priority_push(items, ((Item) { .a = 3, .b = 4 }));
+  item_array_print(items);
+
+  array_priority_push(items, ((Item) { .a = 1, .b = 2 }));
+  item_array_print(items);
+
+  array_remove_first(items);
+  item_array_print(items);
+
+  array_remove_first(items);
+  item_array_print(items);
+
+  array_priority_push(items, ((Item) { .a = 9, .b = 10 }));
+  array_priority_push(items, ((Item) { .a = 5, .b = 6 }));
+  array_priority_push(items, ((Item) { .a = 11, .b = 12 }));
+  array_priority_push(items, ((Item) { .a = 7, .b = 8 }));
+  item_array_print(items);
+
+  array_remove(items, 2);
+  item_array_print(items);
+
+  array_priority_push(items, ((Item) { .a = 13, .b = 14 }));
+  item_array_print(items);
+
+  array_priority_push(items, ((Item) { .a = 15, .b = 16 }));
+  array_remove_first(items);
+  item_array_print(items);
+
+  array_priority_push(items, ((Item) { .a = 17, .b = 18 }));
+  array_remove_first(items);
+  item_array_print(items);
+
+  array_free(items);
+}
+
 int main() {
   printf("// ints\n");
   int_array_tests();
 
   printf("// dyn array\n");
   dyn_array_tests();
+
+  printf("// priority queue\n");
+  array_priority_push_tests();
 
   return 0;
 }

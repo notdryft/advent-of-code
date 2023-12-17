@@ -29,7 +29,7 @@ void array_priority_push(Array *array, Q *value) {
     Q *other;
     do {
       other = (Q *) array_get(array, i++);
-    } while (other->cost < value->cost && i < array->size);
+    } while (other->cost < value->cost && i <= array->size);
     _array_insert(array, i - 1, value);
   }
 }
@@ -200,7 +200,7 @@ int part2(char *filename) {
 
 int main() {
   assert(part1("../../inputs/2023/day17/part1_test") == 102);
-  assert(part1("../../inputs/2023/day17/data") == 855 + 1); // FIXME off by 1?
+  assert(part1("../../inputs/2023/day17/data") == 855);
   assert(part2("../../inputs/2023/day17/part2_1_test") == 94);
   assert(part2("../../inputs/2023/day17/part2_2_test") == 71);
   assert(part2("../../inputs/2023/day17/data") == 980);
