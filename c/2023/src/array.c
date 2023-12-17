@@ -23,8 +23,6 @@ void array_free(Array *array) {
   }
 }
 
-// gets
-
 void *array_get(Array *array, size_t index) {
   return array->items + array->stride * index;
 }
@@ -43,8 +41,6 @@ void *array_last(Array *array) {
   return NULL;
 }
 
-// sets
-
 void _array_resize(Array *array) {
   array->capacity = array->capacity == 0 ? ARRAY_DEFAULT_CAPACITY : array->capacity * 2;
   array->items = realloc(array->items, array->stride * array->capacity);
@@ -59,6 +55,19 @@ void _array_push(Array *array, void *value) {
   array->size++;
 }
 
+void *array_pop(Array *array) {
+  if (array->size == 0) {
+    return NULL;
+  }
+
+  void *copy = malloc(array->stride);
+  memcpy(copy, array->items, array->stride);
+
+  array_remove_first(array);
+
+  return copy;
+}
+
 void _array_set(Array *array, size_t index, void *value) {
   size_t overflow = index + 1;
   while (overflow > array->capacity) {
@@ -71,7 +80,29 @@ void _array_set(Array *array, size_t index, void *value) {
   memcpy(array->items + array->stride * index, value, array->stride);
 }
 
-// modifiers
+void _array_add_first(Array *array, void *value) {
+  if (array->size + 1 > array->capacity) {
+    _array_resize(array);
+  }
+
+  array->size++;
+  for (size_t i = array->size - 1; i > 0; i--) {
+    memcpy(array->items + array->stride * i, array->items + array->stride * (i - 1), array->stride);
+  }
+  memcpy(array->items, value, array->stride);
+}
+
+void _array_insert(Array *array, size_t index, void *value) {
+  if (array->size + 1 > array->capacity) {
+    _array_resize(array);
+  }
+
+  array->size++;
+  for (size_t i = array->size - 1; i > index; i--) {
+    memcpy(array->items + array->stride * i, array->items + array->stride * (i - 1), array->stride);
+  }
+  memcpy(array->items + array->stride * index, value, array->stride);
+}
 
 inline void array_remove_first(Array *array) {
   array_remove(array, 0);

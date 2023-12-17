@@ -24,6 +24,12 @@ void int_array_tests() {
   array_set(ints, 10, 42);
   int_array_print(ints);
 
+  array_add_first(ints, 11);
+  int_array_print(ints);
+
+  array_insert(ints, 5, 12);
+  int_array_print(ints);
+
   array_free(ints);
   array_free(longs);
 }
@@ -69,6 +75,17 @@ void dyn_array_tests() {
   item_array_print(items);
 
   array_remove(items, 2);
+  item_array_print(items);
+
+  array_add_first(items, ((Item) { .a = 13, .b = 14 }));
+  item_array_print(items);
+
+  array_insert(items, 2, ((Item) { .a = 15, .b = 16 }));
+  array_remove_first(items);
+  item_array_print(items);
+
+  array_insert(items, 4, ((Item) { .a = 17, .b = 18 }));
+  array_remove_first(items);
   item_array_print(items);
 
   array_free(items);

@@ -35,14 +35,14 @@ void *array_last(Array *array);
 #define long_array_last(array) *(long *) array_last(array)
 #define ll_array_last(array) *(long long *) array_last(array)
 
-// sets
-
 void _array_push(Array *array, void *value);
 #define array_push(array, value) \
   do { \
     __auto_type tmp = value; \
     _array_push(array, &tmp); \
   } while (0)
+
+void *array_pop(Array *array);
 
 void _array_set(Array *array, size_t index, void *value);
 #define array_set(array, index, value) \
@@ -51,7 +51,27 @@ void _array_set(Array *array, size_t index, void *value);
     _array_set(array, index, &tmp); \
   } while (0)
 
-// modifiers
+void _array_add_first(Array *array, void *value);
+#define array_add_first(array, value) \
+  do { \
+    __auto_type tmp = value; \
+    _array_add_first(array, &tmp); \
+  } while (0)
+
+void _array_add_last(Array *array, void *value);
+#define array_add_last(array, value) \
+  do { \
+    __auto_type tmp = value; \
+    _array_push(array, &tmp); \
+  } while (0)
+
+void _array_insert(Array *array, size_t index, void *value);
+#define array_insert(array, index, value) \
+  do { \
+    __auto_type tmp = value; \
+    _array_insert(array, index, &tmp); \
+  } while (0)
+
 
 void array_remove_first(Array *array);
 void array_remove_last(Array *array);
