@@ -13,11 +13,6 @@
 typedef struct {
   int x;
   int y;
-} Direction;
-
-typedef struct {
-  int x;
-  int y;
   int direction;
 } State;
 
@@ -25,77 +20,6 @@ typedef struct {
   int cost;
   State state;
 } Q;
-
-typedef struct {
-  State key;
-  int value;
-} MapEntry;
-
-typedef struct {
-  size_t capacity;
-  size_t size;
-  MapEntry **entries;
-} Map;
-
-Map *map_new() {
-  Map *map = (Map *) malloc(sizeof(Map));
-  map->capacity = 0;
-  map->size = 0;
-  map->entries = NULL;
-
-  return map;
-}
-
-void map_free(Map *map) {
-  if (map != NULL) {
-    if (map->entries != NULL) {
-      for (size_t i = 0; i < map->size; i++) {
-        MapEntry *entry = map->entries[i];
-        if (entry != NULL) {
-          free(entry);
-        }
-      }
-      free(map->entries);
-    }
-    free(map);
-  }
-}
-
-MapEntry *map_get(Map *map, State *key) {
-  for (size_t i = 0; i < map->size; i++) {
-    if (memcmp(key, map->entries[i], sizeof(State)) == 0) {
-      return map->entries[i];
-    }
-  }
-  return NULL;
-}
-
-bool map_contains(Map *map, State *key) {
-  for (size_t i = 0; i < map->size; i++) {
-    if (memcmp(key, map->entries[i], sizeof(State)) == 0) {
-      return true;
-    }
-  }
-  return false;
-}
-
-void map_put(Map *map, State *key, int value) {
-  if (map->size + 1 > map->capacity) {
-    map->capacity = map->capacity == 0 ? 2 : map->capacity * 2;
-    map->entries = (MapEntry **) realloc(map->entries, sizeof(MapEntry *) * map->capacity);
-  }
-
-  MapEntry *entry = map_get(map, key);
-  if (entry != NULL) {
-    entry->value = value;
-  } else {
-    entry = (MapEntry *) malloc(sizeof(MapEntry));
-    memcpy(&(entry->key), key, sizeof(State));
-    entry->value = value;
-
-    map->entries[map->size++] = entry;
-  }
-}
 
 void array_priority_push(Array *array, Q *value) {
   if (array->size == 0) {
@@ -110,10 +34,21 @@ void array_priority_push(Array *array, Q *value) {
   }
 }
 
+#define dim(x, y, d) (x + y*my + (d+1)*my*mx)
+
 int dijkstra(char **grid, int mx, int my, int mindist, int maxdist) {
   Array *q = array_new(Q);
-  Map *visited = map_new(); // FIXME could be a set
-  Map *costs = map_new();  // FIXME merge with visited?
+
+  int *costs = (int *) malloc(sizeof(int) * 5 * my * mx);
+  bool *visited = (bool *) malloc(sizeof(bool) * 5 * my * mx);
+  for (int d = 0; d < 5; d++) {
+    for (int y = 0; y < my; y++) {
+      for (int x = 0; x < mx; x++) {
+        costs[dim(x, y, d-1)] = INT_MAX;
+        visited[dim(x, y, d-1)] = false;
+      }
+    }
+  }
 
   Q source = {
     .cost = 0,
@@ -125,39 +60,45 @@ int dijkstra(char **grid, int mx, int my, int mindist, int maxdist) {
   };
   array_push(q, source);
 
-  Array *directions = array_new(Direction);
-  array_push(directions, ((Direction) { .x =  0, .y = -1 })); // North
-  array_push(directions, ((Direction) { .x =  1, .y =  0 })); // East
-  array_push(directions, ((Direction) { .x =  0, .y =  1 })); // South
-  array_push(directions, ((Direction) { .x = -1, .y =  0 })); // West
+  int directions[4][2] = {
+    // x,  y
+    {  0, -1 }, // North
+    {  1,  0 }, // East
+    {  0,  1 }, // South
+    { -1,  0 }  // West
+  };
 
   int cost = -1;
 
   while (q->size > 0) {
     Q *current = array_pop(q);
-    State current_state = current->state;
+    int x = current->state.x;
+    int y = current->state.y;
+    int dd = current->state.direction;
 
-    if (current_state.x == mx - 1 && current_state.y == my - 1) {
+    if (x == mx - 1 && y == my - 1) {
       cost = current->cost;
       free(current);
       goto leave;
     }
-    if (map_contains(visited, &current_state)) {
+
+    //printf("visited(%d, %d, %d) = %s\n", x, y, dd, visited[dim(x, y, dd)] ? "true" : "false");
+    if (visited[dim(x, y, dd)]) {
       free(current);
       continue;
     }
-    map_put(visited, &current_state, 0); // ignore cost, we are using the map as a set... :)
-    for (int new_direction = 0; new_direction < 4; new_direction++) {
-      if (new_direction == current_state.direction || ((new_direction + 2) % 4) == current_state.direction) {
+    visited[dim(x, y, dd)] = true;
+
+    for (int d = 0; d < 4; d++) {
+      if (d == dd || ((d + 2) % 4) == dd) {
         continue;
       }
-      Direction *d = (Direction *) array_get(directions, new_direction);
 
       int cost_acc = 0;
 
       for (int distance = 1; distance <= maxdist; distance++) {
-        int dx = current_state.x + d->x * distance;
-        int dy = current_state.y + d->y * distance;
+        int dx = x + directions[d][0] * distance;
+        int dy = y + directions[d][1] * distance;
 
         if (0 <= dx && dx < mx && 0 <= dy && dy < my) {
           cost_acc += grid[dy][dx] - '0';
@@ -167,22 +108,19 @@ int dijkstra(char **grid, int mx, int my, int mindist, int maxdist) {
 
           int new_cost = current->cost + cost_acc;
 
-          State s = {
-            .x = dx,
-            .y = dy,
-            .direction = new_direction
-          };
-
-          MapEntry* c = map_get(costs, &s);
-          //printf("%p %d %d\n", c, (c == NULL) ? -1 : c->value, new_cost);
-          if (c != NULL && c->value < new_cost) {
+          //printf("costs(%d, %d, %d) = %d\n", dx, dy, d, costs[dim(dx, dy, d)]);
+          if (costs[dim(dx, dy, d)] < new_cost) {
             continue;
           }
-          map_put(costs, &s, new_cost);
+          costs[dim(dx, dy, d)] = new_cost;
 
           Q r = {
             .cost = new_cost,
-            .state = s
+            .state = {
+              .x = dx,
+              .y = dy,
+              .direction = d
+            }
           };
           //printf("cost = %d, x = %d, y = %d, d = %d\n", new_cost, dx, dy, new_direction);
           array_priority_push(q, &r);
@@ -193,10 +131,9 @@ int dijkstra(char **grid, int mx, int my, int mindist, int maxdist) {
   }
 
   leave:
-  array_free(directions);
+  free(costs);
+  free(visited);
   array_free(q);
-  map_free(costs);
-  map_free(visited);
 
   return cost;
 }
