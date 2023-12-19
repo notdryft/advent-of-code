@@ -23,6 +23,7 @@ day 15: rip bufread
 day 16: loop instead of rec? count while going to gain iterations
 day 17: path finding, A*, dijktstra with priority queue (heap queue), table based dynamic programming, etc. + bucket queue?
 day 18: shoelace formula + pick's theorem, also applies to day 10
+day 19: negative ranges, overflows...
 
 Ref:
 - https://github.com/Bogdanp/awesome-advent-of-code
