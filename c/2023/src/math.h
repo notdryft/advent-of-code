@@ -1,5 +1,5 @@
-#ifndef STRING
-#define STRING
+#ifndef MATH
+#define MATH
 
 long long gcd(long long a, long long b);
 
