@@ -262,9 +262,9 @@ unsigned long long part2(char *filename) {
 }
 
 int main() {
-  assert(part1("../../inputs/2023/day12/part1_test") == 21);
+  assert(part1("../../inputs/2023/day12/sample") == 21);
   assert(part1("../../inputs/2023/day12/data") == 7694);
-  assert(part2("../../inputs/2023/day12/part2_test") == 525152);
+  assert(part2("../../inputs/2023/day12/sample") == 525152);
   assert(part2("../../inputs/2023/day12/data") == 5071883216318);
 
   return 0;

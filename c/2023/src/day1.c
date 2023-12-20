@@ -80,9 +80,9 @@ int part2(char *filename) {
 }
 
 int main() {
-  assert(part1("../../inputs/2023/day1/part1_test") == 142);
+  assert(part1("../../inputs/2023/day1/sample1") == 142);
   assert(part1("../../inputs/2023/day1/data") == 55488);
-  assert(part2("../../inputs/2023/day1/part2_test") == 281);
+  assert(part2("../../inputs/2023/day1/sample2") == 281);
   assert(part2("../../inputs/2023/day1/data") == 55614);
 
   return 0;

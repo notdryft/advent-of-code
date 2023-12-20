@@ -297,12 +297,12 @@ int part2(char *filename) {
 int main() {
   init_cards_ordering(false);
 
-  assert(part1("../../inputs/2023/day7/part1_test") == 6440);
+  assert(part1("../../inputs/2023/day7/sample") == 6440);
   assert(part1("../../inputs/2023/day7/data") == 246424613);
 
   init_cards_ordering(true);
 
-  assert(part2("../../inputs/2023/day7/part2_test") == 5905);
+  assert(part2("../../inputs/2023/day7/sample") == 5905);
   assert(part2("../../inputs/2023/day7/data") == 248256639);
 
   return 0;

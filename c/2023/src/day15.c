@@ -203,9 +203,9 @@ int part2(char *filename) {
 }
 
 int main() {
-  assert(part1("../../inputs/2023/day15/part1_test") == 1320);
+  assert(part1("../../inputs/2023/day15/sample") == 1320);
   assert(part1("../../inputs/2023/day15/data") == 514639);
-  assert(part2("../../inputs/2023/day15/part2_test") == 145);
+  assert(part2("../../inputs/2023/day15/sample") == 145);
   assert(part2("../../inputs/2023/day15/data") == 279470);
 
   return 0;

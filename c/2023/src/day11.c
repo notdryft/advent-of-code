@@ -249,9 +249,9 @@ unsigned long long part2(char *filename) {
 }
 
 int main() {
-  assert(part1("../../inputs/2023/day11/part1_test") == 374);
+  assert(part1("../../inputs/2023/day11/sample") == 374);
   assert(part1("../../inputs/2023/day11/data") == 10292708);
-  assert(part2("../../inputs/2023/day11/part2_test") == 82000210);
+  assert(part2("../../inputs/2023/day11/sample") == 82000210);
   assert(part2("../../inputs/2023/day11/data") == 790194712336);
 
   return 0;

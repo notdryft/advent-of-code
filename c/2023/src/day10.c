@@ -393,11 +393,11 @@ int part2(char *filename) {
 }
 
 int main() {
-  assert(part1("../../inputs/2023/day10/part1_test") == 8);
+  assert(part1("../../inputs/2023/day10/sample1") == 8);
   assert(part1("../../inputs/2023/day10/data") == 6768);
-  assert(part2("../../inputs/2023/day10/part2_1_test") == 4);
-  assert(part2("../../inputs/2023/day10/part2_2_test") == 8);
-  assert(part2("../../inputs/2023/day10/part2_3_test") == 10);
+  assert(part2("../../inputs/2023/day10/sample2") == 4);
+  assert(part2("../../inputs/2023/day10/sample3") == 8);
+  assert(part2("../../inputs/2023/day10/sample4") == 10);
   assert(part2("../../inputs/2023/day10/data") == 351);
 
   return 0;
