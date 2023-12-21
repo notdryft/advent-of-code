@@ -7,7 +7,7 @@ else
 fi
 
 docker build -f Dockerfile.valgrind -t valgrind:latest .
-docker run -it \
+docker run -it --rm \
   -v "$(pwd)/../..:/app" \
   valgrind:latest \
   bash -c "make mrproper && make mem-$binary"
