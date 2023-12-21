@@ -13,7 +13,7 @@ https://www.reddit.com/r/adventofcode/comments/18b9ohu/2023_day_5_animated_part_
 day 6: binary search, int overflow 101
 day 7:
 day 8:
-day 9: sum of x in xs == 0 is NOT x == 0 for all x in xs...
+day 9: quadratic sum, x in xs == 0 is NOT x == 0 for all x in xs...
 day 10: ray casting with edge case handling, winding number algorith, pnpoly didn't work?
 day 11: breadth first search overkill because we are in a grid
 day 12: bf + dynamic programming
@@ -25,6 +25,7 @@ day 17: path finding, A*, dijktstra with priority queue (heap queue), table base
 day 18: shoelace formula + pick's theorem, also applies to day 10
 day 19: negative ranges, overflows...
 day 20: BFS, cycle detection? buggy array_push which breaks strings? struct ordering with dyn arrays? random result??
+day 21: BFS, euclidian remainder, newton interpolating polynomial, possible to just count without modifying grid?
 
 Ref:
 - https://github.com/Bogdanp/awesome-advent-of-code
