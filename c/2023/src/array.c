@@ -125,6 +125,14 @@ int array_cmp(Array *array, size_t i, size_t j) {
   return memcmp(array->items + array->stride * i, array->items + array->stride * j, array->stride);
 }
 
+Array *array_dup(Array *array) {
+  Array *dup = _array_new(array->stride);
+  for (size_t i = 0; i < array->size; i++) {
+    _array_push(dup, array_get(array, i));
+  }
+  return dup;
+}
+
 bool int_array_all(Array *array, int expected) {
   for (size_t i = 0; i < array->size; i++) {
     if (int_array_get(array, i) != expected) {

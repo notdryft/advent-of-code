@@ -26,6 +26,7 @@ day 18: shoelace formula + pick's theorem, also applies to day 10
 day 19: negative ranges, overflows...
 day 20: BFS, cycle detection? buggy array_push which breaks strings? struct ordering with dyn arrays? random result??
 day 21: BFS, euclidian remainder, newton interpolating polynomial, possible to just count without modifying grid?
+day 22: dominator (control-flow graph)?
 
 Ref:
 - https://github.com/Bogdanp/awesome-advent-of-code
