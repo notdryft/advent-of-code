@@ -71,10 +71,10 @@ unsigned long long part1(char *filename) {
   //printf("\n");
 
   size_t galaxies_size = 0;
-  Galaxy *galaxies = (Galaxy *) malloc(sizeof(Galaxy) * 1000);
+  Galaxy *galaxies = malloc(sizeof(Galaxy) * 1000);
 
   size_t col_expands_size = 0;
-  size_t *col_expands = (size_t *) malloc(sizeof(size_t) * 1000);
+  size_t *col_expands = malloc(sizeof(size_t) * 1000);
 
   for (size_t i = 0; i < universe_width; i++) {
     bool all = true;
@@ -117,7 +117,7 @@ unsigned long long part1(char *filename) {
   printf("galaxies = %zu, pairs = %zu\n", galaxies_size, p);
 
   size_t pairs_size = 0;
-  Pair *pairs = (Pair *) malloc(sizeof(Pair) * 10000);
+  Pair *pairs = malloc(sizeof(Pair) * 10000);
   for (size_t i = 0; i < galaxies_size - 1; i++) {
     for (size_t j = i + 1; j < galaxies_size; j++) {
       Pair pair = { .a = galaxies[i], .b = galaxies[j] };
@@ -172,10 +172,10 @@ unsigned long long part2(char *filename) {
   //printf("\n");
 
   size_t galaxies_size = 0;
-  Galaxy *galaxies = (Galaxy *) malloc(sizeof(Galaxy) * 1000);
+  Galaxy *galaxies = malloc(sizeof(Galaxy) * 1000);
 
   size_t col_expands_size = 0;
-  size_t *col_expands = (size_t *) malloc(sizeof(size_t) * 1000);
+  size_t *col_expands = malloc(sizeof(size_t) * 1000);
 
   for (size_t i = 0; i < universe_width; i++) {
     bool all = true;
@@ -218,7 +218,7 @@ unsigned long long part2(char *filename) {
   printf("galaxies = %zu, pairs = %zu\n", galaxies_size, p);
 
   size_t pairs_size = 0;
-  Pair *pairs = (Pair *) malloc(sizeof(Pair) * 10000);
+  Pair *pairs = malloc(sizeof(Pair) * 10000);
   for (size_t i = 0; i < galaxies_size - 1; i++) {
     for (size_t j = i + 1; j < galaxies_size; j++) {
       Pair pair = { .a = galaxies[i], .b = galaxies[j] };

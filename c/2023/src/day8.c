@@ -34,11 +34,11 @@ Node *find_node(Node **nodes, char *value, size_t size) {
 }
 
 Nodes *find_nodes(Node **nodes, char value, size_t size) {
-  Nodes *result = (Nodes *) malloc(sizeof(Nodes));
+  Nodes *result = malloc(sizeof(Nodes));
   result->capacity = 1000;
   result->size = 0;
 
-  result->items = (Node **) malloc(sizeof(Node *) * result->capacity);
+  result->items = malloc(sizeof(Node *) * result->capacity);
 
   for (size_t i = 0; i < size; i++) {
     Node *node = nodes[i];
@@ -68,7 +68,7 @@ int part1(char *filename) {
 
   size_t nodes_capacity = 1000;
   size_t nodes_size = 0;
-  Node **nodes = (Node **) malloc(sizeof(Node*) * nodes_capacity);
+  Node **nodes = malloc(sizeof(Node *) * nodes_capacity);
 
   char buffer[BUFFER_LENGTH] = {0};
   if (fgets(buffer, BUFFER_LENGTH, fp)) {
@@ -88,14 +88,14 @@ int part1(char *filename) {
     if (sscanf(buffer, "%3s = (%3s, %3s)", value, left_str, right_str)) {
       Node *node = find_node(nodes, value, nodes_size);
       if (node == NULL) {
-        node = (Node *) malloc(sizeof(Node));
+        node = malloc(sizeof(Node));
         strncpy(node->value, value, 4);
         nodes[nodes_size++] = node;
       }
 
       Node *left = find_node(nodes, left_str, nodes_size);
       if (left == NULL) {
-        left = (Node *) malloc(sizeof(Node));
+        left = malloc(sizeof(Node));
         strncpy(left->value, left_str, 4);
         nodes[nodes_size++] = left;
       }
@@ -103,7 +103,7 @@ int part1(char *filename) {
 
       Node *right = find_node(nodes, right_str, nodes_size);
       if (right == NULL) {
-        right = (Node *) malloc(sizeof(Node));
+        right = malloc(sizeof(Node));
         strncpy(right->value, right_str, 4);
         printf("copied node value: %s\n", node->value);
         nodes[nodes_size++] = right;
@@ -168,7 +168,7 @@ long long part2(char *filename) {
 
   size_t nodes_capacity = 1000;
   size_t nodes_size = 0;
-  Node **nodes = (Node **) malloc(sizeof(Node*) * nodes_capacity);
+  Node **nodes = malloc(sizeof(Node *) * nodes_capacity);
 
   char buffer[BUFFER_LENGTH] = {0};
   if (fgets(buffer, BUFFER_LENGTH, fp)) {
@@ -188,14 +188,14 @@ long long part2(char *filename) {
     if (sscanf(buffer, "%3s = (%3s, %3s)", value, left_str, right_str)) {
       Node *node = find_node(nodes, value, nodes_size);
       if (node == NULL) {
-        node = (Node *) malloc(sizeof(Node));
+        node = malloc(sizeof(Node));
         strncpy(node->value, value, 4);
         nodes[nodes_size++] = node;
       }
 
       Node *left = find_node(nodes, left_str, nodes_size);
       if (left == NULL) {
-        left = (Node *) malloc(sizeof(Node));
+        left = malloc(sizeof(Node));
         strncpy(left->value, left_str, 4);
         nodes[nodes_size++] = left;
       }
@@ -203,7 +203,7 @@ long long part2(char *filename) {
 
       Node *right = find_node(nodes, right_str, nodes_size);
       if (right == NULL) {
-        right = (Node *) malloc(sizeof(Node));
+        right = malloc(sizeof(Node));
         strncpy(right->value, right_str, 4);
         printf("copied node value: %s\n", node->value);
         nodes[nodes_size++] = right;

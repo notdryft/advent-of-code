@@ -35,7 +35,7 @@ Coord find_start(char **map, long long mx, long long my) {
 
 StringArray *find_map(Array *infinity, long long ix, long long iy) {
   for (size_t i = 0; i < infinity->size; i++) {
-    Space *s = (Space *) array_get(infinity, i);
+    Space *s = array_get(infinity, i);
     if (s->ix == ix && s->iy == iy) {
       return s->map;
     }
@@ -72,7 +72,7 @@ void array_priority_push(Array *array, Coord c) {
     size_t i = 0;
     Coord *o;
     do {
-      o = (Coord *) array_get(array, i++);
+      o = array_get(array, i++);
     } while (o->step < c.step && i <= array->size);
     array_insert(array, i - 1, c);
   }

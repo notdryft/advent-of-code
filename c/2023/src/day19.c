@@ -60,11 +60,11 @@ typedef struct {
 void debug(Array *nodes) {
   printf("Nodes[ ");
   for (size_t i = 0; i < nodes->size; i++) {
-    Node *node = (Node *) array_get(nodes, i);
+    Node *node = array_get(nodes, i);
     printf("{ %s: [ ", node->name);
     if (node->rules != NULL) {
       for (size_t j = 0; j < node->rules->size; j++) {
-        Rule *rule = (Rule *) array_get(node->rules, j);
+        Rule *rule = array_get(node->rules, j);
         printf("{ %d %d '%c' %d %d \"%s\" }, ", rule->rule_type, rule->action, rule->category, rule->op, rule->quantity, rule->next);
       }
     }
@@ -80,7 +80,7 @@ void debug_ranges_solo(Ranges *ranges) {
 void debug_ranges(Array *array) {
   printf("Ranges[ ");
   for (size_t i = 0; i < array->size; i++) {
-    Ranges *ranges = (Ranges *) array_get(array, i);
+    Ranges *ranges = array_get(array, i);
     printf("{ next = %s, x = [%d %d], m = [%d %d], a = [%d %d], s = [%d %d] }, ", ranges->next, ranges->x.min, ranges->x.max, ranges->m.min, ranges->m.max, ranges->a.min, ranges->a.max, ranges->s.min, ranges->s.max);
   }
   printf("]\n");
@@ -88,7 +88,7 @@ void debug_ranges(Array *array) {
 
 Node *find_node(Array *array, char *name) {
   for (size_t i = 0; i < array->size; i++) {
-    Node *item = (Node *) array_get(array, i);
+    Node *item = array_get(array, i);
     if (strcmp(name, item->name) == 0) {
       return item;
     }
@@ -101,7 +101,7 @@ bool accept_or_reject(Array *nodes, Node *node, int x, int m, int a, int s) {
   printf("new node name=%s\n", node->name);
   for (size_t i = 0; i < node->rules->size; i++) {
     printf("1\n");
-    Rule *rule = (Rule *) array_get(node->rules, i);
+    Rule *rule = array_get(node->rules, i);
     printf("2\n");
     printf("{ %d %d '%c' %d %d \"%s\" }\n", rule->rule_type, rule->action, rule->category, rule->op, rule->quantity, rule->next);
     if (rule->rule_type == AR) {
@@ -198,7 +198,7 @@ void do_something(Rule *rule, Ranges *ranges, Ranges *copy) {
 void reduce(Array *queue, Array *valid, Node *node, Ranges ranges) {
   for (size_t i = 0; i < node->rules->size; i++) {
     Ranges copy = ranges;
-    Rule *rule = (Rule *) array_get(node->rules, i);
+    Rule *rule = array_get(node->rules, i);
     printf("rule = %s\n", rule->next);
     if (rule->rule_type == AR) {
       printf("AR\n");
@@ -487,7 +487,7 @@ unsigned long long part2(char *filename) {
 
   unsigned long long sum = 0;
   for (size_t i = 0; i < valid->size; i++) {
-    Ranges *r = (Ranges *) array_get(valid, i);
+    Ranges *r = array_get(valid, i);
     unsigned long long x = (r->x.max - r->x.min + 1);
     unsigned long long m = (r->m.max - r->m.min + 1);
     unsigned long long a = (r->a.max - r->a.min + 1);

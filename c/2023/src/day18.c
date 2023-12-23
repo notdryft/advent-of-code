@@ -25,7 +25,7 @@ typedef struct {
 void instruction_array_print(Array *array) {
   printf("Array{ capacity = %zu, size = %zu, stride = %zu, data = [ ", array->capacity, array->size, array->stride);
   for (size_t i = 0; i < array->size; i++) {
-    Instruction *instruction = (Instruction *) array_get(array, i);
+    Instruction *instruction = array_get(array, i);
     if (i == array->size - 1) {
       printf("{ direction = %d, distance = %lld }", instruction->direction, instruction->distance);
     } else {
@@ -43,7 +43,7 @@ typedef struct {
 void coord_array_print(Array *array) {
   printf("Array{ capacity = %zu, size = %zu, stride = %zu, data = [ ", array->capacity, array->size, array->stride);
   for (size_t i = 0; i < array->size; i++) {
-    Coord *coord = (Coord *) array_get(array, i);
+    Coord *coord = array_get(array, i);
     if (i == array->size - 1) {
       printf("(%zu, %zu)", coord->x, coord->y);
     } else {
@@ -57,8 +57,8 @@ void coord_array_print(Array *array) {
 long long polygon_area(Array *coords) {
   long long area = 0;
   for (size_t i = 0; i < coords->size; i++) {
-    Coord *c1 = (Coord *) array_get(coords, i);
-    Coord *c2 = (Coord *) ((i == coords->size - 1) ? array_get(coords, 0) : array_get(coords, i + 1));
+    Coord *c1 = array_get(coords, i);
+    Coord *c2 = i == coords->size - 1 ? array_get(coords, 0) : array_get(coords, i + 1);
     area += c1->x * c2->y - c2->x * c1->y;
   }
   return area /= 2;
@@ -74,7 +74,7 @@ long long area_from_instructions(Array *instructions) {
   long long perimeter = 0;
   Array *coords = array_new(Coord);
   for (size_t i = 0; i < instructions->size; i++) {
-    Instruction *instruction = (Instruction *) array_get(instructions, i);
+    Instruction *instruction = array_get(instructions, i);
 
     Coord c = { .x = x, .y = y };
     array_push(coords, c);

@@ -1,6 +1,7 @@
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "array.h"
 
@@ -42,7 +43,7 @@ typedef struct {
 void item_array_print(Array *array) {
   printf("Array{ capacity = %zu, size = %zu, stride = %zu, data = [ ", array->capacity, array->size, array->stride);
   for (size_t i = 0; i < array->size; i++) {
-    Item *item = (Item *) array_get(array, i);
+    Item *item = array_get(array, i);
     if (i == array->size - 1) {
       printf("{ a = %d, b = %d }", item->a, item->b);
     } else {
@@ -98,9 +99,9 @@ void array_priority_push(Array *array, Item value) {
   } else {
     bool stop = false;
     size_t i = 0;
-    Item *other = (Item *) array_get(array, i++);
+    Item *other = array_get(array, i++);
     while (other->a < value.a && i <= array->size) {
-      other = (Item *) array_get(array, i++);
+      other = array_get(array, i++);
     }
     printf("insert at %zu (%zu)\n", i - 1, array->size);
     array_insert(array, i - 1, value);

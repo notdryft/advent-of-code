@@ -79,7 +79,7 @@ void module_print(Module *module) {
 void array_module_print(Array *modules) {
   printf("Modules[ ");
   for (size_t i = 0; i < modules->size; i++) {
-    Module *module = (Module *) array_get(modules, i);
+    Module *module = array_get(modules, i);
     module_print(module);
     if (i < modules->size - 1) printf(", ");
   }
@@ -88,7 +88,7 @@ void array_module_print(Array *modules) {
 
 Module *find_module(Array *modules, char *name) {
   for (size_t i = 0; i < modules->size; i++) {
-    Module *module = (Module *) array_get(modules, i);
+    Module *module = array_get(modules, i);
     if (strcmp(module->name, name) == 0) {
       return module;
     }
@@ -171,7 +171,7 @@ unsigned long long part1(char *filename) {
   fclose(fp);
 
   for (size_t i = 0; i < modules->size; i++) {
-    Module *m = (Module *) array_get(modules, i);
+    Module *m = array_get(modules, i);
     for (size_t j = 0; j < m->connections_size; j++) {
       Module *c = find_module(modules, m->connections[j]);
       if (c->module_type == CONJUNCTION) {
@@ -254,7 +254,7 @@ unsigned long long part1(char *filename) {
   printf("result = %llu\n", result);
 
   for (size_t i = 0; i < modules->size; i++) {
-    Module *module = (Module *) array_get(modules, i);
+    Module *module = array_get(modules, i);
     array_free(module->inputs);
   }
   array_free(modules);
@@ -318,7 +318,7 @@ long long part2(char *filename) {
 
   size_t conjunctions = 4;
   for (size_t i = 0; i < modules->size; i++) {
-    Module *m = (Module *) array_get(modules, i);
+    Module *m = array_get(modules, i);
     for (size_t j = 0; j < m->connections_size; j++) {
       Module *c = find_module(modules, m->connections[j]);
       if (c->module_type == CONJUNCTION) {
@@ -410,7 +410,7 @@ long long part2(char *filename) {
   printf("result = %llu\n", result);
 
   for (size_t i = 0; i < modules->size; i++) {
-    Module *module = (Module *) array_get(modules, i);
+    Module *module = array_get(modules, i);
     array_free(module->inputs);
   }
   array_free(modules);

@@ -83,10 +83,10 @@ typedef struct {
 } DP;
 
 DP *dp_new() {
-  DP *dp = (DP *) malloc(sizeof(DP));
+  DP *dp = malloc(sizeof(DP));
   dp->capacity = 1000;
   dp->size = 0;
-  dp->entries = (DPEntry **) malloc(sizeof(DPEntry *) * dp->capacity);
+  dp->entries = malloc(sizeof(DPEntry *) * dp->capacity);
 
   return dp;
 }
@@ -108,7 +108,7 @@ void dp_push(DP* dp, size_t si, size_t di, int dlen, unsigned long long value) {
     exit(1);
   }
 
-  DPEntry *entry = (DPEntry *) malloc(sizeof(DPEntry));
+  DPEntry *entry = malloc(sizeof(DPEntry));
   entry->si = si;
   entry->di = di;
   entry->dlen = dlen;

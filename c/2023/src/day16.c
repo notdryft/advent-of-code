@@ -123,9 +123,9 @@ int part1(char *filename) {
   int direction = EAST;
   size_t sx = 0, sy = 0;
 
-  int **beams = (int **) malloc(sizeof(int *) * my);
+  int **beams = malloc(sizeof(int *) * my);
   for (size_t y = 0; y < my; y++) {
-    beams[y] = (int *) malloc(sizeof(int) * mx);
+    beams[y] = malloc(sizeof(int) * mx);
   }
 
   int sum = traverse(cavern->items, beams, mx, my, sx, sy, direction);
@@ -165,9 +165,9 @@ int part2(char *filename) {
   size_t mx = strlen(cavern->items[0]);
   size_t my = cavern->size;
 
-  int **beams = (int **) malloc(sizeof(int *) * my);
+  int **beams = malloc(sizeof(int *) * my);
   for (size_t y = 0; y < my; y++) {
-    beams[y] = (int *) malloc(sizeof(int) * mx);
+    beams[y] = malloc(sizeof(int) * mx);
   }
 
   int max = -1; 

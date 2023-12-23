@@ -34,10 +34,10 @@ int hash(char *str, size_t len) {
 }
 
 Map *map_new() {
-  Map *map = (Map *) malloc(sizeof(Map));
+  Map *map = malloc(sizeof(Map));
   map->capacity = 256;
   map->size = 0;
-  map->arrays = (Array **) malloc(sizeof(Array *) * map->capacity);
+  map->arrays = malloc(sizeof(Array *) * map->capacity);
   for (size_t i = 0; i < map->capacity; i++) {
     map->arrays[map->size++] = array_new(BoxItem);
   }
@@ -47,7 +47,7 @@ Map *map_new() {
 
 int map_array_find(Array *array, char *instruction, size_t len) {
   for (size_t i = 0; i < array->size; i++) {
-    BoxItem *item = (BoxItem *) array_get(array, i);
+    BoxItem *item = array_get(array, i);
     if (strncmp(item->lens, instruction, len) == 0) {
       return i;
     }
@@ -60,7 +60,7 @@ void map_add(Map *map, char *instruction, size_t len, int focal) {
   Array *array = map->arrays[h];
   int index = map_array_find(array, instruction, len);
   if (index != -1) {
-    BoxItem *item = (BoxItem *) array_get(array, index);
+    BoxItem *item = array_get(array, index);
     item->focal = focal;
   } else {
     BoxItem item = {
@@ -88,7 +88,7 @@ void map_print(Map *map) {
     if (array->size > 0) {
       printf("Box %zu:", i);
       for (size_t j = 0; j < array->size; j++) {
-          BoxItem *item = (BoxItem *) array_get(array, j);
+          BoxItem *item = array_get(array, j);
           printf(" [%s %d]", item->lens, item->focal);
       }
       printf("\n");
@@ -188,7 +188,7 @@ int part2(char *filename) {
   for (size_t i = 0; i < map->size; i++) {
     Array *array = map->arrays[i];
     for (size_t j = 0; j < array->size; j++) {
-      BoxItem *item = (BoxItem *) array_get(array, j);
+      BoxItem *item = array_get(array, j);
       int power = (i + 1) * (j + 1) * item->focal;
       //printf("sum += %d\n", power);
       sum += power;

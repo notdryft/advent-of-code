@@ -6,7 +6,7 @@
 #include "map.h"
 
 Map *map_new() {
-  Map *map = (Map *) malloc(sizeof(Map));
+  Map *map = malloc(sizeof(Map));
   map->capacity = 0;
   map->size = 0;
   map->entries = NULL;
@@ -59,10 +59,10 @@ bool map_contains_key(Map *map, char *key) {
 void map_put(Map *map, char *key, void *value) {
   if (map->size + 1 > map->capacity) {
     map->capacity = map->capacity == 0 ? MAP_DEFAULT_CAPACITY : map->capacity * 2;
-    map->entries = (MapEntry **) realloc(map->entries, sizeof(MapEntry *) * map->capacity);
+    map->entries = realloc(map->entries, sizeof(*map->entries) * map->capacity);
   }
 
-  MapEntry *entry = (MapEntry *) malloc(sizeof(MapEntry));
+  MapEntry *entry = malloc(sizeof(MapEntry));
   entry->key = strdup(key);
   entry->value = value;
 

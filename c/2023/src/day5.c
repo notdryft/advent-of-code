@@ -37,10 +37,10 @@ int part1(char *filename) {
   size_t capacity = 1000;
 
   size_t seeds_size = 0;
-  long long *seeds = (long long *) malloc(sizeof(long long *) * capacity);
+  long long *seeds = malloc(sizeof(long long) * capacity);
 
   size_t map_size = 0;
-  AlmanachEntry *map = (AlmanachEntry *) malloc(sizeof(AlmanachEntry *) * capacity);
+  AlmanachEntry *map = malloc(sizeof(AlmanachEntry) * capacity);
 
   char source_type_str[BUFFER_LENGTH];
   enum AlmanachEntryType source_type = 0;
@@ -151,10 +151,10 @@ int part2(char *filename) {
   size_t capacity = 1000;
 
   size_t pairs_size = 0;
-  long long *pairs = (long long *) malloc(sizeof(long long *) * capacity);
+  long long *pairs = malloc(sizeof(long long) * capacity);
 
   size_t map_size = 0;
-  AlmanachEntry *map = (AlmanachEntry *) malloc(sizeof(AlmanachEntry *) * capacity);
+  AlmanachEntry *map = malloc(sizeof(AlmanachEntry) * capacity);
 
   char source_type_str[BUFFER_LENGTH];
   enum AlmanachEntryType source_type = 0;

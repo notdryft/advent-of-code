@@ -6,7 +6,7 @@
 #include "string.h"
 
 StringArray *string_array_new() {
-  StringArray *array = (StringArray *) malloc(sizeof(StringArray));
+  StringArray *array = malloc(sizeof(StringArray));
   array->capacity = 0;
   array->size = 0;
   array->stride = sizeof(char *);
@@ -54,7 +54,7 @@ void string_array_push(StringArray *array, char *value) {
 char *repeat(char *content, size_t times) {
   size_t len = strlen(content);
   size_t repeated_len = len * times + 1;
-  char *repeated = (char *) malloc(sizeof(char) * repeated_len);
+  char *repeated = malloc(sizeof(char) * repeated_len);
   memset(repeated, 0, sizeof(char) * repeated_len);
   for (size_t i = 0; i < times; i++) {
     strcat(repeated, content);
@@ -66,7 +66,7 @@ char *repeat_with_delimiter(char *content, size_t times, char *delimiter) {
   size_t len = strlen(content);
   size_t delimiter_len = strlen(delimiter);
   size_t repeated_len = len * times + delimiter_len * times;
-  char *repeated = (char *) malloc(sizeof(char) * repeated_len);
+  char *repeated = malloc(sizeof(char) * repeated_len);
   memset(repeated, 0, sizeof(char) * repeated_len);
   for (size_t i = 0; i < times; i++) {
     strcat(repeated, content);

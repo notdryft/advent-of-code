@@ -11,9 +11,9 @@
 #define BUFFER_LENGTH 1024
 
 bool **seen_new(size_t mx, size_t my) {
-  bool **seen = (bool **) malloc(sizeof(bool *) * my);
+  bool **seen = malloc(sizeof(bool *) * my);
   for (size_t y = 0; y < my; y++) {
-    seen[y] = (bool *) malloc(sizeof(bool) * mx);
+    seen[y] = malloc(sizeof(bool) * mx);
     for (size_t x = 0; x < mx ; x++) {
       seen[y][x] = false;
     }
@@ -56,7 +56,7 @@ void dfs(char **trail, bool **seen, size_t mx, size_t my, size_t x, size_t y, in
   }
 
   for (size_t i = 0; i < coords->size; i++) {
-    Coord *c = (Coord *) array_get(coords, i);
+    Coord *c = array_get(coords, i);
 
     seen[y][x] = true;
     dfs(trail, seen, mx, my, c->x, c->y, increment + 1, max);

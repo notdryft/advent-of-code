@@ -58,7 +58,7 @@ typedef struct {
 
 CoordsSet *coords_from(StringArray *schema, size_t rows, size_t cols, size_t x, size_t y) {
   size_t coords_size = 0;
-  Coord *coords = (Coord *) malloc(sizeof(Coord) * 4);
+  Coord *coords = malloc(sizeof(Coord) * 4);
 
   char *row = string_array_get(schema, y);
   if (can_go_north(row[x]) && y > 0) {
@@ -88,7 +88,7 @@ CoordsSet *coords_from(StringArray *schema, size_t rows, size_t cols, size_t x, 
     }
   }
 
-  CoordsSet *set = (CoordsSet *) malloc(sizeof(CoordsSet));
+  CoordsSet *set = malloc(sizeof(CoordsSet));
   set->size = coords_size;
   set->coords = coords;
 
@@ -148,7 +148,7 @@ void traverse_rec(StringArray *schema, int **steps, size_t rows, size_t cols, si
 
 CoordsSet *traverse_steps(StringArray *schema, int **steps, size_t rows, size_t cols, int highest) {
   size_t coords_size = 0;
-  Coord *coords = (Coord *) malloc(sizeof(Coord) * 10000);
+  Coord *coords = malloc(sizeof(Coord) * 10000);
 
   bool stop = false;
   size_t x = 0, y = 0;
@@ -195,7 +195,7 @@ CoordsSet *traverse_steps(StringArray *schema, int **steps, size_t rows, size_t 
     }
   }
 
-  CoordsSet *set = (CoordsSet *) malloc(sizeof(CoordsSet));
+  CoordsSet *set = malloc(sizeof(CoordsSet));
   set->size = coords_size;
   set->coords = coords;
 
@@ -281,9 +281,9 @@ int part1(char *filename) {
   }
   printf("Start at (%zu, %zu)\n", sx, sy);
 
-  int **steps = (int **) malloc(sizeof(int *) * rows);
+  int **steps = malloc(sizeof(int *) * rows);
   for (size_t j = 0; j < rows; j++) {
-    steps[j] = (int *) malloc(sizeof(int) * cols);
+    steps[j] = malloc(sizeof(int) * cols);
     memset(steps[j], -1, sizeof(int) * cols);
   }
 
@@ -348,10 +348,12 @@ int part2(char *filename) {
   }
   printf("Start at (%zu, %zu)\n", sx, sy);
 
-  int **steps = (int **) malloc(sizeof(int *) * rows);
+  int **steps = malloc(sizeof(int *) * rows);
   for (size_t j = 0; j < rows; j++) {
-    steps[j] = (int *) malloc(sizeof(int) * cols);
-    memset(steps[j], -1, sizeof(int) * cols);
+    steps[j] = malloc(sizeof(int) * cols);
+    for (size_t i = 0; i < cols; i++) {
+      steps[j][i]  = -1;
+    }
   }
 
   printf("1\n");

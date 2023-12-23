@@ -5,7 +5,7 @@
 #include "array.h"
 
 Array *_array_new(size_t stride) {
-  Array *array = (Array *) malloc(sizeof(Array));
+  Array *array = malloc(sizeof(Array));
   array->capacity = 0;
   array->size = 0;
   array->stride = stride;

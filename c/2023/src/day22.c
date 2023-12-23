@@ -23,7 +23,7 @@ typedef struct {
 
 void brick_array_print(Array *bricks) {
   for (size_t i = 0; i < bricks->size; i++) {
-    Brick *brick = (Brick *) array_get(bricks, i);
+    Brick *brick = array_get(bricks, i);
     printf("{ %d %d %d, %d %d %d }, ", brick->start.x, brick->start.y, brick->start.z, brick->end.x, brick->end.y, brick->end.z );
   }
   printf("\n");
@@ -49,12 +49,12 @@ bool collides(Brick *a, Brick *b, int z) {
 
 bool fixed(Array *bricks) {
   for (size_t i = 0; i < bricks->size; i++) {
-    Brick *bi = (Brick *) array_get(bricks, i);
+    Brick *bi = array_get(bricks, i);
     if (bi->start.z == 1 || bi->end.z == 1) continue;
     bool c = true;
     for (size_t j = 0; j < bricks->size; j++) {
       if (i == j) continue;
-      Brick *bj = (Brick *) array_get(bricks, j);
+      Brick *bj = array_get(bricks, j);
       c = c && !collides(bi, bj, -1);
       /*if (c == false) {
         printf(
@@ -72,7 +72,7 @@ bool fixed(Array *bricks) {
 int fall(Array *bricks) {
   int f = 0;
   for (size_t i = 0; i < bricks->size; i++) {
-    Brick *a = (Brick *) array_get(bricks, i);
+    Brick *a = array_get(bricks, i);
     int minz = min(a->start.z, a->end.z);
     if (minz == 1) {
       continue;
@@ -108,11 +108,11 @@ int false_sum(int *ints, size_t size) {
 }
 
 int *fall2(Array *bricks) {
-  int *fallen = (int *) malloc(sizeof(int) * bricks->size);
+  int *fallen = malloc(sizeof(int) * bricks->size);
   memset(fallen, 0, sizeof(int) * bricks->size);
 
   for (size_t i = 0; i < bricks->size; i++) {
-    Brick *a = (Brick *) array_get(bricks, i);
+    Brick *a = array_get(bricks, i);
     int minz = min(a->start.z, a->end.z);
     if (minz == 1) {
       continue;

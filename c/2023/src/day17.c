@@ -28,7 +28,7 @@ void array_priority_push(Array *array, Q *value) {
     size_t i = 0;
     Q *other;
     do {
-      other = (Q *) array_get(array, i++);
+      other = array_get(array, i++);
     } while (other->cost < value->cost && i <= array->size);
     _array_insert(array, i - 1, value);
   }
@@ -39,8 +39,8 @@ void array_priority_push(Array *array, Q *value) {
 int dijkstra(char **grid, int mx, int my, int mindist, int maxdist) {
   Array *q = array_new(Q);
 
-  int *costs = (int *) malloc(sizeof(int) * 5 * my * mx);
-  bool *visited = (bool *) malloc(sizeof(bool) * 5 * my * mx);
+  int *costs = malloc(sizeof(int) * 5 * my * mx);
+  bool *visited = malloc(sizeof(bool) * 5 * my * mx);
   for (int d = 0; d < 5; d++) {
     for (int y = 0; y < my; y++) {
       for (int x = 0; x < mx; x++) {
