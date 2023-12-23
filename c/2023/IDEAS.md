@@ -27,6 +27,7 @@ day 19: negative ranges, overflows...
 day 20: BFS, cycle detection? buggy array_push which breaks strings? struct ordering with dyn arrays? random result??
 day 21: BFS, euclidian remainder, newton interpolating polynomial, possible to just count without modifying grid?
 day 22: dominator (control-flow graph)?
+day 23: longest path, DFS, BF, no alloc > *
 
 Ref:
 - https://github.com/Bogdanp/awesome-advent-of-code
