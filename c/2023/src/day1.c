@@ -47,24 +47,23 @@ int part2(char *filename) {
 
   char buffer[BUFFER_LENGTH] = {0};
   while (fgets(buffer, BUFFER_LENGTH, fp)) {
+    printf("%s", buffer);
+
     Array *digits = array_new(int);
-    size_t len = strlen(buffer) - 1; // \n counts but not \0
     for (size_t i = 0; buffer[i] != '\n'; i++) {
       char c = buffer[i];
       if (c >= '1' && c <= '9') {
         array_push(digits, c - '0');
       } else {
-        // one two three four five six seven eight nine
-        // o   t         f         s         e     n
-        if (c == 'o' && (i+2) < len && buffer[i+1] == 'n' && buffer[i+2] == 'e') array_push(digits, 1);
-        if (c == 't' && (i+2) < len && buffer[i+1] == 'w' && buffer[i+2] == 'o') array_push(digits, 2);
-        if (c == 't' && (i+4) < len && buffer[i+1] == 'h' && buffer[i+2] == 'r' && buffer[i+3] == 'e' && buffer[i+4] == 'e') array_push(digits, 3);
-        if (c == 'f' && (i+3) < len && buffer[i+1] == 'o' && buffer[i+2] == 'u' && buffer[i+3] == 'r') array_push(digits, 4);
-        if (c == 'f' && (i+3) < len && buffer[i+1] == 'i' && buffer[i+2] == 'v' && buffer[i+3] == 'e') array_push(digits, 5);
-        if (c == 's' && (i+2) < len && buffer[i+1] == 'i' && buffer[i+2] == 'x') array_push(digits, 6);
-        if (c == 's' && (i+4) < len && buffer[i+1] == 'e' && buffer[i+2] == 'v' && buffer[i+3] == 'e' && buffer[i+4] == 'n') array_push(digits, 7);
-        if (c == 'e' && (i+4) < len && buffer[i+1] == 'i' && buffer[i+2] == 'g' && buffer[i+3] == 'h' && buffer[i+4] == 't') array_push(digits, 8);
-        if (c == 'n' && (i+3) < len && buffer[i+1] == 'i' && buffer[i+2] == 'n' && buffer[i+3] == 'e') array_push(digits, 9);
+        if (strncmp(buffer + i, "one", 3) == 0) array_push(digits, 1);
+        else if (strncmp(buffer + i, "two", 3) == 0) array_push(digits, 2);
+        else if (strncmp(buffer + i, "three", 5) == 0) array_push(digits, 3);
+        else if (strncmp(buffer + i, "four", 4) == 0) array_push(digits, 4);
+        else if (strncmp(buffer + i, "five", 4) == 0) array_push(digits, 5);
+        else if (strncmp(buffer + i, "six", 3) == 0) array_push(digits, 6);
+        else if (strncmp(buffer + i, "seven", 5) == 0) array_push(digits, 7);
+        else if (strncmp(buffer + i, "eight", 5) == 0) array_push(digits, 8);
+        else if (strncmp(buffer + i, "nine", 4) == 0) array_push(digits, 9);
       }
     }
     sum += int_array_first(digits) * 10 + int_array_last(digits);
