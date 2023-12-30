@@ -72,6 +72,7 @@ void _array_insert(Array *array, size_t index, void *value);
     _array_insert(array, index, &tmp); \
   } while (0)
 
+void array_move_first(Array *array, size_t index);
 
 void array_remove_first(Array *array);
 void array_remove_last(Array *array);

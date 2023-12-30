@@ -89,6 +89,9 @@ void dyn_array_tests() {
   array_remove_first(items);
   item_array_print(items);
 
+  array_move_first(items, 2);
+  item_array_print(items);
+
   array_free(items);
 }
 

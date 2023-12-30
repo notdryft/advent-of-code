@@ -104,6 +104,18 @@ void _array_insert(Array *array, size_t index, void *value) {
   memcpy(array->items + array->stride * index, value, array->stride);
 }
 
+void array_move_first(Array *array, size_t index) {
+  void *tmp = malloc(sizeof(array->stride));
+  memcpy(tmp, array->items + array->stride * index, array->stride);
+
+  for (size_t i = index; i > 0; i--) {
+    memcpy(array->items + array->stride * i, array->items + array->stride * (i - 1), array->stride);
+  }
+  memcpy(array->items, tmp, array->stride);
+
+  free(tmp);
+}
+
 inline void array_remove_first(Array *array) {
   array_remove(array, 0);
 }
