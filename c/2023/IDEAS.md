@@ -29,6 +29,7 @@ day 21: BFS, euclidian remainder, newton interpolating polynomial, possible to j
 day 22: dominator (control-flow graph)?
 day 23: longest path is np hard, DFS, BF and throw DP into the mix?, no alloc > *
 day 24: line-line intersection, SMT solvers (Z3), lup decomposition? gaussian elimination, chinese remainder, BF
+day 25: max flow/min cut (stoer wagner, push-relabel or preflow-push, etc.)
 
 Ref:
 - https://github.com/Bogdanp/awesome-advent-of-code

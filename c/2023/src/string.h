@@ -30,8 +30,10 @@ void string_array_push(StringArray *array, char *value);
 char *repeat(char *content, size_t times);
 char *repeat_with_delimiter(char *content, size_t times, char *delimiter);
 char *substring(char *content, size_t pos, size_t len);
-StringArray *string_array_repeat(StringArray *array, size_t times);
+
+bool string_array_contains(StringArray *array, char *value);
 StringArray *string_array_dup(StringArray *array);
+StringArray *string_array_repeat(StringArray *array, size_t times);
 StringArray *string_array_subset(StringArray *array, size_t start, size_t end);
 StringArray *string_split(char *content, char *delimiter);
 

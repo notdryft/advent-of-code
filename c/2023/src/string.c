@@ -85,20 +85,21 @@ char *substring(char *content, size_t so, size_t len) {
   return strdup(result);
 }
 
+bool string_array_contains(StringArray *array, char *value) {
+  for (size_t i = 0; i < array->size; i++) {
+    if (strcmp(array->items[i], value) == 0) {
+      return true;
+    }
+  }
+  return false;
+}
+
 StringArray *string_array_dup(StringArray *array) {
   StringArray *dup = string_array_new();
   for (size_t i = 0; i < array->size; i++) {
     string_array_push(dup, string_array_get(array, i));
   }
   return dup;
-}
-
-StringArray *string_array_subset(StringArray *array, size_t start, size_t end) {
-  StringArray *subset = string_array_new();
-  for (size_t i = start; i < end; i++) {
-    string_array_push(subset, string_array_get(array, i));
-  }
-  return subset;
 }
 
 StringArray *string_array_repeat(StringArray *array, size_t times) {
@@ -109,6 +110,14 @@ StringArray *string_array_repeat(StringArray *array, size_t times) {
     }
   }
   return repeated;
+}
+
+StringArray *string_array_subset(StringArray *array, size_t start, size_t end) {
+  StringArray *subset = string_array_new();
+  for (size_t i = start; i < end; i++) {
+    string_array_push(subset, string_array_get(array, i));
+  }
+  return subset;
 }
 
 StringArray *string_split(char *content, char *delimiter) {
