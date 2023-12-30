@@ -30,7 +30,7 @@ mem-%_test: %_test
 	$(vg) $(bindir)/$^ $(vflags)
 
 day%: $(srcdir)/day%.c $(libdir)/libaoc.so
-	$(cc) -o$(bindir)/$@ -L$(libdir) -laoc $^ $(cflags)
+	$(cc) -o$(bindir)/$@ -L$(libdir) -laoc -lm $< $(cflags)
 
 mem-day%: day%
 	$(vg) $(vflags) $(bindir)/$^
