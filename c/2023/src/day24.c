@@ -1,6 +1,7 @@
 #include <assert.h>
 #include <limits.h>
 #include <math.h>
+#include <quadmath.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -32,13 +33,13 @@ Vec3 cross(Vec3 a, Vec3 b) {
   };
 }
 
-void cross_matrix(Vec3 v, __float128 M[3][3]) {
+void cross_matrix(Vec3 v, __int128 M[3][3]) {
   M[0][0] =    0; M[0][1] = -v.z; M[0][2] =  v.y;
   M[1][0] =  v.z; M[1][1] =    0; M[1][2] = -v.x;
   M[2][0] = -v.y; M[2][1] =  v.x; M[2][2] =    0;
 }
 
-void combine(__float128 M0[3][3], __float128 M1[3][3], __float128 M2[3][3], __float128 M3[3][3], __float128 M[6][6]) {
+void combine(__int128 M0[3][3], __int128 M1[3][3], __int128 M2[3][3], __int128 M3[3][3], __int128 M[6][6]) {
   M[0][0] = M0[0][0]; M[0][1] = M0[0][1]; M[0][2] = M0[0][2]; M[0][3] = M2[0][0]; M[0][4] = M2[0][1]; M[0][5] = M2[0][2];
   M[1][0] = M0[1][0]; M[1][1] = M0[1][1]; M[1][2] = M0[1][2]; M[1][3] = M2[1][0]; M[1][4] = M2[1][1]; M[1][5] = M2[1][2];
   M[2][0] = M0[2][0]; M[2][1] = M0[2][1]; M[2][2] = M0[2][2]; M[2][3] = M2[2][0]; M[2][4] = M2[2][1]; M[2][5] = M2[2][2];
@@ -47,7 +48,7 @@ void combine(__float128 M0[3][3], __float128 M1[3][3], __float128 M2[3][3], __fl
   M[5][0] = M1[2][0]; M[5][1] = M1[2][1]; M[5][2] = M1[2][2]; M[5][3] = M3[2][0]; M[5][4] = M3[2][1]; M[5][5] = M3[2][2];
 }
 
-void minor(__float128 M[6][6], __float128 m[5][5], size_t p, size_t q) {
+void minor(__int128 M[6][6], __int128 m[5][5], size_t p, size_t q) {
   size_t jj = 0;
   for (size_t j = 0; j < 6; j++) {
     if (j == q) continue;
@@ -60,13 +61,20 @@ void minor(__float128 M[6][6], __float128 m[5][5], size_t p, size_t q) {
   }
 }
 
-__float128 det5(__float128 m[5][5]) {
+__float128 det5(__int128 m[5][5]) {
   __float128 det = 1;
   __float128 total = 1;
 
+  __float128 copy[5][5];
+  for (size_t j = 0; j < 5; j++) {
+    for (size_t i = 0; i < 5; i++) {
+      copy[j][i] = m[j][i];
+    }
+  }
+
   for (size_t i = 0; i < 5; i++) {
     size_t index = i;
-    while (index < 5 && m[index][i] == 0) {
+    while (index < 5 && copy[index][i] == 0) {
       index++;
     }
     if (index == 5) {
@@ -74,49 +82,40 @@ __float128 det5(__float128 m[5][5]) {
     }
     if (index != i) {
       for (size_t j = 0; j < 5; j++) {
-        ld t = m[index][j];
-        m[index][j] = m[i][j];
-        m[i][j] = t;
+        __float128 t = copy[index][j];
+        copy[index][j] = copy[i][j];
+        copy[i][j] = t;
       }
       det = -det;
     }
 
     __float128 tmp[5];
     for (size_t j = 0; j < 5; j++) {
-      tmp[j] = m[i][j];
+      tmp[j] = copy[i][j];
     }
     for (size_t j = i + 1; j < 5; j++) {
       __float128 a = tmp[i];
-      __float128 b = m[j][i];
+      __float128 b = copy[j][i];
       for (size_t k = 0; k < 5; k++) {
-        m[j][k] = a * m[j][k] - b * tmp[k];
+        copy[j][k] = a * copy[j][k] - b * tmp[k];
       }
       total = total * a;
     }
   }
  
   for (size_t i = 0; i < 5; i++) {
-    det = det * m[i][i];
+    det = det * copy[i][i];
   }
 
   return det / total;
 }
 
-void debug5(__float128 m[5][5]) {
-  for (size_t j = 0; j < 5; j++) {
-    for (size_t i = 0; i < 5; i++) {
-      printf("%4.Lf", (ld) m[j][i]);
-    }
-    printf("\n");
-  }
-}
-
-void cofactor(__float128 M[6][6], __float128 C[6][6]) {
+void cofactor(__int128 M[6][6], __float128 C[6][6]) {
   for (size_t j = 0; j < 6; j++) {
     for (size_t i = 0; i < 6; i++) {
-      __float128 m[5][5];
+      __int128 m[5][5];
       minor(M, m, i, j);
-      C[j][i] = det5(m) * pow(-1, i + j + 2);
+      C[j][i] = det5(m) * powq(-1, i + j);
     }
   }
 }
@@ -131,8 +130,9 @@ void transpose(__float128 M[6][6]) {
   }
 }
 
-__float128 determinant(__float128 M[6][6]) {
-  __float128 det = 1, total = 1;
+__float128 determinant(__int128 M[6][6]) {
+  __float128 det = 1;
+  __float128 total = 1;
 
   __float128 copy[6][6];
   for (size_t j = 0; j < 6; j++) {
@@ -179,34 +179,43 @@ __float128 determinant(__float128 M[6][6]) {
   return det / total;
 }
 
-void inverse(__float128 M[6][6], __float128 I[6][6]) {
-  __float128 d = determinant(M);
-  //printf("d = %4.Lf\n", d);
-
-  __float128 A[6][6];
-  cofactor(M, A);
-  //printf("A:\n"); debug(A);
-
-  transpose(A);
-  //printf("A^T:\n"); debug(A);
-
+void debugi(__int128 M[6][6]) {
   for (size_t j = 0; j < 6; j++) {
     for (size_t i = 0; i < 6; i++) {
-      I[j][i] = A[j][i] / d;
-    }
-  }
-}
-
-void debug(__float128 M[6][6]) {
-  for (size_t j = 0; j < 6; j++) {
-    for (size_t i = 0; i < 6; i++) {
-      printf("%5.Lf", (ld) M[j][i]);
+      printf("%20lld", (ll) M[j][i]);
     }
     printf("\n");
   }
 }
 
-void multiply(__float128 M[6][6], __float128 v[6], __float128 r[6]) {
+void debugq(__float128 M[6][6]) {
+  for (size_t j = 0; j < 6; j++) {
+    for (size_t i = 0; i < 6; i++) {
+      printf("%20.5Lf", (ld) M[j][i]);
+    }
+    printf("\n");
+  }
+}
+
+void inverse(__int128 M[6][6], __float128 I[6][6]) {
+  __float128 d = determinant(M);
+  printf("d = %lld\n", (ll) d);
+
+  __float128 A[6][6];
+  cofactor(M, A);
+  printf("A:\n"); debugq(A);
+
+  transpose(A);
+  printf("A^T:\n"); debugq(A);
+
+  for (size_t j = 0; j < 6; j++) {
+    for (size_t i = 0; i < 6; i++) {
+      I[j][i] = (__float128) A[j][i] / d;
+    }
+  }
+}
+
+void multiply(__float128 M[6][6], __int128 v[6], __float128 r[6]) {
   r[0] = M[0][0] * v[0] + M[0][1] * v[1] + M[0][2] * v[2] + M[0][3] * v[3] + M[0][4] * v[4] + M[0][5] * v[5];
   r[1] = M[1][0] * v[0] + M[1][1] * v[1] + M[1][2] * v[2] + M[1][3] * v[3] + M[1][4] * v[4] + M[1][5] * v[5];
   r[2] = M[2][0] * v[0] + M[2][1] * v[1] + M[2][2] * v[2] + M[2][3] * v[3] + M[2][4] * v[4] + M[2][5] * v[5];
@@ -368,35 +377,35 @@ __int128 part2(char *filename) {
   Hailstone *h1 = array_get(hailstones, 1);
   Hailstone *h2 = array_get(hailstones, 2);
 
-  __float128 M0[3][3]; // ┌       ┐
-  __float128 M1[3][3]; // | M0 M2 | 
-  __float128 M2[3][3]; // | M1 M3 |
-  __float128 M3[3][3]; // └       ┘
+  __int128 M0[3][3]; // ┌       ┐
+  __int128 M1[3][3]; // | M0 M2 | 
+  __int128 M2[3][3]; // | M1 M3 |
+  __int128 M3[3][3]; // └       ┘
 
   cross_matrix(sub(h0->v, h1->v), M0);
   cross_matrix(sub(h0->v, h2->v), M1);
   cross_matrix(sub(h1->p, h0->p), M2);
   cross_matrix(sub(h2->p, h0->p), M3);
 
-  __float128 M[6][6];
+  __int128 M[6][6];
   combine(M0, M1, M2, M3, M);
-  //printf("M:\n"); debug(M);
+  printf("M:\n"); debugi(M);
 
   __float128 I[6][6];
   inverse(M, I);
-  //printf("I:\n"); debug(I);
+  printf("I:\n"); debugq(I);
 
-  __float128 v[6];
+  __int128 v[6];
   Vec3 v0 = sub(cross(h1->p, h1->v), cross(h0->p, h0->v));
   Vec3 v1 = sub(cross(h2->p, h2->v), cross(h0->p, h0->v));
   v[0] = v0.x; v[1] = v0.y; v[2] = v0.z; v[3] = v1.x; v[4] = v1.y; v[5] = v1.z;
-  //printf("rhs: %lld %lld %lld %lld %lld %lld\n", (ll) v[0], (ll) v[1], (ll) v[2], (ll) v[3], (ll) v[4], (ll) v[5]);
+  printf("rhs: %lld %lld %lld %lld %lld %lld\n", (ll) v[0], (ll) v[1], (ll) v[2], (ll) v[3], (ll) v[4], (ll) v[5]);
 
   __float128 r[6];
   multiply(I, v, r);
-  printf("r: %lld %lld %lld %lld %lld %lld\n", (ll) r[0], (ll) r[1], (ll) r[2], (ll) r[3], (ll) r[4], (ll) r[5]);
+  printf("r: %Lf %Lf %Lf %Lf %Lf %Lf\n", (ld) r[0], (ld) r[1], (ld) r[2], (ld) r[3], (ld) r[4], (ld) r[5]);
 
-  __int128 sum = roundl(r[0]) + roundl(r[1]) + roundl(r[2]);
+  __int128 sum = roundq(r[0]) + roundq(r[1]) + roundq(r[2]);
   printf("sum = %lld\n", (ll) sum);
 
   array_free(hailstones);
@@ -408,7 +417,7 @@ int main() {
   assert(part1("../../inputs/2023/day24/sample", 7, 27, true) == 2);
   assert(part1("../../inputs/2023/day24/data", 200000000000000, 400000000000000, false) == 18184);
   assert(part2("../../inputs/2023/day24/sample") == 47);
-  assert(part2("../../inputs/2023/day24/data") == 557789988450159 - 3); // FIXME 3 off
+  assert(part2("../../inputs/2023/day24/data") == 557789988450159);
 
   return 0;
 }
