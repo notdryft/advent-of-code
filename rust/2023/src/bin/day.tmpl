@@ -1,0 +1,32 @@
+
+
+static SAMPLE: &str = include_str!("../../../../inputs/2023/day$day/sample");
+static DATA: &str = include_str!("../../../../inputs/2023/day$day/data");
+
+fn part1(input: &str) -> u64 {
+    let mut sum: u64 = 0;
+    for line in input.split('\n').filter(|&line| !line.is_empty()) {}
+
+    sum
+}
+
+fn main() {
+    dbg!(part1(SAMPLE));
+    //dbg!(part1(DATA));
+    //dbg!(part2(SAMPLE));
+    //dbg!(part2(DATA));
+}
+
+#[cfg(test)]
+mod tests {
+
+    use super::*;
+    use test_case::test_case;
+
+    #[test_case(SAMPLE, 0)]
+    #[test_case(DATA, 0)]
+    fn part1_test(input: &str, expected: u64) {
+        let actual = part1(input);
+        assert_eq!(actual, expected);
+    }
+}
