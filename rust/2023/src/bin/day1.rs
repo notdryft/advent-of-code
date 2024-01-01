@@ -1,36 +1,25 @@
 use std::collections::HashMap;
-use std::fs::File;
-use std::io::{self, BufRead};
-use std::path::Path;
 
-fn read_lines<P>(filename: P) -> io::Result<io::Lines<io::BufReader<File>>>
-where
-    P: AsRef<Path>,
-{
-    let file = File::open(filename)?;
-    Ok(io::BufReader::new(file).lines())
-}
+static SAMPLE1: &str = include_str!("../../../../inputs/2023/day1/sample1");
+static SAMPLE2: &str = include_str!("../../../../inputs/2023/day1/sample2");
+static DATA: &str = include_str!("../../../../inputs/2023/day1/data");
 
-fn part1(filename: &str) {
-    let mut sum = 0;
-    if let Ok(lines) = read_lines(filename) {
-        for line in lines {
-            if let Ok(line) = line {
-                let mut digits = Vec::new();
-                for c in line.chars() {
-                    if c.is_ascii_digit() {
-                        digits.push(c.to_digit(10).unwrap());
-                    }
-                }
-                sum += digits.first().unwrap() * 10 + digits.last().unwrap();
+fn part1(input: &str) -> u64 {
+    let mut sum: u64 = 0;
+    for line in input.split('\n').filter(|&line| !line.is_empty()) {
+        let mut digits = Vec::new();
+        for c in line.chars() {
+            if c.is_ascii_digit() {
+                digits.push(c.to_digit(10).unwrap() as u64);
             }
         }
+        sum += digits.first().unwrap() * 10 + digits.last().unwrap();
     }
-    println!("sum: {}", sum);
+
+    sum
 }
 
-fn part2(filename: &str) {
-    let mut sum = 0;
+fn part2(input: &str) -> u64 {
     let cases = HashMap::from([
         ("one", 1),
         ("two", 2),
@@ -43,35 +32,54 @@ fn part2(filename: &str) {
         ("nine", 9),
     ]);
 
-    if let Ok(lines) = read_lines(filename) {
-        for line in lines {
-            if let Ok(line) = line {
-                let mut digits = Vec::new();
-                for (i, c) in line.chars().enumerate() {
-                    if c.is_ascii_digit() {
-                        digits.push(c.to_digit(10).unwrap());
-                    } else {
-                        for (case, digit) in cases.iter() {
-                            if i + case.len() <= line.len() {
-                                let substring = &line[i..i + case.len()];
-                                if substring == *case {
-                                    digits.push(*digit);
-                                }
-                            }
+    let mut sum: u64 = 0;
+    for line in input.split('\n').filter(|&line| !line.is_empty()) {
+        let mut digits = Vec::new();
+        for (i, c) in line.chars().enumerate() {
+            if c.is_ascii_digit() {
+                digits.push(c.to_digit(10).unwrap() as u64);
+            } else {
+                for (case, digit) in cases.iter() {
+                    if i + case.len() <= line.len() {
+                        let substring = &line[i..i + case.len()];
+                        if substring == *case {
+                            digits.push(*digit);
                         }
                     }
                 }
-                println!("{}: {:?}", line, digits);
-                sum += digits.first().unwrap() * 10 + digits.last().unwrap();
             }
         }
+        println!("{}: {:?}", line, digits);
+        sum += digits.first().unwrap() * 10 + digits.last().unwrap();
     }
-    println!("sum: {}", sum);
+
+    sum
 }
 
 fn main() {
-    //part1("../../inputs/2023/day1/part1_test");
-    //part1("../../inputs/2023/day1/data");
-    //part2("../../inputs/2023/day1/part2_test");
-    part2("../../inputs/2023/day1/data");
+    dbg!(part1(SAMPLE1));
+    dbg!(part1(DATA));
+    dbg!(part2(SAMPLE2));
+    dbg!(part2(DATA));
+}
+
+#[cfg(test)]
+mod tests {
+
+    use super::*;
+    use test_case::test_case;
+
+    #[test_case(SAMPLE1, 142)]
+    #[test_case(DATA, 55488)]
+    fn part1_test(input: &str, expected: u64) {
+        let actual = part1(input);
+        assert_eq!(actual, expected);
+    }
+
+    #[test_case(SAMPLE2, 281)]
+    #[test_case(DATA, 55614)]
+    fn part2_test(input: &str, expected: u64) {
+        let actual = part2(input);
+        assert_eq!(actual, expected);
+    }
 }
