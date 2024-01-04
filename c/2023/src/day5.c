@@ -5,9 +5,12 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "array.h"
 #include "string.h"
 
 #define BUFFER_LENGTH 1024
+
+typedef unsigned long long llu;
 
 enum AlmanachEntryType {
   SEED_TO_SOIL,
@@ -22,50 +25,40 @@ enum AlmanachEntryType {
 
 typedef struct {
   enum AlmanachEntryType source_type;
-  long long destination;
-  long long source;
-  long long range;
+  llu destination;
+  llu source;
+  llu range;
 } AlmanachEntry;
 
-int part1(char *filename) {
+llu part1(char *filename) {
   FILE *fp = fopen(filename, "r");
   if (fp == NULL) {
     fprintf(stderr, "Error: could not open file %s\n", filename);
     return 1;
   }
 
-  size_t capacity = 1000;
-
-  size_t seeds_size = 0;
-  long long *seeds = malloc(sizeof(long long) * capacity);
-
-  size_t map_size = 0;
-  AlmanachEntry *map = malloc(sizeof(AlmanachEntry) * capacity);
+  Array *seeds = array_new(llu);
+  Array *entries = array_new(AlmanachEntry);
 
   char source_type_str[BUFFER_LENGTH];
   enum AlmanachEntryType source_type = 0;
-
-  char source_str[BUFFER_LENGTH];
-  char destination_str[BUFFER_LENGTH];
-  char range_str[BUFFER_LENGTH];
 
   char buffer[BUFFER_LENGTH] = {0};
   while (fgets(buffer, BUFFER_LENGTH, fp)) {
     size_t buffer_len = strlen(buffer);
     buffer[buffer_len - 1] = '\0';
 
-    printf("parsing: |%s| with first char '%c'\n", buffer, buffer[0]);
-    if (buffer[0] == '\0') { // reset state
-      printf("reset\n\n");
+    if (buffer[0] == '\0') {
+      printf("reset state\n\n");
     } else if (strncmp(buffer, "seeds: ", 6) == 0) {
       char *seeds_str = substring(buffer, 7, buffer_len - 7 - 1);
-      StringArray *seeds_split = string_split(seeds_str, " ");
-      for (size_t i = 0; i < seeds_split->size; i++) {
-        seeds[seeds_size++] = atoll(string_array_get(seeds_split, i));
+      StringArray *split = string_split(seeds_str, " ");
+      for (size_t i = 0; i < split->size; i++) {
+        array_push(seeds, strtoull(split->items[i], NULL, 10));
       }
 
       free(seeds_str);
-      string_array_free(seeds_split);
+      string_array_free(split);
     } else if (
       'a' <= buffer[0] && buffer[0] <= 'z' &&
       sscanf(buffer, "%[^-]-to-%*s map:", source_type_str)
@@ -88,15 +81,13 @@ int part1(char *filename) {
         printf("got unexpected source type %s\n", source_type_str);
         exit(42);
       }
-      printf("new source type: <%s> to <?> \n", source_type_str);
-    } else if (
-      '0' <= buffer[0] && buffer[0] <= '9' && 
-      sscanf(buffer, "%s %s %s", destination_str, source_str, range_str)
-    ) {
-      long long destination = atoll(destination_str);
-      long long source = atoll(source_str);
-      long long range = atoll(range_str);
-      printf("entry for source type <%s>: %lld %lld %lld\n", source_type_str, destination, source, range);
+      printf("new source type: \033[97;4m%s\033[0m\n", source_type_str);
+    } else if ('0' <= buffer[0] && buffer[0] <= '9') {
+      char *p;
+      llu destination = strtoull(buffer, &p, 10);
+      llu source = strtoull(p + 1, &p, 10);
+      llu range = strtoull(p + 1, NULL, 10);
+      printf("entry for source type \033[97;1m%s\033[0m: %llu %llu %llu\n", source_type_str, destination, source, range);
 
       AlmanachEntry entry = {
         .source_type = source_type,
@@ -104,82 +95,72 @@ int part1(char *filename) {
         .source = source,
         .range = range
       };
-      map[map_size++] = entry;
+      array_push(entries, entry);
     } else {
       exit(42);
     }
   }
-  
-  printf("\n\\\\\n\n");
+  printf("\n");
 
-  long long location_min = LLONG_MAX;
-  for (size_t seed_index = 0; seed_index < seeds_size; seed_index++) {
-    long long seed_to_location = seeds[seed_index];
+  llu min = ULLONG_MAX;
+  for (size_t i = 0; i < seeds->size; i++) {
+    llu seed_to_location = llu_array_get(seeds, i);
     for (size_t entry_type = 0; entry_type < NUMBER_OF_ALMANACH_ENTRY_TYPES; entry_type++) {
-      bool found_entry = false;
-      for (size_t entry_index = 0; entry_index < map_size && !found_entry; entry_index++) {
-        AlmanachEntry entry = map[entry_index];
-        if (entry.source_type == entry_type) {
-          if (entry.source <= seed_to_location && seed_to_location < entry.source + entry.range) {
-            found_entry = true;
-            seed_to_location += entry.destination - entry.source;
+      bool stop = false;
+      for (size_t j = 0; j < entries->size && !stop; j++) {
+        AlmanachEntry *entry = array_get(entries, j);
+        if (entry->source_type == entry_type) {
+          if (entry->source <= seed_to_location && seed_to_location < entry->source + entry->range) {
+            seed_to_location += entry->destination - entry->source;
+            stop = true;
           }
         }
       }
     }
-    if (seed_to_location < location_min) {
-      location_min = seed_to_location;
+    if (seed_to_location < min) {
+      min = seed_to_location;
     }
   }
 
   fclose(fp);
-  free(seeds);
-  free(map);
 
-  printf("location min = %lld\n", location_min);
+  printf("min = %llu\n", min);
 
-  return location_min;
+  array_free(entries);
+  array_free(seeds);
+
+  return min;
 }
 
-int part2(char *filename) {
+llu part2(char *filename) {
   FILE *fp = fopen(filename, "r");
   if (fp == NULL) {
     fprintf(stderr, "Error: could not open file %s\n", filename);
     return 1;
   }
 
-  size_t capacity = 1000;
-
-  size_t pairs_size = 0;
-  long long *pairs = malloc(sizeof(long long) * capacity);
-
-  size_t map_size = 0;
-  AlmanachEntry *map = malloc(sizeof(AlmanachEntry) * capacity);
+  Array *pairs = array_new(llu);
+  Array *entries = array_new(AlmanachEntry);
 
   char source_type_str[BUFFER_LENGTH];
   enum AlmanachEntryType source_type = 0;
-
-  char source_str[BUFFER_LENGTH];
-  char destination_str[BUFFER_LENGTH];
-  char range_str[BUFFER_LENGTH];
 
   char buffer[BUFFER_LENGTH] = {0};
   while (fgets(buffer, BUFFER_LENGTH, fp)) {
     size_t buffer_len = strlen(buffer);
     buffer[buffer_len - 1] = '\0';
 
-    printf("parsing: |%s| with first char '%c'\n", buffer, buffer[0]);
-    if (buffer[0] == '\0') { // reset state
-      printf("reset\n\n");
+    if (buffer[0] == '\0') {
+      printf("reset state\n\n");
     } else if (strncmp(buffer, "seeds: ", 6) == 0) {
       char *pairs_str = substring(buffer, 7, buffer_len - 7 - 1);
-      StringArray *pairs_split = string_split(pairs_str, " ");
-      for (size_t i = 0; i < pairs_split->size; i++) {
-        pairs[pairs_size++] = atoll(string_array_get(pairs_split, i));
+      StringArray *split = string_split(pairs_str, " ");
+      for (size_t i = 0; i < split->size; i++) {
+        array_push(pairs, strtoull(split->items[i], NULL, 0));
       }
 
       free(pairs_str);
-      string_array_free(pairs_split);
+      string_array_free(split);
     } else if (
       'a' <= buffer[0] && buffer[0] <= 'z' &&
       sscanf(buffer, "%[^-]-to-%*s map:", source_type_str)
@@ -202,15 +183,13 @@ int part2(char *filename) {
         printf("got unexpected source type %s\n", source_type_str);
         exit(42);
       }
-      printf("new source type: <%s> to <?> \n", source_type_str);
-    } else if (
-      '0' <= buffer[0] && buffer[0] <= '9' && 
-      sscanf(buffer, "%s %s %s", destination_str, source_str, range_str)
-    ) {
-      long long destination = atoll(destination_str);
-      long long source = atoll(source_str);
-      long long range = atoll(range_str);
-      printf("entry for source type <%s>: %lld %lld %lld\n", source_type_str, destination, source, range);
+      printf("new source type: \033[97;4m%s\033[0m\n", source_type_str);
+    } else if ('0' <= buffer[0] && buffer[0] <= '9') {
+      char *p;
+      llu destination = strtoull(buffer, &p, 10);
+      llu source = strtoull(p + 1, &p, 10);
+      llu range = strtoull(p + 1, NULL, 10);
+      printf("entry for source type \033[97;1m%s\033[0m: %llu %llu %llu\n", source_type_str, destination, source, range);
 
       AlmanachEntry entry = {
         .source_type = source_type,
@@ -218,45 +197,45 @@ int part2(char *filename) {
         .source = source,
         .range = range
       };
-      map[map_size++] = entry;
+      array_push(entries, entry);
     } else {
       exit(42);
     }
   }
+  printf("\n");
   
-  printf("\n\\\\\n\n");
-
-  long long location_min = LLONG_MAX;
-  for (size_t pair_index = 0; pair_index < pairs_size; pair_index += 2) {
-    long long seed_start = pairs[pair_index];
-    long long seed_end = seed_start + pairs[pair_index + 1];
-    for (long long seed = seed_start; seed < seed_end; seed++) {
-      long long seed_to_location = seed;
+  llu min = ULLONG_MAX;
+  for (size_t i = 0; i < pairs->size; i += 2) {
+    llu start = llu_array_get(pairs, i);
+    llu end = start + llu_array_get(pairs, i + 1);
+    for (llu seed = start; seed < end; seed++) {
+      llu seed_to_location = seed;
       for (size_t entry_type = 0; entry_type < NUMBER_OF_ALMANACH_ENTRY_TYPES; entry_type++) {
-        bool found_entry = false;
-        for (size_t entry_index = 0; entry_index < map_size && !found_entry; entry_index++) {
-          AlmanachEntry entry = map[entry_index];
-          if (entry.source_type == entry_type) {
-            if (entry.source <= seed_to_location && seed_to_location < entry.source + entry.range) {
-              found_entry = true;
-              seed_to_location += entry.destination - entry.source;
+        bool stop = false;
+        for (size_t j = 0; j < entries->size && !stop; j++) {
+          AlmanachEntry *entry = array_get(entries, j);
+          if (entry->source_type == entry_type) {
+            if (entry->source <= seed_to_location && seed_to_location < entry->source + entry->range) {
+              seed_to_location += entry->destination - entry->source;
+              stop = true;
             }
           }
         }
       }
-      if (seed_to_location < location_min) {
-        location_min = seed_to_location;
+      if (seed_to_location < min) {
+        min = seed_to_location;
       }
     }
   }
 
   fclose(fp);
-  free(pairs);
-  free(map);
 
-  printf("location min = %llu\n", location_min);
+  printf("min = %llu\n", min);
 
-  return location_min;
+  array_free(entries);
+  array_free(pairs);
+
+  return min;
 }
 
 int main() {

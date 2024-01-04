@@ -24,16 +24,19 @@ void *array_get(Array *array, size_t index);
 #define int_array_get(array, index) *(int *) array_get(array, index)
 #define long_array_get(array, index) *(long *) array_get(array, index)
 #define ll_array_get(array, index) *(long long *) array_get(array, index)
+#define llu_array_get(array, index) *(unsigned long long *) array_get(array, index)
 
 void *array_first(Array *array);
 #define int_array_first(array) *(int *) array_first(array)
 #define long_array_first(array) *(long *) array_first(array)
 #define ll_array_first(array) *(long long *) array_first(array)
+#define llu_array_first(array) *(unsigned long long *) array_first(array)
 
 void *array_last(Array *array);
 #define int_array_last(array) *(int *) array_last(array)
 #define long_array_last(array) *(long *) array_last(array)
 #define ll_array_last(array) *(long long *) array_last(array)
+#define llu_array_last(array) *(unsigned long long *) array_last(array)
 
 void _array_push(Array *array, void *value);
 #define array_push(array, value) \
@@ -92,5 +95,6 @@ bool int_array_contains(Array *array, int expected);
 void int_array_print(Array *array);
 void long_array_print(Array *array);
 void ll_array_print(Array *array);
+void llu_array_print(Array *array);
 
 #endif

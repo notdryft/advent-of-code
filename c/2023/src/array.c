@@ -233,3 +233,26 @@ void ll_array_print(Array *array) {
   }
   printf(" ] }\n");
 }
+
+void llu_array_print(Array *array) {
+  if (array->stride != sizeof(unsigned long long)) {
+    fprintf(
+      stderr,
+      "Error: trying to print an Array<long long> with sizeof(%zu) from a Array<!long long> with sizeof(%zu)\n",
+      sizeof(unsigned long long),
+      array->stride
+    );
+    return;
+  }
+
+  printf("Array{ capacity = %zu, size = %zu, stride = %zu, data = [", array->capacity, array->size, array->stride);
+  for (size_t i = 0; i < array->size; i++) {
+    unsigned long long item = llu_array_get(array, i);
+    if (i == array->size - 1) {
+      printf(" %llu", item);
+    } else {
+      printf(" %llu,", item);
+    }
+  }
+  printf(" ] }\n");
+}
