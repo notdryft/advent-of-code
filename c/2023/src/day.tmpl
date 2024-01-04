@@ -10,14 +10,17 @@
 
 #define BUFFER_LENGTH 1024
 
-int part1(char *filename) {
+typedef long long ll;
+typedef unsigned long long llu;
+
+ll part1(char *filename) {
   FILE *fp = fopen(filename, "r");
   if (fp == NULL) {
     fprintf(stderr, "Error: could not open file %s\n", filename);
     return 1;
   }
 
-  int sum = 0;
+  ll sum = 0;
 
   char buffer[BUFFER_LENGTH] = {0};
   while (fgets(buffer, BUFFER_LENGTH, fp)) {
@@ -27,7 +30,7 @@ int part1(char *filename) {
 
   fclose(fp);
 
-  printf("sum = %d\n", sum);
+  printf("sum = %lld\n", sum);
 
   return sum;
 }
