@@ -33,8 +33,10 @@ Ref:
 Examples:
 - C: https://git.sr.ht/~moshepiekarski/AoC/tree/master/item/2023
 - C: https://github.com/efox4335/advent_of_code
+- CPP: https://github.com/kth-competitive-programming/kactl
 - Java: https://github.com/abnew123/aoc2023
 - Rust: https://github.com/AxlLind/AdventOfCode2023
+- Rust: https://github.com/danielhuang/aoc-2023
 
 Channels:
 - Jonathan Paulson (Python): https://www.youtube.com/@jonathanpaulson5053/videos
