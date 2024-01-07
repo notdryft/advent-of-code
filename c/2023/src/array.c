@@ -137,6 +137,30 @@ int array_cmp(Array *array, size_t i, size_t j) {
   return memcmp(array->items + array->stride * i, array->items + array->stride * j, array->stride);
 }
 
+Array *array_concat(Array *a, Array *b) {
+  if (a->stride != b->stride) {
+    fprintf(
+      stderr,
+      "Error: trying to contact an Array<T> with sizeof(%zu) with an Array<!T> with sizeof(%zu)\n",
+      a->stride,
+      b->stride
+    );
+    return NULL;
+  }
+
+  Array *concat = _array_new(a->stride);
+  for (size_t i = 0; i < a->size; i++) {
+    void *value = array_get(a, i);
+    _array_push(concat, value);
+  }
+  for (size_t i = 0; i < b->size; i++) {
+    void *value = array_get(b, i);
+    _array_push(concat, value);
+  }
+
+  return concat;
+}
+
 Array *array_dup(Array *array) {
   Array *dup = _array_new(array->stride);
   for (size_t i = 0; i < array->size; i++) {

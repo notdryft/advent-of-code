@@ -10,7 +10,7 @@
 
 #define BUFFER_LENGTH 1024
 
-typedef unsigned long long llu;
+typedef long long ll;
 
 enum AlmanachEntryType {
   SEED_TO_SOIL,
@@ -24,20 +24,106 @@ enum AlmanachEntryType {
 };
 
 typedef struct {
+  ll start;
+  ll end;
+} Range;
+
+inline bool range_contains(Range range, ll value) {
+  return range.start <= value && value < range.end;
+}
+
+int range_cmp(const void *a, const void *b) {
+  return ((Range *)a)->start < ((Range *)b)->start ? -1 : 1;
+}
+
+#define min(a,b) ((a<b)?a:b)
+#define max(a,b) ((a>b)?a:b)
+
+void debug_ranges(Array *ranges) {
+  printf("Ranges[ ");
+  for (size_t i = 0; i < ranges->size; i++) {
+    Range *range = array_get(ranges, i);
+    if (i < ranges->size - 1) {
+      printf("[%lld, %lld), ", range->start, range->end);
+    } else {
+      printf("[%lld, %lld) ", range->start, range->end);
+    }
+  }
+  printf("]\n");
+}
+
+typedef struct {
   enum AlmanachEntryType source_type;
-  llu destination;
-  llu source;
-  llu range;
+  Range range;
+  ll offset;
 } AlmanachEntry;
 
-llu part1(char *filename) {
+// [range                      )
+//         [entry       )
+// [before)[intersection)[after)
+void apply_range(Array *waiting, Array *done, AlmanachEntry *entry, Range *range) {
+  Range before = { range->start, min(range->end, entry->range.start) };
+  Range intersection = { max(range->start, entry->range.start), min(range->end, entry->range.end) };
+  Range after = { max(range->start, entry->range.end), range->end};
+
+  if (before.start < before.end) {
+    array_push(waiting, before);
+  }
+  if (intersection.start < intersection.end) {
+    Range nr = { intersection.start + entry->offset, intersection.end + entry->offset };
+    array_push(done, nr);
+  }
+  if (after.start < after.end) {
+    array_push(waiting, after);
+  }
+}
+
+int entry_cmp(const void *a, const void *b) {
+  const AlmanachEntry *ea = a, *eb = b;
+  if (ea->source_type == eb->source_type) {
+    return ea->range.start < eb->range.start ? -1 : 1;
+  }
+  return ea->source_type < eb->source_type ? -1 : 1;
+}
+
+void dump_entries(Array *entries) {
+  printf("Array{ %zu %zu %zu [ ", entries->capacity, entries->size, entries->stride);
+  for (size_t i = 0; i < entries->size; i++) {
+    AlmanachEntry *entry = array_get(entries, i);
+    if (i < entries->size - 1) {
+      printf("{ %d [%lld, %lld) %lld }, ", entry->source_type, entry->range.start, entry->range.end, entry->offset);
+    } else {
+      printf("{ %d [%lld, %lld) %lld }", entry->source_type, entry->range.start, entry->range.end, entry->offset);
+    }
+  }
+  printf(" }\n");
+}
+
+void debug_entries(Array *entries) {
+  printf("Map{\n  0 -> ");
+  size_t source_type = 0;
+  for (size_t i = 0; i < entries->size; i++) {
+    AlmanachEntry *entry = array_get(entries, i);
+    if (entry->source_type != source_type) {
+      printf("\n  %zu -> ", ++source_type);
+    }
+    if (i < entries->size - 1 && ((AlmanachEntry *)(entries->items + entries->stride * (i + 1)))->source_type == source_type) {
+      printf("[%lld, %lld), ", entry->range.start, entry->range.end);
+    } else {
+      printf("[%lld, %lld)", entry->range.start, entry->range.end);
+    }
+  }
+  printf("\n}\n");
+}
+
+ll part1(char *filename) {
   FILE *fp = fopen(filename, "r");
   if (fp == NULL) {
     fprintf(stderr, "Error: could not open file %s\n", filename);
     return 1;
   }
 
-  Array *seeds = array_new(llu);
+  Array *seeds = array_new(ll);
   Array *entries = array_new(AlmanachEntry);
 
   char source_type_str[BUFFER_LENGTH];
@@ -49,12 +135,15 @@ llu part1(char *filename) {
     buffer[buffer_len - 1] = '\0';
 
     if (buffer[0] == '\0') {
-      printf("reset state\n\n");
-    } else if (strncmp(buffer, "seeds: ", 6) == 0) {
+      //printf("reset state\n\n");
+      continue;
+    }
+
+    if (strncmp(buffer, "seeds: ", 6) == 0) {
       char *seeds_str = substring(buffer, 7, buffer_len - 7 - 1);
       StringArray *split = string_split(seeds_str, " ");
       for (size_t i = 0; i < split->size; i++) {
-        array_push(seeds, strtoull(split->items[i], NULL, 10));
+        array_push(seeds, strtoll(split->items[i], NULL, 10));
       }
 
       free(seeds_str);
@@ -77,41 +166,38 @@ llu part1(char *filename) {
         source_type = TEMPERATURE_TO_HUMIDITY;
       } else if (strcmp(source_type_str, "humidity") == 0) {
         source_type = HUMIDITY_TO_LOCATION;
-      } else {
-        printf("got unexpected source type %s\n", source_type_str);
-        exit(42);
       }
-      printf("new source type: \033[97;4m%s\033[0m\n", source_type_str);
+      //printf("new source type: \033[97;4m%s\033[0m\n", source_type_str);
     } else if ('0' <= buffer[0] && buffer[0] <= '9') {
       char *p;
-      llu destination = strtoull(buffer, &p, 10);
-      llu source = strtoull(p + 1, &p, 10);
-      llu range = strtoull(p + 1, NULL, 10);
-      printf("entry for source type \033[97;1m%s\033[0m: %llu %llu %llu\n", source_type_str, destination, source, range);
+      ll destination = strtoll(buffer, &p, 10);
+      ll source = strtoll(p + 1, &p, 10);
+      ll range = strtoll(p + 1, NULL, 10);
+      //printf("entry for source type \033[97;1m%s\033[0m: %lld %lld %lld\n", source_type_str, destination, source, range);
 
       AlmanachEntry entry = {
         .source_type = source_type,
-        .destination = destination,
-        .source = source,
-        .range = range
+        .range = {
+          .start = source,
+          .end = source + range
+        },
+        .offset = destination - source
       };
       array_push(entries, entry);
-    } else {
-      exit(42);
     }
   }
-  printf("\n");
+  fclose(fp);
 
-  llu min = ULLONG_MAX;
+  ll min = LLONG_MAX;
   for (size_t i = 0; i < seeds->size; i++) {
-    llu seed_to_location = llu_array_get(seeds, i);
+    ll seed_to_location = ll_array_get(seeds, i);
     for (size_t entry_type = 0; entry_type < NUMBER_OF_ALMANACH_ENTRY_TYPES; entry_type++) {
       bool stop = false;
       for (size_t j = 0; j < entries->size && !stop; j++) {
         AlmanachEntry *entry = array_get(entries, j);
         if (entry->source_type == entry_type) {
-          if (entry->source <= seed_to_location && seed_to_location < entry->source + entry->range) {
-            seed_to_location += entry->destination - entry->source;
+          if (range_contains(entry->range, seed_to_location)) {
+            seed_to_location += entry->offset;
             stop = true;
           }
         }
@@ -122,9 +208,7 @@ llu part1(char *filename) {
     }
   }
 
-  fclose(fp);
-
-  printf("min = %llu\n", min);
+  printf("min = %lld\n", min);
 
   array_free(entries);
   array_free(seeds);
@@ -132,14 +216,14 @@ llu part1(char *filename) {
   return min;
 }
 
-llu part2(char *filename) {
+ll part2(char *filename) {
   FILE *fp = fopen(filename, "r");
   if (fp == NULL) {
     fprintf(stderr, "Error: could not open file %s\n", filename);
     return 1;
   }
 
-  Array *pairs = array_new(llu);
+  Array *pairs = array_new(ll);
   Array *entries = array_new(AlmanachEntry);
 
   char source_type_str[BUFFER_LENGTH];
@@ -151,12 +235,15 @@ llu part2(char *filename) {
     buffer[buffer_len - 1] = '\0';
 
     if (buffer[0] == '\0') {
-      printf("reset state\n\n");
-    } else if (strncmp(buffer, "seeds: ", 6) == 0) {
+      //printf("reset state\n\n");
+      continue;
+    }
+
+    if (strncmp(buffer, "seeds: ", 6) == 0) {
       char *pairs_str = substring(buffer, 7, buffer_len - 7 - 1);
       StringArray *split = string_split(pairs_str, " ");
       for (size_t i = 0; i < split->size; i++) {
-        array_push(pairs, strtoull(split->items[i], NULL, 0));
+        array_push(pairs, strtoll(split->items[i], NULL, 0));
       }
 
       free(pairs_str);
@@ -179,61 +266,68 @@ llu part2(char *filename) {
         source_type = TEMPERATURE_TO_HUMIDITY;
       } else if (strcmp(source_type_str, "humidity") == 0) {
         source_type = HUMIDITY_TO_LOCATION;
-      } else {
-        printf("got unexpected source type %s\n", source_type_str);
-        exit(42);
       }
-      printf("new source type: \033[97;4m%s\033[0m\n", source_type_str);
+      //printf("new source type: \033[97;4m%s\033[0m\n", source_type_str);
     } else if ('0' <= buffer[0] && buffer[0] <= '9') {
       char *p;
-      llu destination = strtoull(buffer, &p, 10);
-      llu source = strtoull(p + 1, &p, 10);
-      llu range = strtoull(p + 1, NULL, 10);
-      printf("entry for source type \033[97;1m%s\033[0m: %llu %llu %llu\n", source_type_str, destination, source, range);
+      ll destination = strtoll(buffer, &p, 10);
+      ll source = strtoll(p + 1, &p, 10);
+      ll range = strtoll(p + 1, NULL, 10);
+      //printf("entry for source type \033[97;1m%s\033[0m: %lld %lld %lld\n", source_type_str, destination, source, range);
 
       AlmanachEntry entry = {
         .source_type = source_type,
-        .destination = destination,
-        .source = source,
-        .range = range
+        .range = {
+          .start = source,
+          .end = source + range
+        },
+        .offset = destination - source
       };
       array_push(entries, entry);
-    } else {
-      exit(42);
     }
   }
-  printf("\n");
-  
-  llu min = ULLONG_MAX;
-  for (size_t i = 0; i < pairs->size; i += 2) {
-    llu start = llu_array_get(pairs, i);
-    llu end = start + llu_array_get(pairs, i + 1);
-    for (llu seed = start; seed < end; seed++) {
-      llu seed_to_location = seed;
-      for (size_t entry_type = 0; entry_type < NUMBER_OF_ALMANACH_ENTRY_TYPES; entry_type++) {
-        bool stop = false;
-        for (size_t j = 0; j < entries->size && !stop; j++) {
-          AlmanachEntry *entry = array_get(entries, j);
-          if (entry->source_type == entry_type) {
-            if (entry->source <= seed_to_location && seed_to_location < entry->source + entry->range) {
-              seed_to_location += entry->destination - entry->source;
-              stop = true;
-            }
-          }
-        }
-      }
-      if (seed_to_location < min) {
-        min = seed_to_location;
-      }
-    }
-  }
-
   fclose(fp);
 
-  printf("min = %llu\n", min);
+  Array *ranges = array_new(Range);
+  for (size_t i = 0; i < pairs->size; i += 2) {
+    ll start = llu_array_get(pairs, i);
+    ll r = llu_array_get(pairs, i + 1);
+    Range range = { start, start + r };
+    array_push(ranges, range);
+  }
+
+  for (size_t entry_type = 0; entry_type < NUMBER_OF_ALMANACH_ENTRY_TYPES; entry_type++) {
+    Array *done = array_new(Range);
+    for (size_t i = 0; i < entries->size; i++) {
+      AlmanachEntry *entry = array_get(entries, i);
+      if (entry->source_type == entry_type) {
+        Array *waiting = array_new(Range);
+        while (ranges->size > 0) {
+          Range *r = array_pop(ranges);
+          apply_range(waiting, done, entry, r);
+        }
+        free(ranges);
+        ranges = waiting;
+      }
+    }
+    Array *tmp = array_concat(done, ranges);
+    free(done);
+    free(ranges);
+    ranges = tmp;
+  }
+
+  ll min = LLONG_MAX;
+  for (size_t i = 0; i < ranges->size; i++) {
+    Range *r = array_get(ranges, i);
+    if (r->start < min) {
+      min = r->start;
+    }
+  }
+  printf("min = %lld\n", min);
 
   array_free(entries);
   array_free(pairs);
+  array_free(ranges);
 
   return min;
 }
