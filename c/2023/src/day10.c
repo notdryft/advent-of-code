@@ -378,8 +378,15 @@ int part2(char *filename) {
           row[i] = 'O';
         }
       }
+      if (row[i] == 'O') {
+        printf("\033[97;1m%c\033[0m", row[i]);
+      } else if (row[i] == 'I') {
+        printf("\033[91;1m%c\033[0m", row[i]);
+      } else {
+        printf("%c", row[i]);
+      }
     }
-    printf("%s\n", row);
+    printf("\n");
   }
   printf("inside = %d\n", inside);
 

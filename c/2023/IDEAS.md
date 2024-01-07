@@ -24,6 +24,9 @@ day 23: longest path is np hard, DFS, BF and throw DP into the mix?, no alloc > 
 day 24: line-line intersection, SMT solvers (Z3), lup decomposition? gaussian elimination, chinese remainder, BF
 day 25: max flow/min cut (stoer wagner, push-relabel or preflow-push, etc.)
 
+ANSI:
+- https://stackoverflow.com/questions/4842424/list-of-ansi-color-escape-sequences
+
 Ref:
 - https://github.com/Bogdanp/awesome-advent-of-code
 
