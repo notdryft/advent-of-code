@@ -169,6 +169,10 @@ Array *array_dup(Array *array) {
   return dup;
 }
 
+void array_sort(Array *array, int (* cmp)(const void *, const void *)) {
+  qsort(array->items, array->size, array->stride, cmp);
+}
+
 bool int_array_all(Array *array, int expected) {
   for (size_t i = 0; i < array->size; i++) {
     if (int_array_get(array, i) != expected) {

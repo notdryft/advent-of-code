@@ -87,6 +87,7 @@ void array_remove(Array *array, size_t index);
 int array_cmp(Array *array, size_t i, size_t j);
 Array *array_concat(Array *a, Array *b);
 Array *array_dup(Array *array);
+void array_sort(Array *array, int (*compar)(const void *, const void *));
 
 bool int_array_all(Array *array, int expected);
 bool int_array_contains(Array *array, int expected);
