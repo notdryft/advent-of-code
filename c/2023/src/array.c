@@ -169,7 +169,7 @@ void int_array_print(Array *array) {
   if (array->stride != sizeof(int)) {
     fprintf(
       stderr,
-      "Error: trying to print an Array<int> with sizeof(%zu) from a Array<!int> with sizeof(%zu)\n",
+      "Error: trying to print an Array<int> with sizeof(%zu) from an Array<!int> with sizeof(%zu)\n",
       sizeof(int),
       array->stride
     );
@@ -192,7 +192,7 @@ void long_array_print(Array *array) {
   if (array->stride != sizeof(long)) {
     fprintf(
       stderr,
-      "Error: trying to print an Array<long> with sizeof(%zu) from a Array<!long> with sizeof(%zu)\n",
+      "Error: trying to print an Array<long> with sizeof(%zu) from an Array<!long> with sizeof(%zu)\n",
       sizeof(long),
       array->stride
     );
@@ -215,7 +215,7 @@ void ll_array_print(Array *array) {
   if (array->stride != sizeof(long long)) {
     fprintf(
       stderr,
-      "Error: trying to print an Array<long long> with sizeof(%zu) from a Array<!long long> with sizeof(%zu)\n",
+      "Error: trying to print an Array<long long> with sizeof(%zu) from an Array<!long long> with sizeof(%zu)\n",
       sizeof(long long),
       array->stride
     );
@@ -238,7 +238,7 @@ void llu_array_print(Array *array) {
   if (array->stride != sizeof(unsigned long long)) {
     fprintf(
       stderr,
-      "Error: trying to print an Array<long long> with sizeof(%zu) from a Array<!long long> with sizeof(%zu)\n",
+      "Error: trying to print an Array<long long> with sizeof(%zu) from an Array<!long long> with sizeof(%zu)\n",
       sizeof(unsigned long long),
       array->stride
     );
