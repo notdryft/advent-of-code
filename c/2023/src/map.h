@@ -3,35 +3,30 @@
 
 #include <stdbool.h>
 
-#define MAP_DEFAULT_CAPACITY 2
+#include "array.h"
 
-typedef struct {
-  char *key;
-  void *value;
-} MapEntry;
+#define MAP_CAPACITY 131071
 
 typedef struct {
   size_t capacity;
+  size_t entry_stride;
+  size_t key_stride;
   size_t size;
-  MapEntry **entries;
+  Array **table;
 } Map;
 
-Map *map_new();
+Map *_map_new(size_t key_stride, size_t entry_stride);
+#define map_new(key_type, entry_type) _map_new(sizeof(key_type), sizeof(entry_type))
+
 void map_free(Map *map);
 
 // gets
 
-void *map_get(Map *map, char *key);
-bool map_contains_key(Map *map, char *key);
+void *map_get(Map *map, void *key);
+bool map_contains_key(Map *map, void *key);
 
 // sets
 
-void map_put(Map *map, char *key, void *value);
-
-// pretty printers
-
-void map_print(Map *map);
-void int_map_print(Map *map);
-void string_map_print(Map *map);
+void map_put(Map *map, void *entry);
 
 #endif

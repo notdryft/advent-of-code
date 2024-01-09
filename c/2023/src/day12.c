@@ -6,6 +6,7 @@
 #include <string.h>
 
 #include "array.h"
+#include "map.h"
 #include "string.h"
 
 #define BUFFER_LENGTH 1024
@@ -73,62 +74,26 @@ typedef struct {
   size_t si;
   size_t di;
   int dlen;
+} DPKey;
+
+typedef struct {
+  size_t si;
+  size_t di;
+  int dlen;
   unsigned long long value;
 } DPEntry;
 
-typedef struct {
-  size_t capacity;
-  size_t size;
-  DPEntry **entries;
-} DP;
-
-DP *dp_new() {
-  DP *dp = malloc(sizeof(DP));
-  dp->capacity = 1000;
-  dp->size = 0;
-  dp->entries = malloc(sizeof(DPEntry *) * dp->capacity);
-
-  return dp;
+DPEntry *dp_get(Map *dp, size_t si, size_t di, int dlen) {
+  DPKey key = { si, di, dlen };
+  return map_get(dp, &key);
 }
 
-DPEntry *dp_get(DP* dp, size_t si, size_t di, int dlen) {
-  for (size_t i = 0; i < dp->size; i++) {
-    DPEntry *entry = dp->entries[i];
-    if (entry->si == si && entry->di == di && entry->dlen == dlen) {
-      return entry;
-    }
-  }
-  return NULL;
+void dp_put(Map *dp, size_t si, size_t di, int dlen, unsigned long long assignments) {
+  DPEntry entry = { si, di, dlen, assignments };
+  map_put(dp, &entry);
 }
 
-void dp_push(DP* dp, size_t si, size_t di, int dlen, unsigned long long value) {
-  DPEntry *try = dp_get(dp, si, di, dlen);
-  if (try != NULL) {
-    printf("???\n");
-    exit(1);
-  }
-
-  DPEntry *entry = malloc(sizeof(DPEntry));
-  entry->si = si;
-  entry->di = di;
-  entry->dlen = dlen;
-  entry->value = value;
-
-  if (dp->size + 1 > dp->capacity) {
-    dp->capacity *= 2; 
-    dp->entries = realloc(dp->entries, sizeof(DPEntry *) * dp->capacity);
-  }
-  dp->entries[dp->size++] = entry;
-}
-
-void dp_free(DP *dp) {
-  for (size_t i = 0; i < dp->size; i++) {
-    free(dp->entries[i]);
-  }
-  free(dp);
-}
-
-unsigned long long find_arrangements_dp(char *springs, Array *damaged, DP *dp, size_t si, size_t di, int dlen) {
+unsigned long long find_arrangements_dp(char *springs, Array *damaged, Map *dp, size_t si, size_t di, int dlen) {
   DPEntry *entry = dp_get(dp, si, di, dlen);
   if (entry != NULL) {
     return entry->value;
@@ -159,7 +124,7 @@ unsigned long long find_arrangements_dp(char *springs, Array *damaged, DP *dp, s
     }
   }
   //printf("cache push: (%zu, %zu, %zu) -> %llu\n", si, di, dlen, arrangements);
-  dp_push(dp, si, di, dlen, arrangements);
+  dp_put(dp, si, di, dlen, arrangements);
   return arrangements;
 }
 
@@ -241,20 +206,19 @@ unsigned long long part2(char *filename) {
     Array *damaged = string_atoi(damaged_repeated_stra);
     int_array_print(damaged);
 
-    DP* dp = dp_new();
+    Map* dp = map_new(DPKey, DPEntry);
     unsigned long long a = find_arrangements_dp(springs_repeated, damaged, dp, 0, 0, 0);
     printf("arrangements += %llu\n", a);
     arrangements += a;
 
     array_free(damaged);
-    dp_free(dp);
     free(springs_repeated);
+    map_free(dp);
     string_array_free(damaged_repeated_stra);
     string_array_free(damaged_stra);
     string_array_free(split);
   }
   string_array_free(records);
-
 
   printf("arrangements = %llu\n", arrangements);
 

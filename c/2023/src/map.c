@@ -5,28 +5,27 @@
 
 #include "map.h"
 
-Map *map_new() {
+Map *_map_new(size_t key_stride, size_t entry_stride) {
   Map *map = malloc(sizeof(Map));
-  map->capacity = 0;
-  map->size = 0;
-  map->entries = NULL;
+  map->capacity = MAP_CAPACITY;
+  map->table = calloc(map->capacity, sizeof(Array *));
+
+  map->key_stride = key_stride;
+  map->entry_stride = entry_stride;
 
   return map;
 }
 
 void map_free(Map *map) {
   if (map != NULL) {
-    if (map->entries != NULL) {
-      for (size_t i = 0; i < map->size; i++) {
-        MapEntry *entry = map->entries[i];
-        if (entry != NULL) {
-          if (entry->key != NULL) {
-            free(entry->key);
-          }
-          free(entry);
+    if (map->table != NULL) {
+      for (size_t i = 0; i < map->capacity; i++) {
+        Array *array = map->table[i];
+        if (array != NULL) {
+          array_free(array);
         }
       }
-      free(map->entries);
+      free(map->table);
     }
     free(map);
   }
@@ -34,78 +33,72 @@ void map_free(Map *map) {
 
 // gets
 
-void *map_get(Map *map, char *key) {
-  for (size_t i = 0; i < map->size; i++) {
-    MapEntry *entry = map->entries[i];
-    if (strcmp(entry->key, key) == 0) {
-      return entry->value;
+// https://en.wikipedia.org/wiki/Jenkins_hash_function#one_at_a_time
+uint32_t _map_hash(Map *map, const void *entry) {
+  const uint8_t *key = (uint8_t *) entry;
+
+  uint32_t hash = 0;
+  for (size_t i = 0; i < map->key_stride; i++) {
+    hash += key[i];
+    hash += hash << 10;
+    hash ^= hash >> 6;
+  }
+  hash += hash << 3;
+  hash ^= hash >> 11;
+  hash += hash << 15;
+
+  return hash % map->capacity;
+}
+
+void *map_get(Map *map, void *entry) {
+  uint32_t hash = _map_hash(map, entry);
+
+  Array *htable = map->table[hash];
+  if (htable != NULL) {
+    for (size_t i = 0; i < htable->size; i++) {
+      void *item = array_get(htable, i);
+      if (memcmp(entry, item, map->key_stride) == 0) {
+        return item;
+      }
     }
   }
+
   return NULL;
 }
 
-bool map_contains_key(Map *map, char *key) {
-  for (size_t i = 0; i < map->size; i++) {
-    MapEntry *entry = map->entries[i];
-    if (strcmp(entry->key, key) == 0) {
-      return true;
+bool map_contains_key(Map *map, void *entry) {
+  uint32_t hash = _map_hash(map, entry);
+
+  Array *htable = map->table[hash];
+  if (htable != NULL) {
+    for (size_t i = 0; i < htable->size; i++) {
+      void *item = array_get(htable, i);
+      if (memcmp(entry, item, map->key_stride) == 0) {
+        return true;
+      }
     }
   }
+
   return false;
 }
 
 // sets
 
-void map_put(Map *map, char *key, void *value) {
-  if (map->size + 1 > map->capacity) {
-    map->capacity = map->capacity == 0 ? MAP_DEFAULT_CAPACITY : map->capacity * 2;
-    map->entries = realloc(map->entries, sizeof(*map->entries) * map->capacity);
+void map_put(Map *map, void *entry) {
+  uint32_t hash = _map_hash(map, entry);
+  if (map->table[hash] == NULL) {
+    map->table[hash] = _array_new(map->entry_stride);
   }
 
-  MapEntry *entry = malloc(sizeof(MapEntry));
-  entry->key = strdup(key);
-  entry->value = value;
-
-  map->entries[map->size++] = entry;
-}
-
-// pretty printers
-
-void map_print(Map *map) {
-  printf("Map{ capacity = %zu, size = %zu, data = [", map->capacity, map->size);
-  for (size_t i = 0; i < map->size; i++) {
-    MapEntry *entry = map->entries[i];
-    if (i == map->size - 1) {
-      printf(" { key = \"%s\", value = %p }", entry->key, entry->value);
-    } else {
-      printf(" { key = \"%s\", value = %p },", entry->key, entry->value);
+  size_t index = 0;
+  Array *htable = map->table[hash];
+  while (index < htable->size) {
+    void *item = array_get(map->table[hash], index);
+    if (memcmp(entry, item, map->key_stride) == 0) {
+      break;
     }
+    index++;
   }
-  printf(" ] }\n");
-}
 
-void int_map_print(Map *map) {
-  printf("Map{ capacity = %zu, size = %zu, data = [", map->capacity, map->size);
-  for (size_t i = 0; i < map->size; i++) {
-    MapEntry *entry = map->entries[i];
-    if (i == map->size - 1) {
-      printf(" { key = \"%s\", value = %d }", entry->key, *(int *) entry->value);
-    } else {
-      printf(" { key = \"%s\", value = %d },", entry->key, *(int *) entry->value);
-    }
-  }
-  printf(" ] }\n");
-}
-
-void string_map_print(Map *map) {
-  printf("Map{ capacity = %zu, size = %zu, data = [", map->capacity, map->size);
-  for (size_t i = 0; i < map->size; i++) {
-    MapEntry *entry = map->entries[i];
-    if (i == map->size - 1) {
-      printf(" { key = \"%s\", value = \"%s\" }", entry->key, (char *) entry->value);
-    } else {
-      printf(" { key = \"%s\", value = \"%s\" },", entry->key, (char *) entry->value);
-    }
-  }
-  printf(" ] }\n");
+  _array_set(map->table[hash], index, entry);
 }
