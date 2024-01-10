@@ -83,18 +83,11 @@ typedef struct {
   unsigned long long value;
 } DPEntry;
 
-DPEntry *dp_get(Map *dp, size_t si, size_t di, int dlen) {
-  DPKey key = { si, di, dlen };
-  return map_get(dp, &key);
-}
-
-void dp_put(Map *dp, size_t si, size_t di, int dlen, unsigned long long assignments) {
-  DPEntry entry = { si, di, dlen, assignments };
-  map_put(dp, &entry);
-}
+#define dp_get(dp, ...) map_get(dp, &(DPEntry) { __VA_ARGS__ })
+#define dp_put(dp, ...) map_put(dp, &(DPEntry) { __VA_ARGS__ })
 
 unsigned long long find_arrangements_dp(char *springs, Array *damaged, Map *dp, size_t si, size_t di, int dlen) {
-  DPEntry *entry = dp_get(dp, si, di, dlen);
+  DPEntry *entry = dp_get(dp, .si = si, .di = di, .dlen = dlen);
   if (entry != NULL) {
     return entry->value;
   }
@@ -124,7 +117,7 @@ unsigned long long find_arrangements_dp(char *springs, Array *damaged, Map *dp, 
     }
   }
   //printf("cache push: (%zu, %zu, %zu) -> %llu\n", si, di, dlen, arrangements);
-  dp_put(dp, si, di, dlen, arrangements);
+  dp_put(dp, .si = si, .di = di, .dlen = dlen, .value = arrangements);
   return arrangements;
 }
 
