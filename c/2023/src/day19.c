@@ -97,7 +97,6 @@ Node *find_node(Array *array, char *name) {
 }
 
 bool accept_or_reject(Array *nodes, Node *node, int x, int m, int a, int s) {
-  printf("new node %p\n", node);
   printf("new node name=%s\n", node->name);
   for (size_t i = 0; i < node->rules->size; i++) {
     printf("1\n");

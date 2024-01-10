@@ -59,7 +59,7 @@ int hand_cmp(const void *a, const void *b) {
     }
   }
   return hand_a->hand_type - hand_b->hand_type;
-};
+}
 
 int int_reverse_cmp(const void *a, const void *b) {
   return *(int *) b - *(int *) a;

@@ -107,8 +107,11 @@ void debug_entries(Array *entries) {
     if (entry->source_type != source_type) {
       printf("\n  %zu -> ", ++source_type);
     }
-    if (i < entries->size - 1 && ((AlmanachEntry *)(entries->items + entries->stride * (i + 1)))->source_type == source_type) {
-      printf("[%lld, %lld), ", entry->range.start, entry->range.end);
+    if (i < entries->size - 1) {
+      AlmanachEntry *next = array_get(entries, i + 1);
+      if (next->source_type == source_type) {
+        printf("[%lld, %lld), ", entry->range.start, entry->range.end);
+      }
     } else {
       printf("[%lld, %lld)", entry->range.start, entry->range.end);
     }

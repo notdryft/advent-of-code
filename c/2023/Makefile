@@ -1,5 +1,5 @@
 cc = gcc-13
-cflags = -O3 -std=c2x -Wall -Wextra
+cflags = -O3 -pedantic -std=c2x -Wall -Wextra
 
 rm = @rm
 rmflags = -vf
