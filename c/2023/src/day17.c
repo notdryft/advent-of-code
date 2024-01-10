@@ -198,7 +198,7 @@ int part2(char *filename) {
   return cost;
 }
 
-int main() {
+int main(void) {
   assert(part1("../../inputs/2023/day17/sample1") == 102);
   assert(part1("../../inputs/2023/day17/data") == 855);
   assert(part2("../../inputs/2023/day17/sample1") == 94);

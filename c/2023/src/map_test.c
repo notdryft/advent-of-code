@@ -37,7 +37,7 @@ void map_print(Map *map) {
   printf("}\n");
 }
 
-void map_tests() {
+void map_tests(void) {
   Map *map = map_new(MapKey, MapEntry);
   map_print(map);
 
@@ -59,7 +59,7 @@ void map_tests() {
   map_free(map);
 }
 
-int main() {
+int main(void) {
   printf("// Map\n");
   map_tests();
 

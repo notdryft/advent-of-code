@@ -33,7 +33,7 @@ int hash(char *str, size_t len) {
   return h;
 }
 
-Map *map_new() {
+Map *map_new(void) {
   Map *map = malloc(sizeof(Map));
   map->capacity = 256;
   map->size = 0;
@@ -202,7 +202,7 @@ int part2(char *filename) {
   return sum;
 }
 
-int main() {
+int main(void) {
   assert(part1("../../inputs/2023/day15/sample") == 1320);
   assert(part1("../../inputs/2023/day15/data") == 514639);
   assert(part2("../../inputs/2023/day15/sample") == 145);

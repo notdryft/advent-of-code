@@ -4,7 +4,7 @@
 #include "array.h"
 #include "string.h"
 
-void string_array_tests() {
+void string_array_tests(void) {
   StringArray *strings = string_array_new();
   string_array_print(strings);
 
@@ -21,7 +21,7 @@ void string_array_tests() {
   string_array_free(strings);
 }
 
-void string_split_with_one_char_delimiter_tests() {
+void string_split_with_one_char_delimiter_tests(void) {
   char *content = "one,two;three,four";
 
   StringArray *semi_split = string_split(content, ";");
@@ -38,7 +38,7 @@ void string_split_with_one_char_delimiter_tests() {
   string_array_free(semi_split);
 }
 
-void string_split_with_multiple_char_delimiter_tests() {
+void string_split_with_multiple_char_delimiter_tests(void) {
   char *content = "one , two ; three , four";
 
   StringArray *semi_split = string_split(content, " ; ");
@@ -65,7 +65,7 @@ void string_split_with_multiple_char_delimiter_tests() {
   string_array_free(colon_split);
 }
 
-int main() {
+int main(void) {
   printf("// StringArray\n");
   string_array_tests();
 

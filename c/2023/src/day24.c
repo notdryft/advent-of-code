@@ -419,7 +419,7 @@ __int128 part2(char *filename) {
   return (__int128) sum;
 }
 
-int main() {
+int main(void) {
   assert(part1("../../inputs/2023/day24/sample", 7, 27, true) == 2);
   assert(part1("../../inputs/2023/day24/data", 200000000000000, 400000000000000, false) == 18184);
   assert(part2("../../inputs/2023/day24/sample") == 47);

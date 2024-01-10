@@ -12,7 +12,7 @@ typedef struct {
   char **items;
 } StringArray;
 
-StringArray *string_array_new();
+StringArray *string_array_new(void);
 void string_array_free(StringArray *array);
 
 // gets

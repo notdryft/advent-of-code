@@ -165,7 +165,7 @@ int part2(char *filename) {
   return max;
 }
 
-int main() {
+int main(void) {
   assert(part1("../../inputs/2023/day23/sample") == 94);
   assert(part1("../../inputs/2023/day23/data") == 2154);
   assert(part2("../../inputs/2023/day23/sample") == 154);

@@ -171,7 +171,7 @@ int part1(char *filename) {
   return result;
 }
 
-int main() {
+int main(void) {
   // dot -Kdot -Tsvg ../../inputs/2023/day25/sample.dot > ../../inputs/2023/day25/sample.svg
   assert(part1("../../inputs/2023/day25/sample") == 54);
   // dot -Kneato -Tsvg ../../inputs/2023/day25/data.dot > ../../inputs/2023/day25/data.svg

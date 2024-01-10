@@ -5,7 +5,7 @@
 
 #include "array.h"
 
-void int_array_tests() {
+void int_array_tests(void) {
   Array *ints = array_new(int);
   int_array_print(ints);
 
@@ -53,7 +53,7 @@ void item_array_print(Array *array) {
   printf(" ] }\n");
 }
 
-void dyn_array_tests() {
+void dyn_array_tests(void) {
   Array *items = array_new(Item);
   item_array_print(items);
 
@@ -111,7 +111,7 @@ void array_priority_push(Array *array, Item value) {
   }
 }
 
-void array_priority_push_tests() {
+void array_priority_push_tests(void) {
   Array *items = array_new(Item);
   item_array_print(items);
 
@@ -150,7 +150,7 @@ void array_priority_push_tests() {
   array_free(items);
 }
 
-int main() {
+int main(void) {
   printf("// ints\n");
   int_array_tests();
 

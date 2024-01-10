@@ -418,7 +418,7 @@ long long part2(char *filename) {
   return result;
 }
 
-int main() {
+int main(void) {
   //assert(part1("../../inputs/2023/day20/sample1") == 32000000);
   //assert(part1("../../inputs/2023/day20/sample2") == 11687500);
   //assert(part1("../../inputs/2023/day20/data") == 681194780); // random result???

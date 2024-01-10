@@ -218,7 +218,7 @@ unsigned long long part2(char *filename) {
   return arrangements;
 }
 
-int main() {
+int main(void) {
   assert(part1("../../inputs/2023/day12/sample") == 21);
   assert(part1("../../inputs/2023/day12/data") == 7694);
   assert(part2("../../inputs/2023/day12/sample") == 525152);

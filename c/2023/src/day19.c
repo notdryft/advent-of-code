@@ -503,7 +503,7 @@ unsigned long long part2(char *filename) {
   return sum;
 }
 
-int main() {
+int main(void) {
   assert(part1("../../inputs/2023/day19/sample") == 19114);
   assert(part1("../../inputs/2023/day19/data") == 367602);
   assert(part2("../../inputs/2023/day19/sample") == 167409079868000);

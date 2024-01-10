@@ -332,7 +332,7 @@ ll part2(char *filename) {
   return min;
 }
 
-int main() {
+int main(void) {
   assert(part1("../../inputs/2023/day5/sample") == 35);
   assert(part1("../../inputs/2023/day5/data") == 403695602);
   assert(part2("../../inputs/2023/day5/sample") == 46);

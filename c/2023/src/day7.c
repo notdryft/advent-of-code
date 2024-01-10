@@ -294,7 +294,7 @@ int part2(char *filename) {
   return sum;
 }
 
-int main() {
+int main(void) {
   init_cards_ordering(false);
 
   assert(part1("../../inputs/2023/day7/sample") == 6440);

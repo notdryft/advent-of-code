@@ -285,7 +285,7 @@ long long part2(char *filename, int steps) {
   return sum;
 }
 
-int main() {
+int main(void) {
   assert(part1("../../inputs/2023/day21/sample", 6) == 16);
   assert(part1("../../inputs/2023/day21/data", 64) == 3503);
   assert(part2("../../inputs/2023/day21/sample", 6) == 16);

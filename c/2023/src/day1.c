@@ -78,7 +78,7 @@ int part2(char *filename) {
   return sum;
 }
 
-int main() {
+int main(void) {
   assert(part1("../../inputs/2023/day1/sample1") == 142);
   assert(part1("../../inputs/2023/day1/data") == 55488);
   assert(part2("../../inputs/2023/day1/sample2") == 281);

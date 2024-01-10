@@ -23,7 +23,7 @@ void find_longest_cycle_test(int *numbers, size_t len) {
   array_free(array);
 }
 
-void find_longest_cycle_tests() {
+void find_longest_cycle_tests(void) {
   find_longest_cycle_test((int[]) { 1, 2, 3, 4, 5, 6 }, 6);
   find_longest_cycle_test((int[]) { 1, 2, 3, 1, 2 }, 5);
   find_longest_cycle_test((int[]) { 1, 2, 3, 1, 2, 3 }, 6);
@@ -40,7 +40,7 @@ void find_longest_cycle_tests() {
   find_longest_cycle_test((int[]) { 1, 2, 2, 2, 3, 4, 2, 2, 3, 4 }, 10);
 }
 
-int main() {
+int main(void) {
   printf("// Find longest cycle with minimum period\n");
   find_longest_cycle_tests();
 

@@ -5,7 +5,7 @@
 #include "array.h"
 #include "string.h"
 
-StringArray *string_array_new() {
+StringArray *string_array_new(void) {
   StringArray *array = malloc(sizeof(StringArray));
   array->capacity = 0;
   array->size = 0;

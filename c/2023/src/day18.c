@@ -183,7 +183,7 @@ long long part2(char *filename) {
   return area;
 }
 
-int main() {
+int main(void) {
   assert(part1("../../inputs/2023/day18/sample") == 62);
   assert(part1("../../inputs/2023/day18/data") == 70253);
   assert(part2("../../inputs/2023/day18/sample") == 952408144115);
