@@ -80,16 +80,8 @@ void _array_set(Array *array, size_t index, void *value) {
   memcpy((uint8_t *) array->items + array->stride * index, value, array->stride);
 }
 
-void _array_add_first(Array *array, void *value) {
-  if (array->size + 1 > array->capacity) {
-    _array_resize(array);
-  }
-
-  array->size++;
-  for (size_t i = array->size - 1; i > 0; i--) {
-    memcpy((uint8_t *) array->items + array->stride * i, (uint8_t *) array->items + array->stride * (i - 1), array->stride);
-  }
-  memcpy(array->items, value, array->stride);
+inline void _array_add_first(Array *array, void *value) {
+  _array_insert(array, 0, value);
 }
 
 void _array_insert(Array *array, size_t index, void *value) {
@@ -97,20 +89,17 @@ void _array_insert(Array *array, size_t index, void *value) {
     _array_resize(array);
   }
 
+  uint8_t *insertp = (uint8_t *) array->items + array->stride * index;
+  memmove(insertp + array->stride, insertp, array->stride * (array->size - index));
+  memcpy(insertp, value, array->stride);
   array->size++;
-  for (size_t i = array->size - 1; i > index; i--) {
-    memcpy((uint8_t *) array->items + array->stride * i, (uint8_t *) array->items + array->stride * (i - 1), array->stride);
-  }
-  memcpy((uint8_t *) array->items + array->stride * index, value, array->stride);
 }
 
 void array_move_first(Array *array, size_t index) {
   void *tmp = malloc(sizeof(array->stride));
   memcpy(tmp, (uint8_t *) array->items + array->stride * index, array->stride);
 
-  for (size_t i = index; i > 0; i--) {
-    memcpy((uint8_t *) array->items + array->stride * i, (uint8_t *) array->items + array->stride * (i - 1), array->stride);
-  }
+  memmove((uint8_t *) array->items + array->stride, array->items, array->stride * index);
   memcpy(array->items, tmp, array->stride);
 
   free(tmp);
@@ -125,10 +114,10 @@ inline void array_remove_last(Array *array) {
 }
 
 void array_remove(Array *array, size_t index) {
-  for (size_t i = index; i < array->size - 1; i++) {
-    memcpy((uint8_t *) array->items + array->stride * i, (uint8_t *) array->items + array->stride * (i + 1), array->stride);
-  }
   array->size--;
+
+  uint8_t *destp = (uint8_t *) array->items + array->stride * index;
+  memmove(destp, destp + array->stride, array->stride * (array->size - index));
 }
 
 // utils
