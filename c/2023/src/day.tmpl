@@ -1,36 +1,35 @@
 #include <assert.h>
+#include <inttypes.h>
 #include <limits.h>
 #include <stdbool.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 #include "array.h"
+#include "map.h"
 #include "string.h"
 
-#define BUFFER_LENGTH 1024
+constexpr size_t BUFFER_LENGTH = 1024;
 
-typedef long long ll;
-typedef unsigned long long llu;
-
-ll part1(char *filename) {
+int64_t part1(char *filename) {
   FILE *fp = fopen(filename, "r");
   if (fp == NULL) {
     fprintf(stderr, "Error: could not open file %s\n", filename);
     return 1;
   }
 
-  ll sum = 0;
+  int64_t sum = 0;
 
-  char buffer[BUFFER_LENGTH] = {0};
+  char buffer[BUFFER_LENGTH] = {};
   while (fgets(buffer, BUFFER_LENGTH, fp)) {
-    size_t buffer_len = strlen(buffer);
-    buffer[buffer_len - 1] = '\0';
+    size_t buffer_len = strlen(buffer) - 1;
+    buffer[buffer_len] = '\0';
   }
-
   fclose(fp);
 
-  printf("sum = %lld\n", sum);
+  printf("sum: %" PRId64 "\n", sum);
 
   return sum;
 }
