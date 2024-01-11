@@ -48,7 +48,7 @@ unsigned long long distance(Galaxy *a, Galaxy *b) {
 
 unsigned long long part1(char *filename) {
   FILE *fp = fopen(filename, "r");
-  if (fp == NULL) {
+  if (fp == nullptr) {
     fprintf(stderr, "Error: could not open file %s\n", filename);
     return 1;
   }
@@ -149,7 +149,7 @@ unsigned long long part1(char *filename) {
 
 unsigned long long part2(char *filename) {
   FILE *fp = fopen(filename, "r");
-  if (fp == NULL) {
+  if (fp == nullptr) {
     fprintf(stderr, "Error: could not open file %s\n", filename);
     return 1;
   }

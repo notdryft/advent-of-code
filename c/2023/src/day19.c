@@ -62,7 +62,7 @@ void debug(Array *nodes) {
   for (size_t i = 0; i < nodes->size; i++) {
     Node *node = array_get(nodes, i);
     printf("{ %s: [ ", node->name);
-    if (node->rules != NULL) {
+    if (node->rules != nullptr) {
       for (size_t j = 0; j < node->rules->size; j++) {
         Rule *rule = array_get(node->rules, j);
         printf("{ %d %d '%c' %d %d \"%s\" }, ", rule->rule_type, rule->action, rule->category, rule->op, rule->quantity, rule->next);
@@ -93,7 +93,7 @@ Node *find_node(Array *array, char *name) {
       return item;
     }
   }
-  return NULL;
+  return nullptr;
 }
 
 bool accept_or_reject(Array *nodes, Node *node, int x, int m, int a, int s) {
@@ -226,14 +226,14 @@ void reduce(Array *queue, Array *valid, Node *node, Ranges ranges) {
 
 int part1(char *filename) {
   FILE *fp = fopen(filename, "r");
-  if (fp == NULL) {
+  if (fp == nullptr) {
     fprintf(stderr, "Error: could not open file %s\n", filename);
     return 1;
   }
 
   int sum = 0;
 
-  Node *root = NULL;
+  Node *root = nullptr;
   Array *nodes = array_new(Node);
 
   char buffer[BUFFER_LENGTH] = {};
@@ -319,7 +319,7 @@ int part1(char *filename) {
 
       string_array_free(rules);
     } else if (sscanf(buffer, "{x=%d,m=%d,a=%d,s=%d}", &x, &m, &a, &s)) {
-      if (root == NULL) {
+      if (root == nullptr) {
         root = find_node(nodes, "in");
       }
       printf("%s\n", root->name);
@@ -347,7 +347,7 @@ int part1(char *filename) {
 
 unsigned long long part2(char *filename) {
   FILE *fp = fopen(filename, "r");
-  if (fp == NULL) {
+  if (fp == nullptr) {
     fprintf(stderr, "Error: could not open file %s\n", filename);
     return 1;
   }

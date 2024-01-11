@@ -140,7 +140,7 @@ int dijkstra(char **grid, int mx, int my, int mindist, int maxdist) {
 
 int part1(char *filename) {
   FILE *fp = fopen(filename, "r");
-  if (fp == NULL) {
+  if (fp == nullptr) {
     fprintf(stderr, "Error: could not open file %s\n", filename);
     return 1;
   }
@@ -170,7 +170,7 @@ int part1(char *filename) {
 
 int part2(char *filename) {
   FILE *fp = fopen(filename, "r");
-  if (fp == NULL) {
+  if (fp == nullptr) {
     fprintf(stderr, "Error: could not open file %s\n", filename);
     return 1;
   }

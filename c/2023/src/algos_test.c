@@ -13,7 +13,7 @@ void find_longest_cycle_test(int *numbers, size_t len) {
   int_array_print(array);
 
   Cycle *c = find_longest_cycle(array, 2);
-  if (c != NULL) {
+  if (c != nullptr) {
     printf("Cycle from %zu with period %zu\n", c->start, c->period);
     free(c);
   } else {

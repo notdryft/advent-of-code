@@ -40,12 +40,12 @@ StringArray *find_map(Array *infinity, long long ix, long long iy) {
       return s->map;
     }
   }
-  return NULL;
+  return nullptr;
 }
 
 StringArray *find_map_or_dup(Array *infinity, StringArray *original, long long ix, long long iy) {
   StringArray *map = find_map(infinity, ix, iy);
-  if (map == NULL) {
+  if (map == nullptr) {
     //printf("new map for ix = %lld, iy = %lld\n", ix, iy);
     map = string_array_dup(original);
     array_push(infinity, ((Space) { .ix = ix, .iy = iy, .map = map }));
@@ -80,7 +80,7 @@ void array_priority_push(Array *array, Coord c) {
 
 long long part1(char *filename, int steps) {
   FILE *fp = fopen(filename, "r");
-  if (fp == NULL) {
+  if (fp == nullptr) {
     fprintf(stderr, "Error: could not open file %s\n", filename);
     return 1;
   }
@@ -149,7 +149,7 @@ long long part1(char *filename, int steps) {
 
 long long part2(char *filename, int steps) {
   FILE *fp = fopen(filename, "r");
-  if (fp == NULL) {
+  if (fp == nullptr) {
     fprintf(stderr, "Error: could not open file %s\n", filename);
     return 1;
   }

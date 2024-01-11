@@ -105,7 +105,7 @@ int load(StringArray *rocks) {
 
 int part1(char *filename) {
   FILE *fp = fopen(filename, "r");
-  if (fp == NULL) {
+  if (fp == nullptr) {
     fprintf(stderr, "Error: could not open file %s\n", filename);
     return 1;
   }
@@ -138,7 +138,7 @@ int part1(char *filename) {
 
 int part2(char *filename) {
   FILE *fp = fopen(filename, "r");
-  if (fp == NULL) {
+  if (fp == nullptr) {
     fprintf(stderr, "Error: could not open file %s\n", filename);
     return 1;
   }
@@ -161,7 +161,7 @@ int part2(char *filename) {
 
   int cycles = 1000000000;
   printf("%d\n", cycles);
-  Cycle *c = NULL;
+  Cycle *c = nullptr;
   size_t len = strlen(rocks->items[0]);
   for (int i = 0; i < cycles; i++) {
     for (int d = 0; d < DIRECTIONS; d++) {
@@ -172,7 +172,7 @@ int part2(char *filename) {
     int l = load(rocks);
     array_push(loads, l);
     c = find_longest_cycle(loads, 2); 
-    if (c != NULL) {
+    if (c != nullptr) {
       break;
     }
   }
@@ -181,7 +181,7 @@ int part2(char *filename) {
   int_array_print(loads);
 
   int sum = -1;
-  if (c != NULL) {
+  if (c != nullptr) {
     int n = c->start + (cycles - 1 - c->start) % c->period;
     printf("start = %zu, period = %zu, result = %d\n", c->start, c->period, n);
     sum = int_array_get(loads, n);

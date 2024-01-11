@@ -88,7 +88,7 @@ typedef struct {
 
 unsigned long long find_arrangements_dp(char *springs, Array *damaged, Map *dp, size_t si, size_t di, int dlen) {
   DPEntry *entry = dp_get(dp, .si = si, .di = di, .dlen = dlen);
-  if (entry != NULL) {
+  if (entry != nullptr) {
     return entry->value;
   }
   //printf("cache miss: (%zu, %zu, %zu)\n", si, di, dlen);
@@ -123,7 +123,7 @@ unsigned long long find_arrangements_dp(char *springs, Array *damaged, Map *dp, 
 
 int part1(char *filename) {
   FILE *fp = fopen(filename, "r");
-  if (fp == NULL) {
+  if (fp == nullptr) {
     fprintf(stderr, "Error: could not open file %s\n", filename);
     return 1;
   }
@@ -167,7 +167,7 @@ int part1(char *filename) {
 
 unsigned long long part2(char *filename) {
   FILE *fp = fopen(filename, "r");
-  if (fp == NULL) {
+  if (fp == nullptr) {
     fprintf(stderr, "Error: could not open file %s\n", filename);
     return 1;
   }

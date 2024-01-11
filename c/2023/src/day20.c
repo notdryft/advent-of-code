@@ -42,7 +42,7 @@ typedef struct {
 } Signal;
 
 void signal_print(Signal *signal) {
-  printf("%s -%s-> %s\n", signal->source == NULL ? "button" : signal->source->name, signal->signal_type == LOW ? "low" : "high", signal->destination->name);
+  printf("%s -%s-> %s\n", signal->source == nullptr ? "button" : signal->source->name, signal->signal_type == LOW ? "low" : "high", signal->destination->name);
 }
 
 void module_print(Module *module) {
@@ -93,12 +93,12 @@ Module *find_module(Array *modules, char *name) {
       return module;
     }
   }
-  return NULL;
+  return nullptr;
 }
 
 Module *find_or_init_module(Array *modules, char *name) {
   Module *module = find_module(modules, name);
-  if (module == NULL) {
+  if (module == nullptr) {
     Module tmp;
     strncpy(tmp.name, name, 63);
     array_push(modules, tmp);
@@ -118,7 +118,7 @@ Module *find_or_init_module(Array *modules, char *name) {
 
 unsigned long long part1(char *filename) {
   FILE *fp = fopen(filename, "r");
-  if (fp == NULL) {
+  if (fp == nullptr) {
     fprintf(stderr, "Error: could not open file %s\n", filename);
     return 1;
   }
@@ -187,7 +187,7 @@ unsigned long long part1(char *filename) {
 
   for (size_t i = 0; i < times; i++) {
     Array *q = array_new(Signal);
-    array_push(q, ((Signal) { .source = NULL, .signal_type = LOW, .destination = broadcast }));
+    array_push(q, ((Signal) { .source = nullptr, .signal_type = LOW, .destination = broadcast }));
     while (q->size > 0) {
       Signal *s = (Signal *) array_pop(q);
       if (s->destination->module_type == OUTPUT) {
@@ -264,7 +264,7 @@ unsigned long long part1(char *filename) {
 
 long long part2(char *filename) {
   FILE *fp = fopen(filename, "r");
-  if (fp == NULL) {
+  if (fp == nullptr) {
     fprintf(stderr, "Error: could not open file %s\n", filename);
     return 1;
   }
@@ -336,7 +336,7 @@ long long part2(char *filename) {
   long long cycle = 0;
   while (cycles->size < conjunctions) {
     Array *q = array_new(Signal);
-    array_push(q, ((Signal) { .source = NULL, .signal_type = LOW, .destination = broadcast }));
+    array_push(q, ((Signal) { .source = nullptr, .signal_type = LOW, .destination = broadcast }));
     while (q->size > 0) {
       Signal *s = (Signal *) array_pop(q);
       if (s->destination->module_type == OUTPUT) {

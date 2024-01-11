@@ -10,7 +10,7 @@ StringArray *string_array_new(void) {
   array->capacity = 0;
   array->size = 0;
   array->stride = sizeof(char *);
-  array->items = NULL;
+  array->items = nullptr;
 
   return array;
 }
@@ -123,12 +123,12 @@ StringArray *string_split(char *content, char *delimiter) {
   StringArray *strings = string_array_new();
 
   char *token = strstr(copy, delimiter);
-  if (token == NULL) {
+  if (token == nullptr) {
      string_array_push(strings, copy);
   } else {
     size_t delimiter_len = strlen(delimiter);
     char *p = copy;
-    while ((token = strstr(p, delimiter)) != NULL) {
+    while ((token = strstr(p, delimiter)) != nullptr) {
       *token = '\0';
       string_array_push(strings, p);
       p = token + delimiter_len;

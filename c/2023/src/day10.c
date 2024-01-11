@@ -96,8 +96,8 @@ CoordsSet *coords_from(StringArray *schema, size_t rows, size_t cols, size_t x, 
 }
 
 void free_coords_set(CoordsSet *set) {
-  if (set != NULL) {
-    if (set->coords != NULL) {
+  if (set != nullptr) {
+    if (set->coords != nullptr) {
       free(set->coords);
     }
     free(set);
@@ -240,7 +240,7 @@ int winding_number(CoordsSet *set, size_t x, size_t y) {
 
 int part1(char *filename) {
   FILE *fp = fopen(filename, "r");
-  if (fp == NULL) {
+  if (fp == nullptr) {
     fprintf(stderr, "Error: could not open file %s\n", filename);
     return 1;
   }
@@ -307,7 +307,7 @@ int part1(char *filename) {
 
 int part2(char *filename) {
   FILE *fp = fopen(filename, "r");
-  if (fp == NULL) {
+  if (fp == nullptr) {
     fprintf(stderr, "Error: could not open file %s\n", filename);
     return 1;
   }

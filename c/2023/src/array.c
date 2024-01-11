@@ -11,14 +11,14 @@ Array *_array_new(size_t stride) {
   array->capacity = 0;
   array->size = 0;
   array->stride = stride;
-  array->items = NULL;
+  array->items = nullptr;
 
   return array;
 }
 
 void array_free(Array *array) {
-  if (array != NULL) {
-    if (array->items != NULL) {
+  if (array != nullptr) {
+    if (array->items != nullptr) {
       free(array->items);
     }
     free(array);
@@ -33,14 +33,14 @@ void *array_first(Array *array) {
   if (array->size > 0) {
     return array->items;
   }
-  return NULL;
+  return nullptr;
 }
 
 void *array_last(Array *array) {
   if (array->size > 0) {
     return (uint8_t *) array->items + array->stride * (array->size - 1);
   }
-  return NULL;
+  return nullptr;
 }
 
 void _array_resize(Array *array) {
@@ -59,7 +59,7 @@ void _array_push(Array *array, void *value) {
 
 void *array_pop(Array *array) {
   if (array->size == 0) {
-    return NULL;
+    return nullptr;
   }
 
   void *copy = malloc(array->stride);
@@ -136,7 +136,7 @@ Array *array_concat(Array *a, Array *b) {
       a->stride,
       b->stride
     );
-    return NULL;
+    return nullptr;
   }
 
   Array *concat = _array_new(a->stride);

@@ -22,5 +22,5 @@ Cycle *find_longest_cycle(Array *array, size_t min_period) {
       }
     }
   }
-  return NULL;
+  return nullptr;
 }

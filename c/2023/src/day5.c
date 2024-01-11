@@ -121,7 +121,7 @@ void debug_entries(Array *entries) {
 
 ll part1(char *filename) {
   FILE *fp = fopen(filename, "r");
-  if (fp == NULL) {
+  if (fp == nullptr) {
     fprintf(stderr, "Error: could not open file %s\n", filename);
     return 1;
   }
@@ -146,7 +146,7 @@ ll part1(char *filename) {
       char *seeds_str = substring(buffer, 7, buffer_len - 7 - 1);
       StringArray *split = string_split(seeds_str, " ");
       for (size_t i = 0; i < split->size; i++) {
-        array_push(seeds, strtoll(split->items[i], NULL, 10));
+        array_push(seeds, strtoll(split->items[i], nullptr, 10));
       }
 
       free(seeds_str);
@@ -175,7 +175,7 @@ ll part1(char *filename) {
       char *p;
       ll destination = strtoll(buffer, &p, 10);
       ll source = strtoll(p + 1, &p, 10);
-      ll range = strtoll(p + 1, NULL, 10);
+      ll range = strtoll(p + 1, nullptr, 10);
       //printf("entry for source type \033[97;1m%s\033[0m: %lld %lld %lld\n", source_type_str, destination, source, range);
 
       AlmanachEntry entry = {
@@ -221,7 +221,7 @@ ll part1(char *filename) {
 
 ll part2(char *filename) {
   FILE *fp = fopen(filename, "r");
-  if (fp == NULL) {
+  if (fp == nullptr) {
     fprintf(stderr, "Error: could not open file %s\n", filename);
     return 1;
   }
@@ -246,7 +246,7 @@ ll part2(char *filename) {
       char *pairs_str = substring(buffer, 7, buffer_len - 7 - 1);
       StringArray *split = string_split(pairs_str, " ");
       for (size_t i = 0; i < split->size; i++) {
-        array_push(pairs, strtoll(split->items[i], NULL, 0));
+        array_push(pairs, strtoll(split->items[i], nullptr, 0));
       }
 
       free(pairs_str);
@@ -275,7 +275,7 @@ ll part2(char *filename) {
       char *p;
       ll destination = strtoll(buffer, &p, 10);
       ll source = strtoll(p + 1, &p, 10);
-      ll range = strtoll(p + 1, NULL, 10);
+      ll range = strtoll(p + 1, nullptr, 10);
       //printf("entry for source type \033[97;1m%s\033[0m: %lld %lld %lld\n", source_type_str, destination, source, range);
 
       AlmanachEntry entry = {

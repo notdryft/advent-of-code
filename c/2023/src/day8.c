@@ -30,7 +30,7 @@ Node *find_node(Node **nodes, char *value, size_t size) {
       return node;
     }
   }
-  return NULL;
+  return nullptr;
 }
 
 Nodes *find_nodes(Node **nodes, char value, size_t size) {
@@ -59,7 +59,7 @@ void free_nodes(Node **nodes, size_t nodes_size) {
 
 int part1(char *filename) {
   FILE *fp = fopen(filename, "r");
-  if (fp == NULL) {
+  if (fp == nullptr) {
     fprintf(stderr, "Error: could not open file %s\n", filename);
     return 1;
   }
@@ -87,14 +87,14 @@ int part1(char *filename) {
 
     if (sscanf(buffer, "%3s = (%3s, %3s)", value, left_str, right_str)) {
       Node *node = find_node(nodes, value, nodes_size);
-      if (node == NULL) {
+      if (node == nullptr) {
         node = malloc(sizeof(Node));
         strncpy(node->value, value, 4);
         nodes[nodes_size++] = node;
       }
 
       Node *left = find_node(nodes, left_str, nodes_size);
-      if (left == NULL) {
+      if (left == nullptr) {
         left = malloc(sizeof(Node));
         strncpy(left->value, left_str, 4);
         nodes[nodes_size++] = left;
@@ -102,7 +102,7 @@ int part1(char *filename) {
       node->left = left;
 
       Node *right = find_node(nodes, right_str, nodes_size);
-      if (right == NULL) {
+      if (right == nullptr) {
         right = malloc(sizeof(Node));
         strncpy(right->value, right_str, 4);
         printf("copied node value: %s\n", node->value);
@@ -116,12 +116,12 @@ int part1(char *filename) {
   for (size_t i = 0; i < nodes_size; i++) {
     Node *n = nodes[i];
     printf("%s = (", n->value);
-    if (n->left != NULL) {
+    if (n->left != nullptr) {
       printf("%s", n->left->value);
     } else {
       printf("null");
     }
-    if (n->right != NULL) {
+    if (n->right != nullptr) {
       printf(", %s)\n", n->right->value);
     } else {
       printf(", null)\n");
@@ -159,7 +159,7 @@ int part1(char *filename) {
 
 long long part2(char *filename) {
   FILE *fp = fopen(filename, "r");
-  if (fp == NULL) {
+  if (fp == nullptr) {
     fprintf(stderr, "Error: could not open file %s\n", filename);
     return 1;
   }
@@ -187,14 +187,14 @@ long long part2(char *filename) {
 
     if (sscanf(buffer, "%3s = (%3s, %3s)", value, left_str, right_str)) {
       Node *node = find_node(nodes, value, nodes_size);
-      if (node == NULL) {
+      if (node == nullptr) {
         node = malloc(sizeof(Node));
         strncpy(node->value, value, 4);
         nodes[nodes_size++] = node;
       }
 
       Node *left = find_node(nodes, left_str, nodes_size);
-      if (left == NULL) {
+      if (left == nullptr) {
         left = malloc(sizeof(Node));
         strncpy(left->value, left_str, 4);
         nodes[nodes_size++] = left;
@@ -202,7 +202,7 @@ long long part2(char *filename) {
       node->left = left;
 
       Node *right = find_node(nodes, right_str, nodes_size);
-      if (right == NULL) {
+      if (right == nullptr) {
         right = malloc(sizeof(Node));
         strncpy(right->value, right_str, 4);
         printf("copied node value: %s\n", node->value);
@@ -216,12 +216,12 @@ long long part2(char *filename) {
   for (size_t i = 0; i < nodes_size; i++) {
     Node *n = nodes[i];
     printf("%s = (", n->value);
-    if (n->left != NULL) {
+    if (n->left != nullptr) {
       printf("%s", n->left->value);
     } else {
       printf("null");
     }
-    if (n->right != NULL) {
+    if (n->right != nullptr) {
       printf(", %s)\n", n->right->value);
     } else {
       printf(", null)\n");

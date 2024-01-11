@@ -21,7 +21,7 @@ void map_print(Map *map) {
   printf("Map{\n");
   for (size_t i = 0; i < map->capacity; i++) {
     Array *array = map->table[i];
-    if (array != NULL) {
+    if (array != nullptr) {
       printf("  0x%05x -> [ ", i);
       for (size_t j = 0; j < array->size; j++) {
         MapEntry *entry = array_get(array, j);

@@ -19,11 +19,11 @@ Map *_map_new(size_t key_stride, size_t entry_stride) {
 }
 
 void map_free(Map *map) {
-  if (map != NULL) {
-    if (map->table != NULL) {
+  if (map != nullptr) {
+    if (map->table != nullptr) {
       for (size_t i = 0; i < map->capacity; i++) {
         Array *array = map->table[i];
-        if (array != NULL) {
+        if (array != nullptr) {
           array_free(array);
         }
       }
@@ -56,7 +56,7 @@ void *map_get(Map *map, void *entry) {
   uint32_t hash = _map_hash(map, entry);
 
   Array *htable = map->table[hash];
-  if (htable != NULL) {
+  if (htable != nullptr) {
     for (size_t i = 0; i < htable->size; i++) {
       void *item = array_get(htable, i);
       if (memcmp(entry, item, map->key_stride) == 0) {
@@ -65,14 +65,14 @@ void *map_get(Map *map, void *entry) {
     }
   }
 
-  return NULL;
+  return nullptr;
 }
 
 bool map_contains_key(Map *map, void *entry) {
   uint32_t hash = _map_hash(map, entry);
 
   Array *htable = map->table[hash];
-  if (htable != NULL) {
+  if (htable != nullptr) {
     for (size_t i = 0; i < htable->size; i++) {
       void *item = array_get(htable, i);
       if (memcmp(entry, item, map->key_stride) == 0) {
@@ -88,7 +88,7 @@ bool map_contains_key(Map *map, void *entry) {
 
 void map_put(Map *map, void *entry) {
   uint32_t hash = _map_hash(map, entry);
-  if (map->table[hash] == NULL) {
+  if (map->table[hash] == nullptr) {
     map->table[hash] = _array_new(map->entry_stride);
   }
 

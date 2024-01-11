@@ -270,7 +270,7 @@ bool intersects(Hailstone *a, Hailstone *b, Intersection *p) {
 
 int part1(char *filename, int128_t min, int128_t max, bool debug) {
   FILE *fp = fopen(filename, "r");
-  if (fp == NULL) {
+  if (fp == nullptr) {
     fprintf(stderr, "Error: could not open file %s\n", filename);
     return 1;
   }
@@ -344,7 +344,7 @@ int part1(char *filename, int128_t min, int128_t max, bool debug) {
 
 int128_t part2(char *filename) {
   FILE *fp = fopen(filename, "r");
-  if (fp == NULL) {
+  if (fp == nullptr) {
     fprintf(stderr, "Error: could not open file %s\n", filename);
     return 1;
   }

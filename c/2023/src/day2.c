@@ -11,7 +11,7 @@ constexpr size_t GROUPS = 3; // ignoring the last group
 
 int part1(char *filename) {
   FILE *fp = fopen(filename, "r");
-  if (fp == NULL) {
+  if (fp == nullptr) {
     fprintf(stderr, "Error: could not open file %s\n", filename);
     return 1;
   }
@@ -35,17 +35,17 @@ int part1(char *filename) {
   while (fgets(buffer, BUFFER_LENGTH, fp)) {
     char *p_token_save;
     char *token = strtok_r(buffer, ":", &p_token_save);
-    while (token != NULL) {
+    while (token != nullptr) {
       if (token[0] == 'G') { // game
         current_game += 1;
       } else { // pairs
         bool valid = true;
         char *p_token2_save;
         char *token2 = strtok_r(token, ";", &p_token2_save);
-        while (token2 != NULL) { // pairs
+        while (token2 != nullptr) { // pairs
           char *p_token3_save;
           char *token3 = strtok_r(token2, ",", &p_token3_save);
-          while (token3 != NULL) { // pair
+          while (token3 != nullptr) { // pair
             int reti = regexec(&regex, token3, GROUPS, match, REG_EXTENDED);
             int n;
             if (!reti) {
@@ -75,15 +75,15 @@ int part1(char *filename) {
               fprintf(stderr, "Error: regex match failed for `%s`", token3);
               return 1;
             }
-            token3 = strtok_r(NULL, ",", &p_token3_save);
+            token3 = strtok_r(nullptr, ",", &p_token3_save);
           }
-          token2 = strtok_r(NULL, ";", &p_token2_save);
+          token2 = strtok_r(nullptr, ";", &p_token2_save);
         }
         if (valid) {
           sum += current_game;
         }
       }
-      token = strtok_r(NULL, ":", &p_token_save);
+      token = strtok_r(nullptr, ":", &p_token_save);
     }
   }
   
@@ -97,7 +97,7 @@ int part1(char *filename) {
 
 int part2(char *filename) {
   FILE *fp = fopen(filename, "r");
-  if (fp == NULL) {
+  if (fp == nullptr) {
     fprintf(stderr, "Error: could not open file %s", filename);
     return 1;
   }
@@ -116,7 +116,7 @@ int part2(char *filename) {
   while (fgets(buffer, BUFFER_LENGTH, fp)) {
     char *p_token_save;
     char *token = strtok_r(buffer, ":", &p_token_save);
-    while (token != NULL) {
+    while (token != nullptr) {
       if (token[0] != 'G') { // game
         int reds = -1;
         int greens = -1;
@@ -124,10 +124,10 @@ int part2(char *filename) {
 
         char *p_token2_save;
         char *token2 = strtok_r(token, ";", &p_token2_save);
-        while (token2 != NULL) { // pairs
+        while (token2 != nullptr) { // pairs
           char *p_token3_save;
           char *token3 = strtok_r(token2, ",", &p_token3_save);
-          while (token3 != NULL) { // pair
+          while (token3 != nullptr) { // pair
             int reti = regexec(&regex, token3, GROUPS, match, REG_EXTENDED);
             int n;
             if (!reti) {
@@ -157,15 +157,15 @@ int part2(char *filename) {
               fprintf(stderr, "Error: regex match failed for `%s`", token3);
               return 1;
             }
-            token3 = strtok_r(NULL, ",", &p_token3_save);
+            token3 = strtok_r(nullptr, ",", &p_token3_save);
           }
-          token2 = strtok_r(NULL, ";", &p_token2_save);
+          token2 = strtok_r(nullptr, ";", &p_token2_save);
         }
         int power = reds * greens * blues;
         printf("(%d, %d, %d) = %d\n", reds, greens, blues, power);
         sum += power;
       }
-      token = strtok_r(NULL, ":", &p_token_save);
+      token = strtok_r(nullptr, ":", &p_token_save);
     }
   }
 

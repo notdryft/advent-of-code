@@ -99,7 +99,7 @@ long long area_from_instructions(Array *instructions) {
 
 long long part1(char *filename) {
   FILE *fp = fopen(filename, "r");
-  if (fp == NULL) {
+  if (fp == nullptr) {
     fprintf(stderr, "Error: could not open file %s\n", filename);
     return 1;
   }
@@ -142,7 +142,7 @@ long long part1(char *filename) {
 
 long long part2(char *filename) {
   FILE *fp = fopen(filename, "r");
-  if (fp == NULL) {
+  if (fp == nullptr) {
     fprintf(stderr, "Error: could not open file %s\n", filename);
     return 1;
   }
@@ -163,7 +163,7 @@ long long part2(char *filename) {
       char distance_str[6];
       strncpy(distance_str, color_str, 5);
       distance_str[5] = '\0';
-      size_t distance = strtol(distance_str, NULL, 16);
+      size_t distance = strtol(distance_str, nullptr, 16);
 
       Instruction instruction = { .direction = direction, .distance = distance };
 
