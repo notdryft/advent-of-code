@@ -13,6 +13,11 @@ objdir = $(topdir)/obj
 libdir = $(topdir)/lib
 bindir = $(topdir)/bin
 
+arch := $(shell uname -s)
+ifeq ($(arch),Linux)
+	cflags += -Wl,-R$(libdir)
+endif
+
 days = 25
 
 all: $(patsubst %,day%,$(shell seq 1 1 $(days)))
