@@ -29,7 +29,7 @@ $(libdir)/libaoc.so: $(objdir)/algos.o $(objdir)/array.o $(objdir)/map.o $(objdi
 	$(cc) -shared -o$@ $^
 
 %_test: $(srcdir)/%_test.c $(libdir)/libaoc.so
-	$(cc) -o$(bindir)/$@ -L$(libdir) -laoc $^ $(clags)
+	$(cc) -o$(bindir)/$@ -L$(libdir) -laoc $^ $(cflags)
 
 mem-%_test: %_test
 	$(vg) $(bindir)/$^ $(vflags)
