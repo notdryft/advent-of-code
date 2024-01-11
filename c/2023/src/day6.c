@@ -22,7 +22,7 @@ int part1(char *filename) {
   Array *times = array_new(int);
   Array *distances = array_new(int);
 
-  char buffer[BUFFER_LENGTH] = {0};
+  char buffer[BUFFER_LENGTH] = {};
   while (fgets(buffer, BUFFER_LENGTH, fp)) {
     size_t buffer_len = strlen(buffer);
     buffer[buffer_len - 1] = '\0';
@@ -121,7 +121,7 @@ int part2(char *filename) {
   Array *times = array_new(long long);
   Array *distances = array_new(long long);
 
-  char buffer[BUFFER_LENGTH] = {0};
+  char buffer[BUFFER_LENGTH] = {};
   while (fgets(buffer, BUFFER_LENGTH, fp)) {
     size_t buffer_len = strlen(buffer);
     buffer[buffer_len - 1] = '\0';

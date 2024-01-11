@@ -64,13 +64,13 @@ int part1(char *filename) {
     return 1;
   }
 
-  char instructions[BUFFER_LENGTH] = {0};
+  char instructions[BUFFER_LENGTH] = {};
 
   size_t nodes_capacity = 1000;
   size_t nodes_size = 0;
   Node **nodes = malloc(sizeof(Node *) * nodes_capacity);
 
-  char buffer[BUFFER_LENGTH] = {0};
+  char buffer[BUFFER_LENGTH] = {};
   if (fgets(buffer, BUFFER_LENGTH, fp)) {
     size_t buffer_len = strlen(buffer);
     buffer[buffer_len - 1] = '\0';
@@ -164,13 +164,13 @@ long long part2(char *filename) {
     return 1;
   }
 
-  char instructions[BUFFER_LENGTH] = {0};
+  char instructions[BUFFER_LENGTH] = {};
 
   size_t nodes_capacity = 1000;
   size_t nodes_size = 0;
   Node **nodes = malloc(sizeof(Node *) * nodes_capacity);
 
-  char buffer[BUFFER_LENGTH] = {0};
+  char buffer[BUFFER_LENGTH] = {};
   if (fgets(buffer, BUFFER_LENGTH, fp)) {
     size_t buffer_len = strlen(buffer);
     buffer[buffer_len - 1] = '\0';

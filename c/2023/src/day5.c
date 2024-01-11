@@ -132,7 +132,7 @@ ll part1(char *filename) {
   char source_type_str[BUFFER_LENGTH];
   enum AlmanachEntryType source_type = 0;
 
-  char buffer[BUFFER_LENGTH] = {0};
+  char buffer[BUFFER_LENGTH] = {};
   while (fgets(buffer, BUFFER_LENGTH, fp)) {
     size_t buffer_len = strlen(buffer);
     buffer[buffer_len - 1] = '\0';
@@ -232,7 +232,7 @@ ll part2(char *filename) {
   char source_type_str[BUFFER_LENGTH];
   enum AlmanachEntryType source_type = 0;
 
-  char buffer[BUFFER_LENGTH] = {0};
+  char buffer[BUFFER_LENGTH] = {};
   while (fgets(buffer, BUFFER_LENGTH, fp)) {
     size_t buffer_len = strlen(buffer);
     buffer[buffer_len - 1] = '\0';

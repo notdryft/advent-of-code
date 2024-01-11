@@ -113,7 +113,7 @@ int part1(char *filename) {
 
   int sum = 0;
 
-  char buffer[BUFFER_LENGTH] = {0};
+  char buffer[BUFFER_LENGTH] = {};
   while (fgets(buffer, BUFFER_LENGTH, fp)) {
     size_t buffer_len = strlen(buffer);
     buffer[buffer_len - 1] = '\0';
@@ -146,7 +146,7 @@ int part2(char *filename) {
 
   Map *map = map_new();
 
-  char buffer[BUFFER_LENGTH] = {0};
+  char buffer[BUFFER_LENGTH] = {};
   while (fgets(buffer, BUFFER_LENGTH, fp)) {
     size_t buffer_len = strlen(buffer);
     buffer[buffer_len - 1] = '\0';

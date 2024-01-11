@@ -107,7 +107,7 @@ long long part1(char *filename) {
   StringArray *lines = string_array_new();
   Array *instructions = array_new(Instruction);
 
-  char buffer[BUFFER_LENGTH] = {0};
+  char buffer[BUFFER_LENGTH] = {};
   while (fgets(buffer, BUFFER_LENGTH, fp)) {
     size_t buffer_len = strlen(buffer);
     buffer[buffer_len - 1] = '\0';
@@ -150,7 +150,7 @@ long long part2(char *filename) {
   StringArray *lines = string_array_new();
   Array *instructions = array_new(Instruction);
 
-  char buffer[BUFFER_LENGTH] = {0};
+  char buffer[BUFFER_LENGTH] = {};
   while (fgets(buffer, BUFFER_LENGTH, fp)) {
     size_t buffer_len = strlen(buffer);
     buffer[buffer_len - 1] = '\0';

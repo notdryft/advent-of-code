@@ -31,7 +31,7 @@ int part1(char *filename) {
     return 1;
   }
 
-  char buffer[BUFFER_LENGTH] = {0};
+  char buffer[BUFFER_LENGTH] = {};
   while (fgets(buffer, BUFFER_LENGTH, fp)) {
     char *p_token_save;
     char *token = strtok_r(buffer, ":", &p_token_save);
@@ -112,7 +112,7 @@ int part2(char *filename) {
     return 1;
   }
 
-  char buffer[BUFFER_LENGTH] = {0};
+  char buffer[BUFFER_LENGTH] = {};
   while (fgets(buffer, BUFFER_LENGTH, fp)) {
     char *p_token_save;
     char *token = strtok_r(buffer, ":", &p_token_save);

@@ -34,7 +34,7 @@ int part1(char *filename) {
   int card = 1;
   int sum = 0;
 
-  char buffer[BUFFER_LENGTH] = {0};
+  char buffer[BUFFER_LENGTH] = {};
   while (fgets(buffer, BUFFER_LENGTH, fp)) {
     size_t buffer_len = strlen(buffer);
     buffer[buffer_len - 1] = '\0';
@@ -101,10 +101,10 @@ int part2(char *filename) {
   }
 
   int card = 1;
-  int cards[1000] = {0};
+  int cards[1000] = {};
   cards[card - 1] = 0;
 
-  char buffer[BUFFER_LENGTH] = {0};
+  char buffer[BUFFER_LENGTH] = {};
   while (fgets(buffer, BUFFER_LENGTH, fp)) {
     size_t buffer_len = strlen(buffer);
     buffer[buffer_len - 1] = '\0';

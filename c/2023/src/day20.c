@@ -127,7 +127,7 @@ unsigned long long part1(char *filename) {
   Module *broadcast = find_or_init_module(modules, "broadcaster");
   broadcast->module_type = BROADCASTER;
 
-  char buffer[BUFFER_LENGTH] = {0};
+  char buffer[BUFFER_LENGTH] = {};
   while (fgets(buffer, BUFFER_LENGTH, fp)) {
     size_t buffer_len = strlen(buffer);
     buffer[buffer_len - 1] = '\0';
@@ -273,7 +273,7 @@ long long part2(char *filename) {
   Module *broadcast = find_or_init_module(modules, "broadcaster");
   broadcast->module_type = BROADCASTER;
 
-  char buffer[BUFFER_LENGTH] = {0};
+  char buffer[BUFFER_LENGTH] = {};
   while (fgets(buffer, BUFFER_LENGTH, fp)) {
     size_t buffer_len = strlen(buffer);
     buffer[buffer_len - 1] = '\0';

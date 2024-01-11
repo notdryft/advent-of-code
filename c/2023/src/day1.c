@@ -16,7 +16,7 @@ int part1(char *filename) {
 
   int sum = 0;
 
-  char buffer[BUFFER_LENGTH] = {0};
+  char buffer[BUFFER_LENGTH] = {};
   while (fgets(buffer, BUFFER_LENGTH, fp)) {
     Array *digits = array_new(int);
     for (int i = 0; buffer[i] != '\n'; i++) {
@@ -45,7 +45,7 @@ int part2(char *filename) {
 
   int sum = 0;
 
-  char buffer[BUFFER_LENGTH] = {0};
+  char buffer[BUFFER_LENGTH] = {};
   while (fgets(buffer, BUFFER_LENGTH, fp)) {
     printf("%s", buffer);
 

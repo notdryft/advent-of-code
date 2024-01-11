@@ -277,7 +277,7 @@ int part1(char *filename, int128_t min, int128_t max, bool debug) {
 
   Array *hailstones = array_new(Hailstone);
 
-  char buffer[BUFFER_LENGTH] = {0};
+  char buffer[BUFFER_LENGTH] = {};
   while (fgets(buffer, BUFFER_LENGTH, fp)) {
     size_t buffer_len = strlen(buffer);
     buffer[buffer_len - 1] = '\0';
@@ -351,7 +351,7 @@ int128_t part2(char *filename) {
 
   Array *hailstones = array_new(Hailstone);
 
-  char buffer[BUFFER_LENGTH] = {0};
+  char buffer[BUFFER_LENGTH] = {};
   while (fgets(buffer, BUFFER_LENGTH, fp)) {
     size_t buffer_len = strlen(buffer);
     buffer[buffer_len - 1] = '\0';
