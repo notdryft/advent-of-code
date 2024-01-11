@@ -234,8 +234,7 @@ long long part2(char *filename) {
   size_t instructions_len = strlen(instructions);
   //printf("instructions(%zu) = %s\n", instructions_len, instructions);
 
-  int ghost_steps[ghost_nodes->size];
-  memset(ghost_steps, 0, sizeof(int) * ghost_nodes->size);
+  int *ghost_steps = calloc(ghost_nodes->size, sizeof(int));
 
   for (size_t i = 0; i < ghost_nodes->size; i++) {
     Node *node = ghost_nodes->items[i];
@@ -268,6 +267,7 @@ long long part2(char *filename) {
 
   printf("result = %llu\n", result);
 
+  free(ghost_steps);
   free_nodes(nodes, nodes_size);
 
   return result;

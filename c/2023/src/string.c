@@ -78,11 +78,9 @@ char *repeat_with_delimiter(char *content, size_t times, char *delimiter) {
 }
 
 char *substring(char *content, size_t so, size_t len) {
-  char result[len + 1];
+  char *result = calloc(len + 1, sizeof(char));
   strncpy(result, content + so, len);
-  result[len] = '\0';
-
-  return strdup(result);
+  return result;
 }
 
 bool string_array_contains(StringArray *array, char *value) {

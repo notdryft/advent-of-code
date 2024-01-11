@@ -7,6 +7,8 @@
 
 #define BUFFER_LENGTH 1024
 
+constexpr size_t GROUPS = 3; // ignoring the last group
+
 int part1(char *filename) {
   FILE *fp = fopen(filename, "r");
   if (fp == NULL) {
@@ -22,8 +24,7 @@ int part1(char *filename) {
   int current_game = 0;
 
   regex_t regex;
-  size_t groups = 3; // ignoring the last group
-  regmatch_t match[groups];
+  regmatch_t match[GROUPS];
   char *pattern = " *([0-9]+) (red|green|blue)( |\n)*";
   if (regcomp(&regex, pattern, REG_EXTENDED)) {
     fprintf(stderr, "Error: could not compile regex `%s`\n", pattern);
@@ -45,18 +46,17 @@ int part1(char *filename) {
           char *p_token3_save;
           char *token3 = strtok_r(token2, ",", &p_token3_save);
           while (token3 != NULL) { // pair
-            int reti = regexec(&regex, token3, groups, match, REG_EXTENDED);
+            int reti = regexec(&regex, token3, GROUPS, match, REG_EXTENDED);
             int n;
             if (!reti) {
-              for (size_t g = 1; g < groups; g++) {
+              for (size_t g = 1; g < GROUPS; g++) {
                 regoff_t start = match[g].rm_so;
                 if (start == -1) {
                   break;
                 }
                 regoff_t end = match[g].rm_eo;
-                char copy[end - start + 1];
+                char *copy = calloc(end - start + 1, sizeof(char));
                 strncpy(copy, token3 + start, end - start);
-                copy[end - start] = 0;
                 if (g == 1) {
                   n = atoi(copy);
                 } else if (copy[0] == 'g' && n > greens) {
@@ -66,6 +66,7 @@ int part1(char *filename) {
                 } else if (copy[0] == 'b' && n > blues) {
                   valid = false;
                 }
+                free(copy);
               }
             } else if (reti == REG_NOMATCH) {
               fprintf(stderr, "Error: no match for `%s`", token3);
@@ -104,8 +105,7 @@ int part2(char *filename) {
   int sum = 0;
 
   regex_t regex;
-  size_t groups = 3; // ignoring the last group
-  regmatch_t match[groups];
+  regmatch_t match[GROUPS];
   char *pattern = " *([0-9]+) (red|green|blue)( |\n)*";
   if (regcomp(&regex, pattern, REG_EXTENDED)) {
     fprintf(stderr, "Error: could not compile regex `%s`\n", pattern);
@@ -128,18 +128,17 @@ int part2(char *filename) {
           char *p_token3_save;
           char *token3 = strtok_r(token2, ",", &p_token3_save);
           while (token3 != NULL) { // pair
-            int reti = regexec(&regex, token3, groups, match, REG_EXTENDED);
+            int reti = regexec(&regex, token3, GROUPS, match, REG_EXTENDED);
             int n;
             if (!reti) {
-              for (size_t g = 1; g < groups; g++) {
+              for (size_t g = 1; g < GROUPS; g++) {
                 regoff_t start = match[g].rm_so;
                 if (start == -1) {
                   break;
                 }
                 regoff_t end = match[g].rm_eo;
-                char copy[end - start + 1];
+                char *copy = calloc(end - start + 1, sizeof(char));
                 strncpy(copy, token3 + start, end - start);
-                copy[end - start] = 0;
                 if (g == 1) {
                   n = atoi(copy);
                 } else if (copy[0] == 'r' && n > reds) {
@@ -149,6 +148,7 @@ int part2(char *filename) {
                 } else if (copy[0] == 'b' && n > blues) {
                   blues = n;
                 }
+                free(copy);
               }
             } else if (reti == REG_NOMATCH) {
               fprintf(stderr, "Error: no match for `%s`", token3);

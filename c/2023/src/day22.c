@@ -225,8 +225,7 @@ int part2(char *filename) {
     Array *dup = array_dup(bricks);
     array_remove(dup, i);
     
-    int fallen[dup->size];
-    memset(fallen, 0, sizeof(int) * dup->size);
+    int *fallen = calloc(dup->size, sizeof(int));
 
     int *f = fall2(dup);
     int fs = false_sum(f, dup->size);
@@ -250,6 +249,7 @@ int part2(char *filename) {
     sum += false_sum(fallen, dup->size);
 
     array_free(dup);
+    free(fallen);
   }
   printf("sum = %d\n", sum);
 

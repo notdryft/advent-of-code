@@ -53,9 +53,8 @@ int part1(char *filename) {
       } else if (!is_digit(line[i]) && digit_so != SIZE_MAX) {
         size_t digit_eo = i;
         size_t digit_len = digit_eo - digit_so;
-        char digit_str[digit_len + 1];
+        char *digit_str = calloc(digit_len + 1, sizeof(char));
         strncpy(digit_str, line + digit_so, digit_len);
-        digit_str[digit_len] = '\0';
 
         size_t sy = ((long) j - 1 < 0) ? 0 : j - 1;
         size_t ey = (j + 1 >= lines->size) ? j : j + 1;
@@ -78,6 +77,8 @@ int part1(char *filename) {
         }
 
         digit_so = SIZE_MAX;
+
+        free(digit_str);
       }
     }
   }
@@ -121,9 +122,8 @@ int part2(char *filename) {
       } else if (!is_digit(line[i]) && digit_so != SIZE_MAX) {
         size_t digit_eo = i;
         size_t digit_len = digit_eo - digit_so;
-        char digit_str[digit_len + 1];
+        char *digit_str = calloc(digit_len + 1, sizeof(char));
         strncpy(digit_str, line + digit_so, digit_len);
-        digit_str[digit_len] = '\0';
 
         for (size_t id = digit_so; id < digit_eo; id++) {
           line[id] = 'N';
@@ -193,9 +193,8 @@ int part2(char *filename) {
             }
 
             size_t pair_len = pair_eo - pair_so;
-            char pair_str[pair_len + 1];
+            char *pair_str = calloc(pair_len + 1, sizeof(char));
             strncpy(pair_str, pline + pair_so, pair_len);
-            pair_str[pair_len] = '\0';
 
             for (size_t id = digit_so; id < digit_eo; id++) {
               line[id] = 'D';
@@ -206,6 +205,7 @@ int part2(char *filename) {
 
             printf("paired digit: %s (%zu, %zu) from symbol (%zu, %zu)\n", pair_str, digit_x, digit_y, gear_x, gear_y);
             sum += atoi(digit_str) * atoi(pair_str);
+            free(pair_str);
 
             lol_x = gear_x;
             lol_y = gear_y;
@@ -213,6 +213,8 @@ int part2(char *filename) {
         }
 
         digit_so = SIZE_MAX;
+
+        free(digit_str);
       }
     }
   }
