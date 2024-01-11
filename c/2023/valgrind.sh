@@ -6,8 +6,15 @@ else
   binary="${1}_test"
 fi
 
-docker build -f Dockerfile.valgrind -t valgrind:latest .
-docker run -it --rm \
-  -v "$(pwd)/../..:/app" \
-  valgrind:latest \
-  bash -c "make mrproper && make mem-$binary"
+case $(uname -s) in
+  Darwin)
+    docker build -f Dockerfile.valgrind -t valgrind:latest .
+    docker run -it --rm \
+      -v "$(pwd)/../..:/app" \
+      valgrind:latest \
+      bash -c "make mrproper && make mem-$binary"
+    ;;
+  Linux)
+    make mrproper && make "mem-$binary"
+    ;;
+esac
