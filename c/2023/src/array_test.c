@@ -100,7 +100,6 @@ void array_priority_push(Array *array, Item value) {
     printf("push\n");
     array_push(array, value);
   } else {
-    bool stop = false;
     size_t i = 0;
     Item *other = array_get(array, i++);
     while (other->a < value.a && i <= array->size) {

@@ -22,7 +22,7 @@ void map_print(Map *map) {
   for (size_t i = 0; i < map->capacity; i++) {
     Array *array = map->table[i];
     if (array != nullptr) {
-      printf("  0x%05x -> [ ", i);
+      printf("  0x%05lx -> [ ", i);
       for (size_t j = 0; j < array->size; j++) {
         MapEntry *entry = array_get(array, j);
         if (j == array->size - 1) {
