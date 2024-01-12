@@ -14,7 +14,7 @@ typedef struct {
   int step;
   long long x;
   long long y;
-} Coord;
+} Vec2;
 
 typedef struct {
   long long ix;
@@ -22,15 +22,15 @@ typedef struct {
   StringArray *map;
 } Space;
 
-Coord find_start(char **map, long long mx, long long my) {
+Vec2 find_start(char **map, long long mx, long long my) {
   for (long long y = 0; y < my; y++) {
     for (long long x = 0; x < mx; x++) {
       if (map[y][x] == 'S') {
-        return ((Coord) { .step = 0, .x = x, .y = y });
+        return ((Vec2) { .step = 0, .x = x, .y = y });
       }
     }
   }
-  return ((Coord) { .step = -1, .x = 0, .y = 0 });
+  return ((Vec2) { .step = -1, .x = 0, .y = 0 });
 }
 
 StringArray *find_map(Array *infinity, long long ix, long long iy) {
@@ -65,16 +65,16 @@ void infinity_print_raw(Array *infinity, StringArray *map, long long six, long l
   }
 }
 
-void array_priority_push(Array *array, Coord c) {
+void array_priority_push(Array *array, Vec2 *u) {
   if (array->size == 0) {
-    array_push(array, &c);
+    array_push(array, u);
   } else {
     size_t i = 0;
-    Coord *o;
+    Vec2 *v;
     do {
-      o = array_get(array, i++);
-    } while (o->step < c.step && i <= array->size);
-    array_insert(array, i - 1, &c);
+      v = array_get(array, i++);
+    } while (v->step < u->step && i <= array->size);
+    array_insert(array, i - 1, u);
   }
 }
 
@@ -100,15 +100,15 @@ long long part1(char *filename, int steps) {
   long long mx = strlen(map->items[0]);
   long long my = map->size;
 
-  Coord start = find_start(map->items, mx, my);
+  Vec2 start = find_start(map->items, mx, my);
   printf("S = %lld %lld\n", start.x, start.y);
 
   int step = 0;
-  Array *q = array_new(Coord);
+  Array *q = array_new(Vec2);
   array_push(q, &start);
 
   while (42) {
-    Coord *peek = array_first(q);
+    Vec2 *peek = array_first(q);
     if (peek->step == step + 1) {
       step++;
       if (step == steps) {
@@ -116,25 +116,25 @@ long long part1(char *filename, int steps) {
       }
     }
 
-    Coord *c = array_pop(q);
-    map->items[c->y][c->x] = '.';
-    if (c->y > 0 && map->items[c->y - 1][c->x] == '.') {
-      map->items[c->y - 1][c->x] = 'O';
-      array_priority_push(q, ((Coord) { .step = c->step + 1, .x = c->x, .y = c->y - 1 }));
+    Vec2 *u = array_pop(q);
+    map->items[u->y][u->x] = '.';
+    if (u->y > 0 && map->items[u->y - 1][u->x] == '.') {
+      map->items[u->y - 1][u->x] = 'O';
+      array_priority_push(q, &(Vec2) { .step = u->step + 1, .x = u->x, .y = u->y - 1 });
     }
-    if (c->x > 0 && map->items[c->y][c->x - 1] == '.') {
-      map->items[c->y][c->x - 1] = 'O';
-      array_priority_push(q, ((Coord) { .step = c->step + 1, .x = c->x - 1, .y = c->y }));
+    if (u->x > 0 && map->items[u->y][u->x - 1] == '.') {
+      map->items[u->y][u->x - 1] = 'O';
+      array_priority_push(q, &(Vec2) { .step = u->step + 1, .x = u->x - 1, .y = u->y });
     }
-    if (c->y < my - 1 && map->items[c->y + 1][c->x] == '.') {
-      map->items[c->y + 1][c->x] = 'O';
-      array_priority_push(q, ((Coord) { .step = c->step + 1, .x = c->x, .y = c->y + 1 }));
+    if (u->y < my - 1 && map->items[u->y + 1][u->x] == '.') {
+      map->items[u->y + 1][u->x] = 'O';
+      array_priority_push(q, &(Vec2) { .step = u->step + 1, .x = u->x, .y = u->y + 1 });
     }
-    if (c->x < mx - 1 && map->items[c->y][c->x + 1] == '.') {
-      map->items[c->y][c->x + 1] = 'O';
-      array_priority_push(q, ((Coord) { .step = c->step + 1, .x = c->x + 1, .y = c->y }));
+    if (u->x < mx - 1 && map->items[u->y][u->x + 1] == '.') {
+      map->items[u->y][u->x + 1] = 'O';
+      array_priority_push(q, &(Vec2) { .step = u->step + 1, .x = u->x + 1, .y = u->y });
     }
-    free(c);
+    free(u);
     //string_array_print_raw(map);
   }
 
@@ -171,18 +171,18 @@ long long part2(char *filename, int steps) {
   long long mx = strlen(map->items[0]);
   long long my = map->size;
 
-  Coord start = find_start(map->items, mx, my);
+  Vec2 start = find_start(map->items, mx, my);
   printf("S = %lld %lld\n", start.x, start.y);
   map->items[start.y][start.x] = '.';
 
   int step = 0;
-  Array *q = array_new(Coord);
+  Array *q = array_new(Vec2);
   array_push(q, &start);
 
   Array *n = array_new(long long);
 
   while (step <= steps) {
-    Coord *peek = array_first(q);
+    Vec2 *peek = array_first(q);
     if (peek->step == step+1) {
       step++;
       //infinity_print_raw(infinity, map, -1, 1, -1, 1, my);
@@ -195,15 +195,15 @@ long long part2(char *filename, int steps) {
       }
     }
 
-    Coord *c = array_pop(q);
-    long long ix = (c->x < 0) ? -((-c->x - 1 + mx) / mx) : c->x / mx;
-    long long iy = (c->y < 0) ? -((-c->y - 1 + my) / my) : c->y / my;
+    Vec2 *u = array_pop(q);
+    long long ix = (u->x < 0) ? -((-u->x - 1 + mx) / mx) : u->x / mx;
+    long long iy = (u->y < 0) ? -((-u->y - 1 + my) / my) : u->y / my;
     StringArray *imap = find_map_or_dup(infinity, map, ix, iy);
 
-    long long bx = (c->x % mx + mx) % mx;
-    long long by = (c->y % my + my) % my;
+    long long bx = (u->x % mx + mx) % mx;
+    long long by = (u->y % my + my) % my;
     long long x = bx, y = by;
-    //printf("(%lld %lld) (%lld %lld) (%lld %lld) (%lld %lld)\n", c->x, c->y, bx, by, mx, my, ix, iy);
+    //printf("(%lld %lld) (%lld %lld) (%lld %lld) (%lld %lld)\n", u->x, u->y, bx, by, mx, my, ix, iy);
     imap->items[y][x] = '.';
 
     StringArray *umap = imap;
@@ -215,7 +215,7 @@ long long part2(char *filename, int steps) {
     }
     if (umap->items[y][x] == '.') {
       umap->items[y][x] = 'O';
-      array_priority_push(q, ((Coord) { .step = c->step + 1, .x = c->x, .y = c->y - 1 }));
+      array_priority_push(q, &(Vec2) { .step = u->step + 1, .x = u->x, .y = u->y - 1 });
     }
     y = by;
 
@@ -228,7 +228,7 @@ long long part2(char *filename, int steps) {
     }
     if (lmap->items[y][x] == '.') {
       lmap->items[y][x] = 'O';
-      array_priority_push(q, ((Coord) { .step = c->step + 1, .x = c->x - 1, .y = c->y }));
+      array_priority_push(q, &(Vec2) { .step = u->step + 1, .x = u->x - 1, .y = u->y });
     }
     x = bx;
 
@@ -241,7 +241,7 @@ long long part2(char *filename, int steps) {
     }
     if (bmap->items[y][x] == '.') {
       bmap->items[y][x] = 'O';
-      array_priority_push(q, ((Coord) { .step = c->step + 1, .x = c->x, .y = c->y + 1 }));
+      array_priority_push(q, &(Vec2) { .step = u->step + 1, .x = u->x, .y = u->y + 1 });
     }
     y = by;
 
@@ -254,9 +254,9 @@ long long part2(char *filename, int steps) {
     }
     if (rmap->items[y][x] == '.') {
       rmap->items[y][x] = 'O';
-      array_priority_push(q, ((Coord) { .step = c->step + 1, .x = c->x + 1, .y = c->y }));
+      array_priority_push(q, &(Vec2) { .step = u->step + 1, .x = u->x + 1, .y = u->y });
     }
-    free(c);
+    free(u);
   }
 
   // steps <= 131*3+65

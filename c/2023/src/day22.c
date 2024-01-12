@@ -14,11 +14,11 @@ typedef struct {
   int x;
   int y;
   int z;
-} Coord;
+} Vec3;
 
 typedef struct {
-  Coord start;
-  Coord end;
+  Vec3 start;
+  Vec3 end;
 } Brick;
 
 void brick_array_print(Array *bricks) {
