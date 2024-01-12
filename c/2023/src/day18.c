@@ -38,28 +38,28 @@ void instruction_array_print(Array *array) {
 typedef struct {
   size_t x;
   size_t y;
-} Coord;
+} Vec2;
 
-void coord_array_print(Array *array) {
+void vec2_array_print(Array *array) {
   printf("Array{ capacity = %zu, size = %zu, stride = %zu, data = [ ", array->capacity, array->size, array->stride);
   for (size_t i = 0; i < array->size; i++) {
-    Coord *coord = array_get(array, i);
+    Vec2 *v = array_get(array, i);
     if (i == array->size - 1) {
-      printf("(%zu, %zu)", coord->x, coord->y);
+      printf("(%zu, %zu)", v->x, v->y);
     } else {
-      printf("(%zu, %zu), ", coord->x, coord->y);
+      printf("(%zu, %zu), ", v->x, v->y);
     }
   }
   printf(" ] }\n");
 }
 
 // https://en.wikipedia.org/wiki/Shoelace_formula#Triangle_formula
-long long polygon_area(Array *coords) {
+long long polygon_area(Array *vecs) {
   long long area = 0;
-  for (size_t i = 0; i < coords->size; i++) {
-    Coord *c1 = array_get(coords, i);
-    Coord *c2 = i == coords->size - 1 ? array_get(coords, 0) : array_get(coords, i + 1);
-    area += c1->x * c2->y - c2->x * c1->y;
+  for (size_t i = 0; i < vecs->size; i++) {
+    Vec2 *u = array_get(vecs, i);
+    Vec2 *v = i == vecs->size - 1 ? array_get(vecs, 0) : array_get(vecs, i + 1);
+    area += u->x * v->y - v->x * u->y;
   }
   return area /= 2;
 }
@@ -72,12 +72,11 @@ long long points_inside_polygon(long long area, long long perimeter) {
 long long area_from_instructions(Array *instructions) {
   long long x = 0, y = 0;
   long long perimeter = 0;
-  Array *coords = array_new(Coord);
+  Array *vecs = array_new(Vec2);
   for (size_t i = 0; i < instructions->size; i++) {
     Instruction *instruction = array_get(instructions, i);
 
-    Coord c = { .x = x, .y = y };
-    array_push(coords, c);
+    _array_push(vecs, &(Vec2) { x, y });
 
     perimeter += instruction->distance;
     if (instruction->direction == R) x += instruction->distance;
@@ -87,12 +86,12 @@ long long area_from_instructions(Array *instructions) {
 
     //printf("%zu %zu\n", x, y);
   }
-  //coord_array_print(coords);
+  //vec2_array_print(vecs);
 
-  long long area = polygon_area(coords);
+  long long area = polygon_area(vecs);
   long long points = points_inside_polygon(area, perimeter);
 
-  array_free(coords);
+  array_free(vecs);
 
   return perimeter + points;
 }

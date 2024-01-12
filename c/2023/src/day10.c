@@ -49,59 +49,36 @@ bool is_edge(char c) {
 typedef struct {
   size_t x;
   size_t y;
-} Coord;
+} Vec2;
 
-typedef struct {
-  size_t size;
-  Coord *coords;
-} CoordsSet;
-
-CoordsSet *coords_from(StringArray *schema, size_t rows, size_t cols, size_t x, size_t y) {
-  size_t coords_size = 0;
-  Coord *coords = malloc(sizeof(Coord) * 4);
+Array *vecs_from(StringArray *schema, size_t rows, size_t cols, size_t x, size_t y) {
+  Array *vecs = array_new(Vec2);
 
   char *row = string_array_get(schema, y);
   if (can_go_north(row[x]) && y > 0) {
     char *previous_row = string_array_get(schema, y - 1);
     if (valid_going_north(previous_row[x])) {
-      Coord coord = { .x = x, .y = y - 1 }; 
-      coords[coords_size++] = coord;
+      _array_push(vecs, &(Vec2) { x, y - 1 });
     }
   }
   if (can_go_east(row[x]) && x + 1 < cols) {
     if (valid_going_east(row[x + 1])) {
-      Coord coord = { .x = x + 1, .y = y }; 
-      coords[coords_size++] = coord;
+      _array_push(vecs, &(Vec2) { x + 1, y });
     }
   }
   if (can_go_south(row[x]) && y + 1 < rows) {
     char *next_row = string_array_get(schema, y + 1);
     if (valid_going_south(next_row[x])) {
-      Coord coord = { .x = x, .y = y + 1 }; 
-      coords[coords_size++] = coord;
+      _array_push(vecs, &(Vec2) { x, y + 1 });
     }
   }
   if (can_go_west(row[x]) && x > 0) {
     if (valid_going_west(row[x - 1])) {
-      Coord coord = { .x = x - 1, .y = y }; 
-      coords[coords_size++] = coord;
+      _array_push(vecs, &(Vec2) { x - 1, y });
     }
   }
 
-  CoordsSet *set = malloc(sizeof(CoordsSet));
-  set->size = coords_size;
-  set->coords = coords;
-
-  return set;
-}
-
-void free_coords_set(CoordsSet *set) {
-  if (set != nullptr) {
-    if (set->coords != nullptr) {
-      free(set->coords);
-    }
-    free(set);
-  }
+  return vecs;
 }
 
 void debug_steps(int **steps, size_t rows, size_t cols) {
@@ -127,28 +104,27 @@ void debug_steps(int **steps, size_t rows, size_t cols) {
 
 void traverse_rec(StringArray *schema, int **steps, size_t rows, size_t cols, size_t x, size_t y, int count, int *highest) {
   //printf("%d\n", count);
-  CoordsSet *set = coords_from(schema, rows, cols, x, y);
-  //printf("size: %zu\n", set->size);
-  for (size_t i = 0; i < set->size; i++) {
-    Coord c = set->coords[i];
+  Array *vecs = vecs_from(schema, rows, cols, x, y);
+  //printf("size: %zu\n", vecs->size);
+  for (size_t i = 0; i < vecs->size; i++) {
+    Vec2 *u = array_get(vecs, i);
     //char *yrow = string_array_get(schema, y);
-    //char *cyrow = string_array_get(schema, c.y);
-    //printf("from { %zu, %zu } = '%c' to { %zu, %zu } = '%c' \n", x, y, yrow[x], c.x, c.y, cyrow[c.x]);
-    int step = steps[c.y][c.x];
+    //char *vyrow = string_array_get(schema, v->y);
+    //printf("from { %zu, %zu } = '%c' to { %zu, %zu } = '%c' \n", x, y, yrow[x], v->x, v->y, vyrow[v->x]);
+    int step = steps[u->y][u->x];
     if (step == 0 && count > 2) {
       //printf("highest = %d\n", count);
       *highest = count;
     } else if (step == -1) {
-      steps[c.y][c.x] = count;
-      traverse_rec(schema, steps, rows, cols, c.x, c.y, count + 1, highest);
+      steps[u->y][u->x] = count;
+      traverse_rec(schema, steps, rows, cols, u->x, u->y, count + 1, highest);
     }
   }
-  free_coords_set(set);
+  array_free(vecs);
 }
 
-CoordsSet *traverse_steps(StringArray *schema, int **steps, size_t rows, size_t cols, int highest) {
-  size_t coords_size = 0;
-  Coord *coords = malloc(sizeof(Coord) * 10000);
+Array *traverse_steps(StringArray *schema, int **steps, size_t rows, size_t cols, int highest) {
+  Array *vecs = array_new(Vec2);
 
   bool stop = false;
   size_t x = 0, y = 0;
@@ -163,11 +139,8 @@ CoordsSet *traverse_steps(StringArray *schema, int **steps, size_t rows, size_t 
   }
 
   printf("Start at (%zu, %zu)\n", x, y);
-  //printf("(%zu, %zu)\n", x, y);
-  Coord coord = { .x = x, .y = y };
-  coords[coords_size++] = coord;
+  _array_push(vecs, &(Vec2) { x, y });
 
-  stop = false;
   int count = 0;
   while (1) {
     int next = (count + 1) % highest;
@@ -190,19 +163,14 @@ CoordsSet *traverse_steps(StringArray *schema, int **steps, size_t rows, size_t 
     char *row = string_array_get(schema, y);
     if (is_edge(row[x])) {
       //printf("(%zu, %zu)\n", x, y);
-      Coord coord = { .x = x, .y = y };
-      coords[coords_size++] = coord;
+      _array_push(vecs, &(Vec2) { x, y });
     }
   }
 
-  CoordsSet *set = malloc(sizeof(CoordsSet));
-  set->size = coords_size;
-  set->coords = coords;
-
-  return set;
+  return vecs;
 }
 
-int is_left(Coord *edge1, Coord *edge2, size_t x, size_t y) {
+int is_left(Vec2 *edge1, Vec2 *edge2, size_t x, size_t y) {
   return (edge2->x - edge1->x) * (y - edge1->y) -
          (x - edge1->x) * (edge2->y - edge1->y);
 }
@@ -210,14 +178,14 @@ int is_left(Coord *edge1, Coord *edge2, size_t x, size_t y) {
 // https://en.wikipedia.org/wiki/Point_in_polygon#Winding_number_algorithm
 // https://stackoverflow.com/a/37703647
 // and https://forums.codeguru.com/showthread.php?497679-To-check-if-a-point-is-inside-a-polygon
-int winding_number(CoordsSet *set, size_t x, size_t y) {
+int winding_number(Array *vecs, size_t x, size_t y) {
   int wn = 0;
-  for (size_t i = 0; i < set->size; i++) {
-    Coord c = set->coords[i];
-    Coord n = (i == set->size - 1) ? set->coords[0] : set->coords[i + 1];
-    if (c.y <= y) {
-      if (n.y > y) {
-        int l = is_left(&c, &n, x, y); 
+  for (size_t i = 0; i < vecs->size; i++) {
+    Vec2 *c = array_get(vecs, i);
+    Vec2 *n = (i == vecs->size - 1) ? array_get(vecs, 0) : array_get(vecs, i + 1);
+    if (c->y <= y) {
+      if (n->y > y) {
+        int l = is_left(c, n, x, y);
         if (l > 0) {
           wn++;
         } else if (l == 0) {
@@ -225,8 +193,8 @@ int winding_number(CoordsSet *set, size_t x, size_t y) {
         }
       }
     } else {
-      if (n.y <= y) {
-        int l = is_left(&c, &n, x, y);
+      if (n->y <= y) {
+        int l = is_left(c, n, x, y);
         if (l < 0) {
           wn--;
         } else if (l == 0) {
@@ -362,7 +330,7 @@ int part2(char *filename) {
   traverse_rec(schema, steps, rows, cols, sx, sy, 1, &highest);
   debug_steps(steps, rows, cols);
 
-  CoordsSet *edges = traverse_steps(schema, steps, rows, cols, highest);
+  Array *edges = traverse_steps(schema, steps, rows, cols, highest);
   printf("edges = %zu\n", edges->size);
 
   int inside = 0;
@@ -390,13 +358,12 @@ int part2(char *filename) {
   }
   printf("inside = %d\n", inside);
 
-  free_coords_set(edges);
-
-  string_array_free(schema);
+  array_free(edges);
   for (size_t j = 0; j < rows; j++) {
     free(steps[j]);
   }
   free(steps);
+  string_array_free(schema);
 
   return inside;
 }

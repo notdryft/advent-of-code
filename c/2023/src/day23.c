@@ -31,39 +31,39 @@ void seen_free(bool **seen, size_t my) {
 typedef struct {
   size_t x;
   size_t y;
-} Coord;
+} Vec2;
 
 void dfs(char **trail, bool **seen, size_t mx, size_t my, size_t x, size_t y, int increment, int *max) {
-  Array *coords = array_new(Coord);
+  Array *vecs = array_new(Vec2);
   if (y > 0 && !seen[y - 1][x] && (trail[y - 1][x] == '.' || trail[y - 1][x] == '^')) {
-    array_push(coords, ((Coord) { x, y - 1 }));
+    _array_push(vecs, &(Vec2) { x, y - 1 });
   }
   if (x > 0 && !seen[y][x - 1] && (trail[y][x - 1] == '.' || trail[y][x - 1] == '<')) {
-    array_push(coords, ((Coord) { x - 1, y }));
+    _array_push(vecs, &(Vec2) { x - 1, y });
   }
   if (y < my - 1 && !seen[y + 1][x] && (trail[y + 1][x] == '.' || trail[y + 1][x] == 'v')) {
-    array_push(coords, ((Coord) { x, y + 1 }));
+    _array_push(vecs, &(Vec2) { x, y + 1 });
   }
   if (x < mx - 1 && !seen[y][x + 1] && (trail[y][x + 1] == '.' || trail[y][x + 1] == '>')) {
-    array_push(coords, ((Coord) { x + 1, y }));
+    _array_push(vecs, &(Vec2) { x + 1, y });
   }
 
-  if (coords->size == 0 && x == mx - 2 && y == mx - 1) {
+  if (vecs->size == 0 && x == mx - 2 && y == mx - 1) {
     if (increment > *max) {
       printf("new max = %d\n", increment);
       *max = increment;
     } 
   }
 
-  for (size_t i = 0; i < coords->size; i++) {
-    Coord *c = array_get(coords, i);
+  for (size_t i = 0; i < vecs->size; i++) {
+    Vec2 *u = array_get(vecs, i);
 
     seen[y][x] = true;
-    dfs(trail, seen, mx, my, c->x, c->y, increment + 1, max);
+    dfs(trail, seen, mx, my, u->x, u->y, increment + 1, max);
     seen[y][x] = false;
   }
 
-  array_free(coords);
+  array_free(vecs);
 }
 
 void dfs2(char **trail, bool **seen, size_t mx, size_t my, size_t x, size_t y, int increment, int *max) {
