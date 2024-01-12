@@ -117,7 +117,7 @@ long long part1(char *filename) {
     if (sscanf(buffer, "%[RDLU] %lld (#[a-z0-9]+)", direction_str, &distance)) {
       enum Direction direction;
       if (direction_str[0] == 'R') direction = R;
-      else if (direction_str[0] == 'D') direction = D; 
+      else if (direction_str[0] == 'D') direction = D;
       else if (direction_str[0] == 'L') direction = L;
       else direction = U;
 

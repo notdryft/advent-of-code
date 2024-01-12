@@ -28,7 +28,7 @@ int part1(char *filename) {
     sum += int_array_first(digits) * 10 + int_array_last(digits);
     array_free(digits);
   }
-  
+
   fclose(fp);
 
   printf("sum: %d\n", sum);
@@ -70,7 +70,7 @@ int part2(char *filename) {
     int_array_print(digits);
     array_free(digits);
   }
-  
+
   fclose(fp);
 
   printf("sum: %d\n", sum);

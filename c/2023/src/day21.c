@@ -262,8 +262,8 @@ long long part2(char *filename, int steps) {
   // steps <= 131*3+65
   // step % 131 == 65
   // 3606 32258 89460 175212
-  // ^ 28652 57202 85752 
-  //   ^ 28550 28550 
+  // ^ 28652 57202 85752
+  //   ^ 28550 28550
   //     ^    0
 
   // x = (26501365 - 65) / 131 = 202300
@@ -271,7 +271,7 @@ long long part2(char *filename, int steps) {
   //  = 3606 + 28652 * 202300 + 28550 * 202300 * 202299 / 2
   //  = 584211423220706
 
-  long long sum = q->size; 
+  long long sum = q->size;
   printf("sum = %lld\n", sum);
 
   array_free(q);

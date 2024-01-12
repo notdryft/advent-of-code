@@ -158,13 +158,13 @@ int part2(char *filename) {
       char *instruction_raw = string_array_get(split, i);
       size_t len = strlen(instruction_raw);
 
-      char *instruction = strdup(instruction_raw); 
+      char *instruction = strdup(instruction_raw);
       if (instruction[len - 2] == '=') {
         instruction[len - 2] = '\0';
         int focal = atoi(instruction + len - 1);
         len -= 2;
         printf("After \"%s=%d\" (%zu):\n", instruction, focal, len);
-        
+
         map_add(map, instruction, len, focal);
       } else if (instruction[len - 1] == '-') {
         instruction[len - 1] = '\0';

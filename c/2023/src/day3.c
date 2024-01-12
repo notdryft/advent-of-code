@@ -70,7 +70,7 @@ int part1(char *filename) {
             }
           }
         }
-        
+
         if (is_near_symbol) {
           sum += atoi(digit_str);
           printf("digit: %s (%zu, %zu) is next to a symbol\n", digit_str, digit_so, digit_eo);
@@ -84,7 +84,7 @@ int part1(char *filename) {
   }
 
   string_array_free(lines);
-  
+
   fclose(fp);
 
   printf("sum = %d\n", sum);
@@ -135,7 +135,7 @@ int part2(char *filename) {
         size_t ex = (digit_eo + 1 > line_len) ? digit_eo : digit_eo + 1;
 
         size_t gear_x;
-        size_t gear_y; 
+        size_t gear_y;
         bool is_near_gear_symbol = false;
         for (size_t y = sy; y <= ey; y++) {
           char *sline = string_array_get(lines, y);
@@ -162,7 +162,7 @@ int part2(char *filename) {
           printf("scanning from (%zu, %zu) to (%zu, %zu)\n", nsx, nsy, nex, ney);
 
           size_t digit_x;
-          size_t digit_y; 
+          size_t digit_y;
           bool is_gear_near_another_digit = false;
           printf("nline: ");
           for (size_t y = nsy; y <= ney; y++) {
@@ -177,7 +177,7 @@ int part2(char *filename) {
             }
           }
           printf("\n");
-          
+
           printf("digit: %s (%zu, %zu) is next to a symbol (%zu, %zu)\n", digit_str, digit_so, digit_eo, gear_x, gear_y);
 
           if (is_gear_near_another_digit) {

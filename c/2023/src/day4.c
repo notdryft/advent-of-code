@@ -43,7 +43,7 @@ int part1(char *filename) {
     size_t pipe_offset = strchr(buffer, '|') - buffer;
     size_t winning_numbers_len = (pipe_offset - 1) - (colon_offset + 2);
     size_t numbers_len = buffer_len - (pipe_offset + 2);
-  
+
     //           11111111112222222222333333333344444444
     // 012345678901234567890123456789012345678901234567
     // Card 1: 41 48 83 86 17 | 83 86  6 31 17  9 48 53
@@ -77,7 +77,7 @@ int part1(char *filename) {
     free(numbers_buf);
     free(winning_numbers_buf);
   }
-  
+
   fclose(fp);
 
   printf("sum = %d\n", sum);
@@ -115,7 +115,7 @@ int part2(char *filename) {
     size_t pipe_offset = strchr(buffer, '|') - buffer;
     size_t winning_numbers_len = (pipe_offset - 1) - (colon_offset + 2);
     size_t numbers_len = buffer_len - (pipe_offset + 2);
-  
+
     //           11111111112222222222333333333344444444
     // 012345678901234567890123456789012345678901234567
     // Card 1: 41 48 83 86 17 | 83 86  6 31 17  9 48 53

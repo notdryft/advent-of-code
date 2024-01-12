@@ -131,7 +131,7 @@ unsigned long long part1(char *filename) {
   while (fgets(buffer, BUFFER_LENGTH, fp)) {
     size_t buffer_len = strlen(buffer);
     buffer[buffer_len - 1] = '\0';
-    
+
     if (strncmp(buffer, "broadcaster", 11) == 0 || buffer[0] == '%' || buffer[0] == '&') {
       StringArray *split = string_split(buffer, " -> ");
       StringArray *csplit = string_split(split->items[1], ", ");
@@ -277,7 +277,7 @@ long long part2(char *filename) {
   while (fgets(buffer, BUFFER_LENGTH, fp)) {
     size_t buffer_len = strlen(buffer);
     buffer[buffer_len - 1] = '\0';
-    
+
     if (strncmp(buffer, "broadcaster", 11) == 0 || buffer[0] == '%' || buffer[0] == '&') {
       StringArray *split = string_split(buffer, " -> ");
       StringArray *csplit = string_split(split->items[1], ", ");

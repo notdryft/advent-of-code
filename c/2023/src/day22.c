@@ -146,7 +146,7 @@ int part1(char *filename) {
     return 1;
   }
 
-  Array *bricks = array_new(Brick); 
+  Array *bricks = array_new(Brick);
 
   char buffer[BUFFER_LENGTH] = {};
   while (fgets(buffer, BUFFER_LENGTH, fp)) {
@@ -194,7 +194,7 @@ int part2(char *filename) {
     return 1;
   }
 
-  Array *bricks = array_new(Brick); 
+  Array *bricks = array_new(Brick);
 
   char buffer[BUFFER_LENGTH] = {};
   while (fgets(buffer, BUFFER_LENGTH, fp)) {
@@ -222,7 +222,7 @@ int part2(char *filename) {
   for (size_t i = 0; i < bricks->size; i++) {
     Array *dup = array_dup(bricks);
     array_remove(dup, i);
-    
+
     int *fallen = calloc(dup->size, sizeof(int));
 
     int *f = fall2(dup);

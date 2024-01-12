@@ -23,7 +23,7 @@ days = 25
 
 all: $(patsubst %,day%,$(shell seq 1 1 $(days)))
 
-$(objdir)/%.o: $(srcdir)/%.c 
+$(objdir)/%.o: $(srcdir)/%.c
 	$(cc) -c -fPIC -o$@ $^ $(cflags)
 
 $(libdir)/libaoc.so: $(objdir)/algos.o $(objdir)/array.o $(objdir)/map.o $(objdir)/math.o $(objdir)/string.o

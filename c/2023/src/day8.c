@@ -13,7 +13,7 @@ constexpr size_t BUFFER_LENGTH = 1024;
 typedef struct _Node {
  char value[4];
  struct _Node *left;
- struct _Node *right; 
+ struct _Node *right;
 } Node;
 
 typedef struct {
@@ -257,7 +257,7 @@ long long part2(char *filename) {
     ghost_steps[i] = steps;
     printf("steps = %d\n", steps);
   }
-  
+
   long long result = ghost_steps[0];
   for (size_t i = 1; i < ghost_nodes->size; i++) {
     printf("lcm(%llu, %d) = ", result, ghost_steps[i]);

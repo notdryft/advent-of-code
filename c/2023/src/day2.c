@@ -86,7 +86,7 @@ int part1(char *filename) {
       token = strtok_r(nullptr, ":", &p_token_save);
     }
   }
-  
+
   fclose(fp);
   regfree(&regex);
 
@@ -173,7 +173,7 @@ int part2(char *filename) {
   regfree(&regex);
 
   printf("sum: %d\n", sum);
-  
+
   return sum;
 }
 

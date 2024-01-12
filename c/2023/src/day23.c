@@ -52,7 +52,7 @@ void dfs(char **trail, bool **seen, size_t mx, size_t my, size_t x, size_t y, in
     if (increment > *max) {
       printf("new max = %d\n", increment);
       *max = increment;
-    } 
+    }
   }
 
   for (size_t i = 0; i < vecs->size; i++) {
@@ -71,7 +71,7 @@ void dfs2(char **trail, bool **seen, size_t mx, size_t my, size_t x, size_t y, i
     if (increment > *max) {
       printf("new max = %d\n", increment);
       *max = increment;
-    } 
+    }
     return;
   }
 
@@ -110,7 +110,7 @@ int part1(char *filename) {
   while (fgets(buffer, BUFFER_LENGTH, fp)) {
     size_t buffer_len = strlen(buffer);
     buffer[buffer_len - 1] = '\0';
-    
+
     string_array_push(trail, buffer);
   }
   fclose(fp);
@@ -144,7 +144,7 @@ int part2(char *filename) {
   while (fgets(buffer, BUFFER_LENGTH, fp)) {
     size_t buffer_len = strlen(buffer);
     buffer[buffer_len - 1] = '\0';
-    
+
     string_array_push(trail, buffer);
   }
   fclose(fp);

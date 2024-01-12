@@ -314,7 +314,7 @@ int part1(char *filename) {
           array_push(node.rules, &rule);
         }
       }
-      
+
       array_push(nodes, &node);
 
       string_array_free(rules);
@@ -430,7 +430,7 @@ unsigned long long part2(char *filename) {
           array_push(node.rules, &rule);
         }
       }
-      
+
       array_push(nodes, &node);
 
       string_array_free(rules);

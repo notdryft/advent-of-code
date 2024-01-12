@@ -104,7 +104,7 @@ float128_t det5(int128_t m[5][5]) {
       total = total * a;
     }
   }
- 
+
   for (size_t i = 0; i < 5; i++) {
     det = det * copy[i][i];
   }
@@ -125,7 +125,7 @@ void cofactor(int128_t M[6][6], float128_t C[6][6]) {
 void transpose(float128_t M[6][6]) {
   for (size_t j = 0; j < 6; j++) {
     for (size_t i = j + 1; i < 6; i++) {
-      float128_t tmp = M[j][i]; 
+      float128_t tmp = M[j][i];
       M[j][i] = M[i][j];
       M[i][j] = tmp;
     }
@@ -142,7 +142,7 @@ float128_t determinant(int128_t M[6][6]) {
       copy[j][i] = M[j][i];
     }
   }
- 
+
   for (size_t i = 0; i < 6; i++) {
     size_t index = i;
     while (index < 6 && copy[index][i] == 0) {
@@ -173,7 +173,7 @@ float128_t determinant(int128_t M[6][6]) {
       total = total * a;
     }
   }
- 
+
   for (size_t i = 0; i < 6; i++) {
     det = det * copy[i][i];
   }
@@ -256,7 +256,7 @@ bool intersects(Hailstone *a, Hailstone *b, Intersection *p) {
   if (d == 0) {
     return false;
   }
- 
+
   int128_t pxn = (x1 * y2 - y1 * x2) * (x3 - x4) - (x1 - x2) * (x3 * y4 - y3 * x4);
   int128_t pyn = (x1 * y2 - y1 * x2) * (y3 - y4) - (y1 - y2) * (x3 * y4 - y3 * x4);
 
@@ -282,7 +282,7 @@ int part1(char *filename, int128_t min, int128_t max, bool debug) {
     size_t buffer_len = strlen(buffer);
     buffer[buffer_len - 1] = '\0';
 
-    StringArray *at_split = string_split(buffer, " @ "); 
+    StringArray *at_split = string_split(buffer, " @ ");
     StringArray *positions = string_split(at_split->items[0], ", ");
     int128_t px = atoll(positions->items[0]);
     int128_t py = atoll(positions->items[1]);
@@ -355,7 +355,7 @@ int128_t part2(char *filename) {
     size_t buffer_len = strlen(buffer);
     buffer[buffer_len - 1] = '\0';
 
-    StringArray *at_split = string_split(buffer, " @ "); 
+    StringArray *at_split = string_split(buffer, " @ ");
     StringArray *positions = string_split(at_split->items[0], ", ");
     int128_t px = atoll(positions->items[0]);
     int128_t py = atoll(positions->items[1]);
@@ -379,7 +379,7 @@ int128_t part2(char *filename) {
   Hailstone *h2 = array_get(hailstones, 2);
 
   int128_t M0[3][3]; // ┌       ┐
-  int128_t M1[3][3]; // | M0 M2 | 
+  int128_t M1[3][3]; // | M0 M2 |
   int128_t M2[3][3]; // | M1 M3 |
   int128_t M3[3][3]; // └       ┘
 
