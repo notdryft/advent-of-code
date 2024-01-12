@@ -22,7 +22,7 @@ int part1(char *filename) {
     for (int i = 0; buffer[i] != '\n'; i++) {
       int value = buffer[i] - '0';
       if (value > 0 && value < 10) {
-        array_push(digits, value);
+        array_push_rval(digits, value);
       }
     }
     sum += int_array_first(digits) * 10 + int_array_last(digits);
@@ -53,17 +53,17 @@ int part2(char *filename) {
     for (size_t i = 0; buffer[i] != '\n'; i++) {
       char c = buffer[i];
       if (c >= '1' && c <= '9') {
-        array_push(digits, c - '0');
+        array_push_rval(digits, c - '0');
       } else {
-        if (strncmp(buffer + i, "one", 3) == 0) array_push(digits, 1);
-        else if (strncmp(buffer + i, "two", 3) == 0) array_push(digits, 2);
-        else if (strncmp(buffer + i, "three", 5) == 0) array_push(digits, 3);
-        else if (strncmp(buffer + i, "four", 4) == 0) array_push(digits, 4);
-        else if (strncmp(buffer + i, "five", 4) == 0) array_push(digits, 5);
-        else if (strncmp(buffer + i, "six", 3) == 0) array_push(digits, 6);
-        else if (strncmp(buffer + i, "seven", 5) == 0) array_push(digits, 7);
-        else if (strncmp(buffer + i, "eight", 5) == 0) array_push(digits, 8);
-        else if (strncmp(buffer + i, "nine", 4) == 0) array_push(digits, 9);
+        if (strncmp(buffer + i, "one", 3) == 0) array_push_rval(digits, 1);
+        else if (strncmp(buffer + i, "two", 3) == 0) array_push_rval(digits, 2);
+        else if (strncmp(buffer + i, "three", 5) == 0) array_push_rval(digits, 3);
+        else if (strncmp(buffer + i, "four", 4) == 0) array_push_rval(digits, 4);
+        else if (strncmp(buffer + i, "five", 4) == 0) array_push_rval(digits, 5);
+        else if (strncmp(buffer + i, "six", 3) == 0) array_push_rval(digits, 6);
+        else if (strncmp(buffer + i, "seven", 5) == 0) array_push_rval(digits, 7);
+        else if (strncmp(buffer + i, "eight", 5) == 0) array_push_rval(digits, 8);
+        else if (strncmp(buffer + i, "nine", 4) == 0) array_push_rval(digits, 9);
       }
     }
     sum += int_array_first(digits) * 10 + int_array_last(digits);

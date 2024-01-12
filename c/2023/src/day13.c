@@ -90,14 +90,14 @@ int part1(char *filename) {
 
   //string_array_print_raw(lines);
   Array* patterns = array_new(int);
-  array_push(patterns, 0);
+  array_push_rval(patterns, 0);
   for (size_t i = 0; i < lines->size; i++) {
     char *line = string_array_get(lines, i);
     if (strlen(line) == 0) {
-      array_push(patterns, i);
+      array_push_rval(patterns, i);
     }
   }
-  array_push(patterns, lines->size);
+  array_push_rval(patterns, lines->size);
   int_array_print(patterns);
 
   int sum = 0;
@@ -154,14 +154,14 @@ int part2(char *filename) {
 
   //string_array_print_raw(lines);
   Array* patterns = array_new(int);
-  array_push(patterns, 0);
+  array_push_rval(patterns, 0);
   for (size_t i = 0; i < lines->size; i++) {
     char *line = string_array_get(lines, i);
     if (strlen(line) == 0) {
-      array_push(patterns, i);
+      array_push_rval(patterns, i);
     }
   }
-  array_push(patterns, lines->size);
+  array_push_rval(patterns, lines->size);
   //int_array_print(patterns);
 
   int sum = 0;

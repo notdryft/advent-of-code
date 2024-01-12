@@ -67,14 +67,13 @@ void apply_range(Array *waiting, Array *done, AlmanachEntry *entry, Range *range
   Range after = { max(range->start, entry->range.end), range->end};
 
   if (before.start < before.end) {
-    array_push(waiting, before);
+    array_push(waiting, &before);
   }
   if (intersection.start < intersection.end) {
-    Range nr = { intersection.start + entry->offset, intersection.end + entry->offset };
-    array_push(done, nr);
+    array_push(done, &(Range) { intersection.start + entry->offset, intersection.end + entry->offset });
   }
   if (after.start < after.end) {
-    array_push(waiting, after);
+    array_push(waiting, &after);
   }
 }
 
@@ -146,7 +145,7 @@ ll part1(char *filename) {
       char *seeds_str = substring(buffer, 7, buffer_len - 7 - 1);
       StringArray *split = string_split(seeds_str, " ");
       for (size_t i = 0; i < split->size; i++) {
-        array_push(seeds, strtoll(split->items[i], nullptr, 10));
+        array_push_rval(seeds, strtoll(split->items[i], nullptr, 10));
       }
 
       free(seeds_str);
@@ -186,7 +185,7 @@ ll part1(char *filename) {
         },
         .offset = destination - source
       };
-      array_push(entries, entry);
+      array_push(entries, &entry);
     }
   }
   fclose(fp);
@@ -246,7 +245,7 @@ ll part2(char *filename) {
       char *pairs_str = substring(buffer, 7, buffer_len - 7 - 1);
       StringArray *split = string_split(pairs_str, " ");
       for (size_t i = 0; i < split->size; i++) {
-        array_push(pairs, strtoll(split->items[i], nullptr, 0));
+        array_push_rval(pairs, strtoll(split->items[i], nullptr, 0));
       }
 
       free(pairs_str);
@@ -286,7 +285,7 @@ ll part2(char *filename) {
         },
         .offset = destination - source
       };
-      array_push(entries, entry);
+      array_push(entries, &entry);
     }
   }
   fclose(fp);
@@ -295,8 +294,7 @@ ll part2(char *filename) {
   for (size_t i = 0; i < pairs->size; i += 2) {
     ll start = llu_array_get(pairs, i);
     ll r = llu_array_get(pairs, i + 1);
-    Range range = { start, start + r };
-    array_push(ranges, range);
+    array_push(ranges, &(Range) { start, start + r });
   }
 
   for (size_t entry_type = 0; entry_type < NUMBER_OF_ALMANACH_ENTRY_TYPES; entry_type++) {

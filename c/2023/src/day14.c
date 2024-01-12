@@ -170,7 +170,7 @@ int part2(char *filename) {
     //string_array_print_raw(rocks);
     //printf("\n");
     int l = load(rocks);
-    array_push(loads, l);
+    array_push_rval(loads, l);
     c = find_longest_cycle(loads, 2); 
     if (c != nullptr) {
       break;

@@ -76,7 +76,7 @@ long long area_from_instructions(Array *instructions) {
   for (size_t i = 0; i < instructions->size; i++) {
     Instruction *instruction = array_get(instructions, i);
 
-    _array_push(vecs, &(Vec2) { x, y });
+    array_push(vecs, &(Vec2) { x, y });
 
     perimeter += instruction->distance;
     if (instruction->direction == R) x += instruction->distance;
@@ -121,9 +121,7 @@ long long part1(char *filename) {
       else if (direction_str[0] == 'L') direction = L;
       else direction = U;
 
-      Instruction instruction = { .direction = direction, .distance = distance };
-
-      array_push(instructions, instruction);
+      array_push(instructions, &(Instruction) { direction, distance });
     }
   }
   fclose(fp);
@@ -164,9 +162,7 @@ long long part2(char *filename) {
       distance_str[5] = '\0';
       size_t distance = strtol(distance_str, nullptr, 16);
 
-      Instruction instruction = { .direction = direction, .distance = distance };
-
-      array_push(instructions, instruction);
+      array_push(instructions, &(Instruction) { direction, distance });
     }
   }
   fclose(fp);

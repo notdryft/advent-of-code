@@ -36,16 +36,16 @@ typedef struct {
 void dfs(char **trail, bool **seen, size_t mx, size_t my, size_t x, size_t y, int increment, int *max) {
   Array *vecs = array_new(Vec2);
   if (y > 0 && !seen[y - 1][x] && (trail[y - 1][x] == '.' || trail[y - 1][x] == '^')) {
-    _array_push(vecs, &(Vec2) { x, y - 1 });
+    array_push(vecs, &(Vec2) { x, y - 1 });
   }
   if (x > 0 && !seen[y][x - 1] && (trail[y][x - 1] == '.' || trail[y][x - 1] == '<')) {
-    _array_push(vecs, &(Vec2) { x - 1, y });
+    array_push(vecs, &(Vec2) { x - 1, y });
   }
   if (y < my - 1 && !seen[y + 1][x] && (trail[y + 1][x] == '.' || trail[y + 1][x] == 'v')) {
-    _array_push(vecs, &(Vec2) { x, y + 1 });
+    array_push(vecs, &(Vec2) { x, y + 1 });
   }
   if (x < mx - 1 && !seen[y][x + 1] && (trail[y][x + 1] == '.' || trail[y][x + 1] == '>')) {
-    _array_push(vecs, &(Vec2) { x + 1, y });
+    array_push(vecs, &(Vec2) { x + 1, y });
   }
 
   if (vecs->size == 0 && x == mx - 2 && y == mx - 1) {

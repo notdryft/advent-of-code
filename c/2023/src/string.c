@@ -144,7 +144,7 @@ StringArray *string_split(char *content, char *delimiter) {
 Array *string_atoi(StringArray *array) {
   Array *ints = array_new(int);
   for (size_t i = 0; i < array->size; i++) {
-    array_push(ints, atoi(string_array_get(array, i)));
+    array_push_rval(ints, atoi(string_array_get(array, i)));
   }
   return ints;
 }
@@ -152,7 +152,7 @@ Array *string_atoi(StringArray *array) {
 Array *string_atol(StringArray *array) {
   Array *longs = array_new(long);
   for (size_t i = 0; i < array->size; i++) {
-    array_push(longs, atol(string_array_get(array, i)));
+    array_push_rval(longs, atol(string_array_get(array, i)));
   }
   return longs;
 }
@@ -160,7 +160,7 @@ Array *string_atol(StringArray *array) {
 Array *string_atoll(StringArray *array) {
   Array *lls = array_new(long long);
   for (size_t i = 0; i < array->size; i++) {
-    array_push(lls, atoll(string_array_get(array, i)));
+    array_push_rval(lls, atoll(string_array_get(array, i)));
   }
   return lls;
 }

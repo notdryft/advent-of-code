@@ -23,14 +23,14 @@ typedef struct {
 
 void array_priority_push(Array *array, Q *value) {
   if (array->size == 0) {
-    _array_push(array, value);
+    array_push(array, value);
   } else {
     size_t i = 0;
     Q *other;
     do {
       other = array_get(array, i++);
     } while (other->cost < value->cost && i <= array->size);
-    _array_insert(array, i - 1, value);
+    array_insert(array, i - 1, value);
   }
 }
 
@@ -58,7 +58,7 @@ int dijkstra(char **grid, int mx, int my, int mindist, int maxdist) {
       .direction = -1
     }
   };
-  array_push(q, source);
+  array_push(q, &source);
 
   int directions[4][2] = {
     // x,  y

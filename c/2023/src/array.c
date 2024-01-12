@@ -48,7 +48,7 @@ void _array_resize(Array *array) {
   array->items = realloc(array->items, array->stride * array->capacity);
 }
 
-void _array_push(Array *array, void *value) {
+void array_push(Array *array, void *value) {
   if (array->size + 1 > array->capacity) {
     _array_resize(array);
   }
@@ -70,7 +70,7 @@ void *array_pop(Array *array) {
   return copy;
 }
 
-void _array_set(Array *array, size_t index, void *value) {
+void array_set(Array *array, size_t index, void *value) {
   size_t overflow = index + 1;
   while (overflow > array->capacity) {
     _array_resize(array);
@@ -82,11 +82,11 @@ void _array_set(Array *array, size_t index, void *value) {
   memcpy((uint8_t *) array->items + array->stride * index, value, array->stride);
 }
 
-inline void _array_add_first(Array *array, void *value) {
-  _array_insert(array, 0, value);
+inline void array_add_first(Array *array, void *value) {
+  array_insert(array, 0, value);
 }
 
-void _array_insert(Array *array, size_t index, void *value) {
+void array_insert(Array *array, size_t index, void *value) {
   if (array->size + 1 > array->capacity) {
     _array_resize(array);
   }
@@ -142,11 +142,11 @@ Array *array_concat(Array *a, Array *b) {
   Array *concat = _array_new(a->stride);
   for (size_t i = 0; i < a->size; i++) {
     void *value = array_get(a, i);
-    _array_push(concat, value);
+    array_push(concat, value);
   }
   for (size_t i = 0; i < b->size; i++) {
     void *value = array_get(b, i);
-    _array_push(concat, value);
+    array_push(concat, value);
   }
 
   return concat;
@@ -155,7 +155,7 @@ Array *array_concat(Array *a, Array *b) {
 Array *array_dup(Array *array) {
   Array *dup = _array_new(array->stride);
   for (size_t i = 0; i < array->size; i++) {
-    _array_push(dup, array_get(array, i));
+    array_push(dup, array_get(array, i));
   }
   return dup;
 }

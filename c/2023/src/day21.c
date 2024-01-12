@@ -48,7 +48,7 @@ StringArray *find_map_or_dup(Array *infinity, StringArray *original, long long i
   if (map == nullptr) {
     //printf("new map for ix = %lld, iy = %lld\n", ix, iy);
     map = string_array_dup(original);
-    array_push(infinity, ((Space) { .ix = ix, .iy = iy, .map = map }));
+    array_push(infinity, &(Space) { .ix = ix, .iy = iy, .map = map });
   }
   return map;
 }
@@ -67,14 +67,14 @@ void infinity_print_raw(Array *infinity, StringArray *map, long long six, long l
 
 void array_priority_push(Array *array, Coord c) {
   if (array->size == 0) {
-    array_push(array, c);
+    array_push(array, &c);
   } else {
     size_t i = 0;
     Coord *o;
     do {
       o = array_get(array, i++);
     } while (o->step < c.step && i <= array->size);
-    array_insert(array, i - 1, c);
+    array_insert(array, i - 1, &c);
   }
 }
 
@@ -105,7 +105,7 @@ long long part1(char *filename, int steps) {
 
   int step = 0;
   Array *q = array_new(Coord);
-  array_push(q, start);
+  array_push(q, &start);
 
   while (42) {
     Coord *peek = array_first(q);
@@ -177,7 +177,7 @@ long long part2(char *filename, int steps) {
 
   int step = 0;
   Array *q = array_new(Coord);
-  array_push(q, start);
+  array_push(q, &start);
 
   Array *n = array_new(long long);
 
@@ -188,7 +188,7 @@ long long part2(char *filename, int steps) {
       //infinity_print_raw(infinity, map, -1, 1, -1, 1, my);
       if (step % mx == mx / 2) { // step % 131 == 65
         printf("step %d: %zu\n", step, q->size);
-        array_push(n, q->size);
+        array_push_rval(n, q->size);
       }
       if (step == steps) {
         break;

@@ -15,7 +15,7 @@ Array *get_numbers(char *str) {
   for (size_t i = 0; i < split->size; i++) {
     int number = atoi(string_array_get(split, i));
     if (number > 0) {
-      array_push(numbers, number);
+      array_push_rval(numbers, number);
     }
   }
 

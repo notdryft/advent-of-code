@@ -155,8 +155,7 @@ int part1(char *filename) {
 
     int sx, sy, sz, ex, ey, ez;
     if (sscanf(buffer, "%d,%d,%d~%d,%d,%d", &sx, &sy, &sz, &ex, &ey, &ez)) {
-      Brick brick = { .start = { sx, sy, sz }, .end = { ex, ey, ez } };
-      array_push(bricks, brick);
+      array_push(bricks, &(Brick) { .start = { sx, sy, sz }, .end = { ex, ey, ez } });
     }
   }
   fclose(fp);
@@ -204,8 +203,7 @@ int part2(char *filename) {
 
     int sx, sy, sz, ex, ey, ez;
     if (sscanf(buffer, "%d,%d,%d~%d,%d,%d", &sx, &sy, &sz, &ex, &ey, &ez)) {
-      Brick brick = { .start = { sx, sy, sz }, .end = { ex, ey, ez } };
-      array_push(bricks, brick);
+      array_push(bricks, &(Brick) { .start = { sx, sy, sz }, .end = { ex, ey, ez } });
     }
   }
   fclose(fp);

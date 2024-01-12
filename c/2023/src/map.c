@@ -102,5 +102,5 @@ void map_put(Map *map, void *entry) {
     index++;
   }
 
-  _array_set(map->table[hash], index, entry);
+  array_set(map->table[hash], index, entry);
 }

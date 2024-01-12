@@ -69,7 +69,7 @@ void map_add(Map *map, char *instruction, size_t len, int focal) {
     memset(item.lens, 0, sizeof(char) * 32);
     strncpy(item.lens, instruction, len + 1);
 
-    array_push(array, item);
+    array_push_rval(array, item);
   }
 }
 

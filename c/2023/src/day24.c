@@ -292,8 +292,7 @@ int part1(char *filename, int128_t min, int128_t max, bool debug) {
     int128_t vy = atoll(velocities->items[1]);
     int128_t vz = atoll(velocities->items[2]);
 
-    Hailstone hailstone = { { px, py, pz }, { vx, vy, vz } };
-    array_push(hailstones, hailstone);
+    array_push(hailstones, &(Hailstone) { { px, py, pz }, { vx, vy, vz } });
 
     string_array_free(velocities);
     string_array_free(positions);
@@ -366,8 +365,7 @@ int128_t part2(char *filename) {
     int128_t vy = atoll(velocities->items[1]);
     int128_t vz = atoll(velocities->items[2]);
 
-    Hailstone hailstone = { { px, py, pz }, { vx, vy, vz } };
-    array_push(hailstones, hailstone);
+    array_push(hailstones, &(Hailstone) { { px, py, pz }, { vx, vy, vz } });
 
     string_array_free(velocities);
     string_array_free(positions);

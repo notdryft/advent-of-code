@@ -47,7 +47,7 @@ int part1(char *filename) {
       StringArray* times_split = string_split(times_str, " ");
       string_array_print(times_split);
       for (size_t i = 0; i < times_split->size; i++) {
-        array_push(times, atoi(string_array_get(times_split, i)));
+        array_push_rval(times, atoi(string_array_get(times_split, i)));
       }
 
       free(times_str);
@@ -61,7 +61,7 @@ int part1(char *filename) {
       StringArray* distances_split = string_split(distances_str, " ");
       string_array_print(distances_split);
       for (size_t i = 0; i < distances_split->size; i++) {
-        array_push(distances, atoi(string_array_get(distances_split, i)));
+        array_push_rval(distances, atoi(string_array_get(distances_split, i)));
       }
 
       free(distances_str);
@@ -146,7 +146,7 @@ int part2(char *filename) {
       StringArray* times_split = string_split(times_str, " ");
       string_array_print(times_split);
       for (size_t i = 0; i < times_split->size; i++) {
-        array_push(times, atoll(string_array_get(times_split, i)));
+        array_push_rval(times, atoll(string_array_get(times_split, i)));
       }
 
       free(times_str);
@@ -160,7 +160,7 @@ int part2(char *filename) {
       StringArray* distances_split = string_split(distances_str, " ");
       string_array_print(distances_split);
       for (size_t i = 0; i < distances_split->size; i++) {
-        array_push(distances, atoll(string_array_get(distances_split, i)));
+        array_push_rval(distances, atoll(string_array_get(distances_split, i)));
       }
 
       free(distances_str);

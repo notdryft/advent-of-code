@@ -58,23 +58,23 @@ Array *vecs_from(StringArray *schema, size_t rows, size_t cols, size_t x, size_t
   if (can_go_north(row[x]) && y > 0) {
     char *previous_row = string_array_get(schema, y - 1);
     if (valid_going_north(previous_row[x])) {
-      _array_push(vecs, &(Vec2) { x, y - 1 });
+      array_push(vecs, &(Vec2) { x, y - 1 });
     }
   }
   if (can_go_east(row[x]) && x + 1 < cols) {
     if (valid_going_east(row[x + 1])) {
-      _array_push(vecs, &(Vec2) { x + 1, y });
+      array_push(vecs, &(Vec2) { x + 1, y });
     }
   }
   if (can_go_south(row[x]) && y + 1 < rows) {
     char *next_row = string_array_get(schema, y + 1);
     if (valid_going_south(next_row[x])) {
-      _array_push(vecs, &(Vec2) { x, y + 1 });
+      array_push(vecs, &(Vec2) { x, y + 1 });
     }
   }
   if (can_go_west(row[x]) && x > 0) {
     if (valid_going_west(row[x - 1])) {
-      _array_push(vecs, &(Vec2) { x - 1, y });
+      array_push(vecs, &(Vec2) { x - 1, y });
     }
   }
 
@@ -139,7 +139,7 @@ Array *traverse_steps(StringArray *schema, int **steps, size_t rows, size_t cols
   }
 
   printf("Start at (%zu, %zu)\n", x, y);
-  _array_push(vecs, &(Vec2) { x, y });
+  array_push(vecs, &(Vec2) { x, y });
 
   int count = 0;
   while (1) {
@@ -163,7 +163,7 @@ Array *traverse_steps(StringArray *schema, int **steps, size_t rows, size_t cols
     char *row = string_array_get(schema, y);
     if (is_edge(row[x])) {
       //printf("(%zu, %zu)\n", x, y);
-      _array_push(vecs, &(Vec2) { x, y });
+      array_push(vecs, &(Vec2) { x, y });
     }
   }
 

@@ -33,12 +33,12 @@ bool is_valid(char *springs, Array *damaged, size_t len) {
       s = true;
     }
     if (springs[i] == '.' && s) {
-      array_push(d, i - j);
+      array_push_rval(d, i - j);
       s = false;
     }
   }
   if (s) {
-    array_push(d, len - j);
+    array_push_rval(d, len - j);
   }
   //int_array_print(d);
 

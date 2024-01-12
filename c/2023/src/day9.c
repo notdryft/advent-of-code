@@ -13,7 +13,7 @@ constexpr size_t BUFFER_LENGTH = 1024;
 int predict_first_rec(Array *array) {
   Array *sub = array_new(int);
   for (size_t i = 1; i < array->size; i++) {
-    array_push(sub, int_array_get(array, i) - int_array_get(array, i - 1));
+    array_push_rval(sub, int_array_get(array, i) - int_array_get(array, i - 1));
   }
   int_array_print(sub);
   if (int_array_all(sub, 0)) {
@@ -33,7 +33,7 @@ int predict_first_rec(Array *array) {
 int predict_last_rec(Array *array) {
   Array *sub = array_new(int);
   for (size_t i = 1; i < array->size; i++) {
-    array_push(sub, int_array_get(array, i) - int_array_get(array, i - 1));
+    array_push_rval(sub, int_array_get(array, i) - int_array_get(array, i - 1));
   }
   int_array_print(sub);
   if (int_array_all(sub, 0)) {

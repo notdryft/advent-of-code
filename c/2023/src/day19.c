@@ -202,23 +202,23 @@ void reduce(Array *queue, Array *valid, Node *node, Ranges ranges) {
     if (rule->rule_type == AR) {
       printf("AR\n");
       if (rule->action == A) {
-        array_push(valid, ranges);
+        array_push(valid, &ranges);
       }
       break;
     } else if (rule->rule_type == FOLLOW_NODE) {
       printf("FOLLOW_NODE\n");
       strncpy(ranges.next, rule->next, 4);
-      array_push(queue, ranges);
+      array_push(queue, &ranges);
     } else if (rule->rule_type == COMPARE_AR) {
       printf("COMPARE_AR\n");
       do_something(rule, &ranges, &copy);
       debug_ranges_solo(&copy);
-      if (rule->action == A) array_push(valid, ranges);
+      if (rule->action == A) array_push(valid, &ranges);
     } else if (rule->rule_type == COMPARE_NODE) {
       printf("COMPARE_NODE\n");
       do_something(rule, &ranges, &copy);
       strncpy(ranges.next, rule->next, 4);
-      array_push(queue, ranges);
+      array_push(queue, &ranges);
     }
     ranges = copy;
   }
@@ -299,23 +299,23 @@ int part1(char *filename) {
             strncpy(rule.next, action_str, 3);
           }
 
-          array_push(node.rules, rule);
+          array_push(node.rules, &rule);
 
           string_array_free(split);
         } else if (rule_str[0] == 'A') {
           Rule rule = { .rule_type = AR, .action = A };
-          array_push(node.rules, rule);
+          array_push(node.rules, &rule);
         } else if (rule_str[0] == 'R') {
           Rule rule = { .rule_type = AR, .action = R };
-          array_push(node.rules, rule);
+          array_push(node.rules, &rule);
         } else { // just name
           Rule rule = { .rule_type = FOLLOW_NODE };
           strncpy(rule.next, rule_str, 3);
-          array_push(node.rules, rule);
+          array_push(node.rules, &rule);
         }
       }
       
-      array_push(nodes, node);
+      array_push(nodes, &node);
 
       string_array_free(rules);
     } else if (sscanf(buffer, "{x=%d,m=%d,a=%d,s=%d}", &x, &m, &a, &s)) {
@@ -415,23 +415,23 @@ unsigned long long part2(char *filename) {
             strncpy(rule.next, action_str, 3);
           }
 
-          array_push(node.rules, rule);
+          array_push(node.rules, &rule);
 
           string_array_free(split);
         } else if (rule_str[0] == 'A') {
           Rule rule = { .rule_type = AR, .action = A };
-          array_push(node.rules, rule);
+          array_push(node.rules, &rule);
         } else if (rule_str[0] == 'R') {
           Rule rule = { .rule_type = AR, .action = R };
-          array_push(node.rules, rule);
+          array_push(node.rules, &rule);
         } else { // just name
           Rule rule = { .rule_type = FOLLOW_NODE };
           strncpy(rule.next, rule_str, 3);
-          array_push(node.rules, rule);
+          array_push(node.rules, &rule);
         }
       }
       
-      array_push(nodes, node);
+      array_push(nodes, &node);
 
       string_array_free(rules);
     }
@@ -462,7 +462,7 @@ unsigned long long part2(char *filename) {
 
   Array *queue = array_new(Ranges);
   Array *valid = array_new(Ranges);
-  array_push(queue, start);
+  array_push(queue, &start);
 
   int i = 0;
   while (queue->size > 0) {

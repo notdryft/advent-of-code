@@ -99,9 +99,9 @@ Module *find_module(Array *modules, char *name) {
 Module *find_or_init_module(Array *modules, char *name) {
   Module *module = find_module(modules, name);
   if (module == nullptr) {
-    Module tmp;
+    Module tmp = {};
     strncpy(tmp.name, name, 63);
-    array_push(modules, tmp);
+    array_push(modules, &tmp);
 
     module = find_module(modules, name);
     module->module_type = OUTPUT;
@@ -175,7 +175,7 @@ unsigned long long part1(char *filename) {
     for (size_t j = 0; j < m->connections_size; j++) {
       Module *c = find_module(modules, m->connections[j]);
       if (c->module_type == CONJUNCTION) {
-        array_push(c->inputs, hash(m->name));
+        array_push_rval(c->inputs, hash(m->name));
       }
     }
   }
@@ -187,9 +187,9 @@ unsigned long long part1(char *filename) {
 
   for (size_t i = 0; i < times; i++) {
     Array *q = array_new(Signal);
-    array_push(q, ((Signal) { .source = nullptr, .signal_type = LOW, .destination = broadcast }));
+    array_push(q, &(Signal) { .source = nullptr, .signal_type = LOW, .destination = broadcast });
     while (q->size > 0) {
-      Signal *s = (Signal *) array_pop(q);
+      Signal *s = array_pop(q);
       if (s->destination->module_type == OUTPUT) {
         free(s);
         continue;
@@ -201,7 +201,7 @@ unsigned long long part1(char *filename) {
           Module *m = find_module(modules, s->destination->connections[j]);
           Signal ns = { .source = s->destination, .signal_type = LOW, .destination = m };
           //signal_print(&ns);
-          array_push(q, ns);
+          array_push(q, &ns);
         }
       } else if (s->destination->module_type == FLIP_FLOP) {
         if (s->signal_type == HIGH) {
@@ -221,7 +221,7 @@ unsigned long long part1(char *filename) {
           if (st == LOW) lows++;
           else highs++;
           //signal_print(&ns);
-          array_push(q, ns);
+          array_push(q, &ns);
         }
       } else if (s->destination->module_type == CONJUNCTION) {
         s->destination->memory[hash(s->source->name)] = s->signal_type;
@@ -240,7 +240,7 @@ unsigned long long part1(char *filename) {
           if (st == LOW) lows++;
           else highs++;
           //signal_print(&ns);
-          array_push(q, ns);
+          array_push(q, &ns);
         }
       }
       free(s);
@@ -322,7 +322,7 @@ long long part2(char *filename) {
     for (size_t j = 0; j < m->connections_size; j++) {
       Module *c = find_module(modules, m->connections[j]);
       if (c->module_type == CONJUNCTION) {
-        array_push(c->inputs, hash(m->name));
+        array_push_rval(c->inputs, hash(m->name));
       }
     }
   }
@@ -336,17 +336,16 @@ long long part2(char *filename) {
   long long cycle = 0;
   while (cycles->size < conjunctions) {
     Array *q = array_new(Signal);
-    array_push(q, ((Signal) { .source = nullptr, .signal_type = LOW, .destination = broadcast }));
+    array_push(q, &(Signal) { .source = nullptr, .signal_type = LOW, .destination = broadcast });
     while (q->size > 0) {
-      Signal *s = (Signal *) array_pop(q);
+      Signal *s = array_pop(q);
       if (s->destination->module_type == OUTPUT) {
         free(s);
         continue;
       } else if (s->destination->module_type == BROADCASTER) {
         for (size_t j = 0; j < s->destination->connections_size; j++) {
           Module *m = find_module(modules, s->destination->connections[j]);
-          Signal ns = { .source = s->destination, .signal_type = LOW, .destination = m };
-          array_push(q, ns);
+          array_push(q, &(Signal) { .source = s->destination, .signal_type = LOW, .destination = m });
         }
       } else if (s->destination->module_type == FLIP_FLOP) {
         if (s->signal_type == HIGH) {
@@ -362,8 +361,7 @@ long long part2(char *filename) {
         }
         for (size_t j = 0; j < s->destination->connections_size; j++) {
           Module *m = find_module(modules, s->destination->connections[j]);
-          Signal ns = { .source = s->destination, .signal_type = st, .destination = m };
-          array_push(q, ns);
+          array_push(q, &(Signal) { .source = s->destination, .signal_type = st, .destination = m });
         }
       } else if (s->destination->module_type == CONJUNCTION) {
         s->destination->memory[hash(s->source->name)] = s->signal_type;
@@ -384,15 +382,14 @@ long long part2(char *filename) {
           //printf("all high for %s at %lld (%zu)\n", s->destination->name, cycle, cycles->size);
           int h = hash(s->destination->name);
           if (!done[h]) {
-            array_push(cycles, cycle);
+            array_push_rval(cycles, cycle);
             done[h] = true;
           }
         }
 
         for (size_t j = 0; j < s->destination->connections_size; j++) {
           Module *m = find_module(modules, s->destination->connections[j]);
-          Signal ns = { .source = s->destination, .signal_type = st, .destination = m };
-          array_push(q, ns);
+          array_push(q, &(Signal) { .source = s->destination, .signal_type = st, .destination = m });
         }
       }
       free(s);
