@@ -6,7 +6,7 @@ rm = @rm
 rmflags = -vf
 
 vg = valgrind
-vflags = --leak-check=full --show-leak-kinds=all
+vflags = --leak-check=full --leak-resolution=high --show-leak-kinds=all --track-origins=yes --vgdb=no
 
 topdir = .
 srcdir = $(topdir)/src
