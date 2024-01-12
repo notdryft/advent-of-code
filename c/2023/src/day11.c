@@ -6,6 +6,7 @@
 #include <string.h>
 
 #include "array.h"
+#include "commons.h"
 #include "string.h"
 
 constexpr size_t BUFFER_LENGTH = 1024;
@@ -67,8 +68,7 @@ unsigned long long part1(char *filename) {
 
   fclose(fp);
 
-  //string_array_print_raw(universe);
-  //printf("\n");
+  //debugf(string_array_print_raw, universe);
 
   size_t galaxies_size = 0;
   Galaxy *galaxies = malloc(sizeof(Galaxy) * 1000);
@@ -95,16 +95,16 @@ unsigned long long part1(char *filename) {
     size_t col_expand = 0;
     if (string_all(row, '.')) {
       row_expand++;
-      //printf("expanding row %zu\n", j);
+      debug("expanding row %zu\n", j);
     } else {
       for (size_t i = 0; i < strlen(row); i++) {
         if (size_t_array_contains(col_expands, col_expands_size, i)) {
           col_expand++;
-          //printf("expanding col %zu\n", i);
+          debug("expanding col %zu\n", i);
         }
         if (row[i] == '#') {
           Galaxy galaxy = { .ordinal = galaxies_size + 1, .x = i + col_expand, .y = j + row_expand };
-          //printf("Galaxy { %zu: (%zu, %zu) }\n", galaxy.ordinal, galaxy.x, galaxy.y);
+          debug("Galaxy { %zu: (%zu, %zu) }\n", galaxy.ordinal, galaxy.x, galaxy.y);
           galaxies[galaxies_size++] = galaxy;
         }
       }
@@ -114,7 +114,7 @@ unsigned long long part1(char *filename) {
   string_array_free(universe);
 
   size_t p = galaxies_size * (galaxies_size - 1) / 2;
-  printf("galaxies = %zu, pairs = %zu\n", galaxies_size, p);
+  debug("galaxies = %zu, pairs = %zu\n", galaxies_size, p);
 
   size_t pairs_size = 0;
   Pair *pairs = malloc(sizeof(Pair) * 10000);
@@ -122,13 +122,13 @@ unsigned long long part1(char *filename) {
     for (size_t j = i + 1; j < galaxies_size; j++) {
       Pair pair = { .a = galaxies[i], .b = galaxies[j] };
       pairs[pairs_size++] = pair;
-      //printf("pairing { %zu: (%zu, %zu) } with  { %zu: (%zu, %zu) }\n", pair.a.ordinal, pair.a.x, pair.a.y, pair.b.ordinal, pair.b.x, pair.b.y);
+      debug("pairing { %zu: (%zu, %zu) } with  { %zu: (%zu, %zu) }\n", pair.a.ordinal, pair.a.x, pair.a.y, pair.b.ordinal, pair.b.x, pair.b.y);
     }
   }
 
   free(galaxies);
 
-  printf("pairs = %zu\n", pairs_size);
+  debug("pairs = %zu\n", pairs_size);
   assert(pairs_size == p);
 
   unsigned long long sum = 0;
@@ -136,7 +136,7 @@ unsigned long long part1(char *filename) {
   for (size_t i = 0; i < pairs_size; i++) {
     Pair pair = pairs[i];
     unsigned long long d = distance(&pair.a, &pair.b);
-    printf("Between galaxy %zu and galaxy %zu: %llu\n", pair.a.ordinal, pair.b.ordinal, d);
+    debug("Between galaxy %zu and galaxy %zu: %llu\n", pair.a.ordinal, pair.b.ordinal, d);
     sum += d;
   }
 
@@ -168,8 +168,7 @@ unsigned long long part2(char *filename) {
 
   fclose(fp);
 
-  //string_array_print_raw(universe);
-  //printf("\n");
+  //debugf(string_array_print_raw, universe);
 
   size_t galaxies_size = 0;
   Galaxy *galaxies = malloc(sizeof(Galaxy) * 1000);
@@ -196,16 +195,16 @@ unsigned long long part2(char *filename) {
     size_t col_expand = 0;
     if (string_all(row, '.')) {
       row_expand += 999999;
-      //printf("expanding row %zu\n", j);
+      debug("expanding row %zu\n", j);
     } else {
       for (size_t i = 0; i < strlen(row); i++) {
         if (size_t_array_contains(col_expands, col_expands_size, i)) {
           col_expand += 999999;
-          //printf("expanding col %zu\n", i);
+          debug("expanding col %zu\n", i);
         }
         if (row[i] == '#') {
           Galaxy galaxy = { .ordinal = galaxies_size + 1, .x = i + col_expand, .y = j + row_expand };
-          //printf("Galaxy { %zu: (%zu, %zu) }\n", galaxy.ordinal, galaxy.x, galaxy.y);
+          debug("Galaxy { %zu: (%zu, %zu) }\n", galaxy.ordinal, galaxy.x, galaxy.y);
           galaxies[galaxies_size++] = galaxy;
         }
       }
@@ -215,7 +214,7 @@ unsigned long long part2(char *filename) {
   string_array_free(universe);
 
   size_t p = galaxies_size * (galaxies_size - 1) / 2;
-  printf("galaxies = %zu, pairs = %zu\n", galaxies_size, p);
+  debug("galaxies = %zu, pairs = %zu\n", galaxies_size, p);
 
   size_t pairs_size = 0;
   Pair *pairs = malloc(sizeof(Pair) * 10000);
@@ -223,13 +222,13 @@ unsigned long long part2(char *filename) {
     for (size_t j = i + 1; j < galaxies_size; j++) {
       Pair pair = { .a = galaxies[i], .b = galaxies[j] };
       pairs[pairs_size++] = pair;
-      //printf("pairing { %zu: (%zu, %zu) } with  { %zu: (%zu, %zu) }\n", pair.a.ordinal, pair.a.x, pair.a.y, pair.b.ordinal, pair.b.x, pair.b.y);
+      debug("pairing { %zu: (%zu, %zu) } with  { %zu: (%zu, %zu) }\n", pair.a.ordinal, pair.a.x, pair.a.y, pair.b.ordinal, pair.b.x, pair.b.y);
     }
   }
 
   free(galaxies);
 
-  printf("pairs = %zu\n", pairs_size);
+  debug("pairs = %zu\n", pairs_size);
   assert(pairs_size == p);
 
   unsigned long long sum = 0;
@@ -237,7 +236,7 @@ unsigned long long part2(char *filename) {
   for (size_t i = 0; i < pairs_size; i++) {
     Pair pair = pairs[i];
     unsigned long long d = distance(&pair.a, &pair.b);
-    //printf("Between galaxy %zu and galaxy %zu: %d\n", pair.a.ordinal, pair.b.ordinal, d);
+    debug("Between galaxy %zu and galaxy %zu: %llu\n", pair.a.ordinal, pair.b.ordinal, d);
     sum += d;
   }
 

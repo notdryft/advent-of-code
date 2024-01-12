@@ -21,4 +21,12 @@ __extension__ typedef __uint128_t u128;
 
 __extension__ typedef __float128 f128;
 
+#ifdef DEBUG
+#define debug(...) printf(__VA_ARGS__)
+#define debugf(f, ...) f(__VA_ARGS__)
+#else
+#define debug(...)
+#define debugf(f, ...)
+#endif
+
 #endif

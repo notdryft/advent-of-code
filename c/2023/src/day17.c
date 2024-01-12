@@ -6,6 +6,7 @@
 #include <string.h>
 
 #include "array.h"
+#include "commons.h"
 #include "string.h"
 
 constexpr size_t BUFFER_LENGTH = 1024;
@@ -108,7 +109,7 @@ int dijkstra(char **grid, int mx, int my, int mindist, int maxdist) {
 
           int new_cost = current->cost + cost_acc;
 
-          //printf("costs(%d, %d, %d) = %d\n", dx, dy, d, costs[dim(dx, dy, d)]);
+          debug("costs(%d, %d, %d) = %d\n", dx, dy, direction, costs[dim(dx, dy, direction)]);
           if (costs[dim(dx, dy, direction)] <= new_cost) {
             continue;
           }
@@ -122,7 +123,7 @@ int dijkstra(char **grid, int mx, int my, int mindist, int maxdist) {
               .direction = direction
             }
           };
-          //printf("cost = %d, x = %d, y = %d, d = %d\n", new_cost, dx, dy, new_direction);
+          debug("cost = %d, x = %d, y = %d, d = %d\n", new_cost, dx, dy, direction);
           array_priority_push(q, &r);
         }
       }

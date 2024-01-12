@@ -6,6 +6,7 @@
 #include <string.h>
 
 #include "array.h"
+#include "commons.h"
 #include "string.h"
 
 constexpr size_t BUFFER_LENGTH = 1024;
@@ -80,8 +81,8 @@ int traverse(char **cavern, int **beams, size_t mx, size_t my, size_t sx, size_t
   }
 
   traverse_rec(cavern, beams, mx, my, sx, sy, direction);
-  //debug_beams(beams, mx, my);
-  //print_beams(beams, mx, my);
+  //debugf(debug_beams, beams, mx, my);
+  //debugf(print_beams, beams, mx, my);
 
   int sum = 0;
   for (size_t y = 0; y < my; y++) {
@@ -114,8 +115,8 @@ int part1(char *filename) {
 
   fclose(fp);
 
-  string_array_print_raw(cavern);
-  printf("\n");
+  debugf(string_array_print_raw, cavern);
+  debug("\n");
 
   size_t mx = strlen(cavern->items[0]);
   size_t my = cavern->size;
@@ -159,8 +160,8 @@ int part2(char *filename) {
 
   fclose(fp);
 
-  string_array_print_raw(cavern);
-  printf("\n");
+  debugf(string_array_print_raw, cavern);
+  debug("\n");
 
   size_t mx = strlen(cavern->items[0]);
   size_t my = cavern->size;

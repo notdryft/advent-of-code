@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "commons.h"
 #include "array.h"
 
 constexpr size_t BUFFER_LENGTH = 1024;
@@ -25,6 +26,7 @@ int part1(char *filename) {
         array_push_rval(digits, value);
       }
     }
+    debugf(int_array_print, digits);
     sum += int_array_first(digits) * 10 + int_array_last(digits);
     array_free(digits);
   }
@@ -47,7 +49,7 @@ int part2(char *filename) {
 
   char buffer[BUFFER_LENGTH] = {};
   while (fgets(buffer, BUFFER_LENGTH, fp)) {
-    printf("%s", buffer);
+    debug("%s", buffer);
 
     Array *digits = array_new(int);
     for (size_t i = 0; buffer[i] != '\n'; i++) {
@@ -66,8 +68,8 @@ int part2(char *filename) {
         else if (strncmp(buffer + i, "nine", 4) == 0) array_push_rval(digits, 9);
       }
     }
+    debugf(int_array_print, digits);
     sum += int_array_first(digits) * 10 + int_array_last(digits);
-    int_array_print(digits);
     array_free(digits);
   }
 

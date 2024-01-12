@@ -30,13 +30,13 @@ $(libdir)/libaoc.so: $(objdir)/algos.o $(objdir)/array.o $(objdir)/map.o $(objdi
 	$(cc) -shared -o$@ $^
 
 %_test: $(srcdir)/%_test.c $(libdir)/libaoc.so
-	$(cc) -o$(bindir)/$@ -L$(libdir) -laoc $^ $(cflags)
+	$(cc) -o$(bindir)/$@ -L$(libdir) -laoc $^ $(cflags) $(CMDLINE_FLAGS)
 
 mem-%_test: %_test
 	$(vg) $(bindir)/$^ $(vflags)
 
 day%: $(srcdir)/day%.c $(libdir)/libaoc.so
-	$(cc) -o$(bindir)/$@ -L$(libdir) -laoc -lm -lquadmath $< $(cflags)
+	$(cc) -o$(bindir)/$@ -L$(libdir) -laoc -lm -lquadmath $< $(cflags) $(CMDLINE_FLAGS)
 
 mem-day%: day%
 	$(vg) $(vflags) $(bindir)/$^

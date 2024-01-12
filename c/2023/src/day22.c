@@ -6,6 +6,7 @@
 #include <string.h>
 
 #include "array.h"
+#include "commons.h"
 #include "string.h"
 
 constexpr size_t BUFFER_LENGTH = 1024;
@@ -160,21 +161,21 @@ int part1(char *filename) {
   }
   fclose(fp);
 
-  //brick_array_print(bricks);
+  //debugf(brick_array_print, bricks);
 
   int falled = fall(bricks);
-  printf("%d bricks falled\n", falled);
-  //brick_array_print(bricks);
+  debug("%d bricks falled\n", falled);
+  //debugf(brick_array_print, bricks);
   while (falled != 0) falled = fall(bricks);
 
-  bool b = fixed(bricks);
-  printf("fixed after fall: %s\n", b ? "true" : "false");
+  bool b __attribute((unused)) = fixed(bricks);
+  debug("fixed after fall: %s\n", b ? "true" : "false");
 
   int sum = 0;
   for (size_t i = 0; i < bricks->size; i++) {
     Array *dup = array_dup(bricks);
     array_remove(dup, i);
-    //printf("f = %d\n", f);
+    //debug("f = %d\n", f);
     if (fixed(dup)) {
       sum++;
     }
@@ -208,15 +209,15 @@ int part2(char *filename) {
   }
   fclose(fp);
 
-  //brick_array_print(bricks);
+  //debugf(brick_array_print, bricks);
 
   int falled = fall(bricks);
-  printf("%d bricks falled\n", falled);
-  //brick_array_print(bricks);
+  debug("%d bricks falled\n", falled);
+  //debugf(brick_array_print, bricks);
   while (falled != 0) falled = fall(bricks);
 
-  bool b = fixed(bricks);
-  printf("fixed after fall: %s\n", b ? "true" : "false");
+  bool b __attribute((unused)) = fixed(bricks);
+  debug("fixed after fall: %s\n", b ? "true" : "false");
 
   int sum = 0;
   for (size_t i = 0; i < bricks->size; i++) {
@@ -232,8 +233,8 @@ int part2(char *filename) {
     }
     free(f);
 
-    printf("%zu / %zu:\n", i, bricks->size);
-    printf("\tf = %d\n", fs);
+    debug("%zu / %zu:\n", i, bricks->size);
+    debug("\tf = %d\n", fs);
     while (fs > 0) {
       f = fall2(dup);
       fs = false_sum(f, dup->size);
@@ -241,7 +242,7 @@ int part2(char *filename) {
         fallen[j] += f[j];
       }
       free(f);
-      printf("\tff = %d\n", fs);
+      debug("\tff = %d\n", fs);
     }
 
     sum += false_sum(fallen, dup->size);

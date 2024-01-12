@@ -6,6 +6,7 @@
 #include <string.h>
 
 #include "array.h"
+#include "commons.h"
 #include "string.h"
 
 constexpr size_t BUFFER_LENGTH = 1024;
@@ -15,17 +16,17 @@ int predict_first_rec(Array *array) {
   for (size_t i = 1; i < array->size; i++) {
     array_push_rval(sub, int_array_get(array, i) - int_array_get(array, i - 1));
   }
-  int_array_print(sub);
+  debugf(int_array_print, sub);
   if (int_array_all(sub, 0)) {
     int first = int_array_first(array);
-    printf("array first = %d, sub array predirection = 0, prediction = %d\n", first, first);
+    debug("array first = %d, sub array predirection = 0, prediction = %d\n", first, first);
     return first;
   } else {
     int sub_prediction = predict_first_rec(sub);
     array_free(sub);
     int first = int_array_first(array);
     int prediction = first - sub_prediction;
-    printf("array first = %d, sub predirection = %d, prediction = %d\n", first, sub_prediction, prediction);
+    debug("array first = %d, sub predirection = %d, prediction = %d\n", first, sub_prediction, prediction);
     return prediction;
   }
 }
@@ -35,16 +36,16 @@ int predict_last_rec(Array *array) {
   for (size_t i = 1; i < array->size; i++) {
     array_push_rval(sub, int_array_get(array, i) - int_array_get(array, i - 1));
   }
-  int_array_print(sub);
+  debugf(int_array_print, sub);
   if (int_array_all(sub, 0)) {
     int last = int_array_last(array);
-    printf("array last = %d, sub array predirection = 0, prediction = %d\n", last, last);
+    debug("array last = %d, sub array predirection = 0, prediction = %d\n", last, last);
     return last;
   } else {
     int sub_prediction = predict_last_rec(sub);
     int last = int_array_last(array);
     int prediction = last + sub_prediction;
-    printf("array last = %d, sub array predirection = %d, prediction = %d\n", last, sub_prediction, prediction);
+    debug("array last = %d, sub array predirection = %d, prediction = %d\n", last, sub_prediction, prediction);
     return prediction;
   }
 }
@@ -66,16 +67,15 @@ int part1(char *filename) {
     StringArray *line_split = string_split(buffer, " ");
     Array *array = string_atoi(line_split);
     string_array_free(line_split);
-    int_array_print(array);
+    debugf(int_array_print, array);
 
     int last = predict_last_rec(array);
     array_free(array);
     sum += last;
-
-    printf("sum = %d\n", sum);
   }
-
   fclose(fp);
+
+  printf("sum = %d\n", sum);
 
   return sum;
 }
@@ -97,15 +97,14 @@ int part2(char *filename) {
     StringArray *line_split = string_split(buffer, " ");
     Array *array = string_atoi(line_split);
     string_array_free(line_split);
-    int_array_print(array);
+    debugf(int_array_print, array);
 
     int first = predict_first_rec(array);
     sum += first;
-
-    printf("sum = %d\n", sum);
   }
-
   fclose(fp);
+
+  printf("sum = %d\n", sum);
 
   return sum;
 }

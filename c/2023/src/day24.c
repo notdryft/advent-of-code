@@ -196,14 +196,14 @@ void debugq(f128 M[6][6]) {
 
 void inverse(i128 M[6][6], f128 I[6][6]) {
   f128 d = determinant(M);
-  printf("d = %lld\n", (ll) d);
+  debug("d = %lld\n", (ll) d);
 
   f128 A[6][6];
   cofactor(M, A);
-  printf("A:\n"); debugq(A);
+  debug("A:\n"); debugf(debugq, A);
 
   transpose(A);
-  printf("A^T:\n"); debugq(A);
+  debug("A^T:\n"); debugf(debugq, A);
 
   for (size_t j = 0; j < 6; j++) {
     for (size_t i = 0; i < 6; i++) {
@@ -263,7 +263,7 @@ bool intersects(Hailstone *a, Hailstone *b, Intersection *p) {
   return true;
 }
 
-int part1(char *filename, i128 min, i128 max, bool debug) {
+int part1(char *filename, i128 min, i128 max) {
   FILE *fp = fopen(filename, "r");
   if (fp == nullptr) {
     fprintf(stderr, "Error: could not open file %s\n", filename);
@@ -301,31 +301,31 @@ int part1(char *filename, i128 min, i128 max, bool debug) {
     Hailstone *a = array_get(hailstones, i);
     for (size_t j = i + 1; j < hailstones->size; j++) {
       Hailstone *b = array_get(hailstones, j);
-      if (debug) printf("Hailstone A: %lld, %lld, %lld @ %lld, %lld, %lld\n", (ll) a->p.x, (ll) a->p.y, (ll) a->p.z, (ll) a->v.x, (ll) a->v.y, (ll) a->v.z);
-      if (debug) printf("Hailstone B: %lld, %lld, %lld @ %lld, %lld, %lld\n", (ll) b->p.x, (ll) b->p.y, (ll) b->p.z, (ll) b->v.x, (ll) b->v.y, (ll) b->v.z);
+      debug("Hailstone A: %lld, %lld, %lld @ %lld, %lld, %lld\n", (ll) a->p.x, (ll) a->p.y, (ll) a->p.z, (ll) a->v.x, (ll) a->v.y, (ll) a->v.z);
+      debug("Hailstone B: %lld, %lld, %lld @ %lld, %lld, %lld\n", (ll) b->p.x, (ll) b->p.y, (ll) b->p.z, (ll) b->v.x, (ll) b->v.y, (ll) b->v.z);
 
       Intersection p;
       if (intersects(a, b, &p)) {
         if (p.futureA) {
           if (p.futureB) {
             if (min <= p.x && p.x <= max && min <= p.y && p.y <= max) {
-              if (debug) printf("Hailstones' paths will cross inside the test area (at x=%.3Lf, y=%.3Lf).\n",  (ld) p.x, (ld) p.y);
+              debug("Hailstones' paths will cross inside the test area (at x=%.3Lf, y=%.3Lf).\n",  (ld) p.x, (ld) p.y);
               sum += 1;
             } else {
-              if (debug) printf("Hailstones' paths will cross outside the test area (at x=%.3Lf, y=%.3Lf).\n", (ld) p.x, (ld) p.y);
+              debug("Hailstones' paths will cross outside the test area (at x=%.3Lf, y=%.3Lf).\n", (ld) p.x, (ld) p.y);
             }
           } else {
-            if (debug) printf("Hailstones' paths crossed in the past for hailstone B.\n");
+            debug("Hailstones' paths crossed in the past for hailstone B.\n");
           }
         } else if (p.futureB) {
-          if (debug) printf("Hailstones' paths crossed in the past for hailstone A.\n");
+          debug("Hailstones' paths crossed in the past for hailstone A.\n");
         } else if (!p.futureA && !p.futureB) {
-          if (debug) printf("Hailstones' paths crossed in the past for both hailstones.\n");
+          debug("Hailstones' paths crossed in the past for both hailstones.\n");
         }
       } else {
-        if (debug) printf("Hailstones' paths are parallel; they never intersect.\n");
+        debug("Hailstones' paths are parallel; they never intersect.\n");
       }
-      if (debug) printf("\n");
+      debug("\n");
     }
   }
 
@@ -388,24 +388,24 @@ i128 part2(char *filename) {
   merge(M, M1, 0, 3);
   merge(M, M2, 3, 0);
   merge(M, M3, 3, 3);
-  printf("M:\n"); debugi(M);
+  debug("M:\n"); debugf(debugi, M);
 
   f128 I[6][6];
   inverse(M, I);
-  printf("I:\n"); debugq(I);
+  debug("I:\n"); debugf(debugq, I);
 
   i128 v[6];
   Vec3 v0 = sub(cross(h1->p, h1->v), cross(h0->p, h0->v));
   Vec3 v1 = sub(cross(h2->p, h2->v), cross(h0->p, h0->v));
   v[0] = v0.x; v[1] = v0.y; v[2] = v0.z; v[3] = v1.x; v[4] = v1.y; v[5] = v1.z;
-  printf("rhs: %lld %lld %lld %lld %lld %lld\n", (ll) v[0], (ll) v[1], (ll) v[2], (ll) v[3], (ll) v[4], (ll) v[5]);
+  debug("rhs: %lld %lld %lld %lld %lld %lld\n", (ll) v[0], (ll) v[1], (ll) v[2], (ll) v[3], (ll) v[4], (ll) v[5]);
 
   f128 r[6];
   multiply(I, v, r);
   for (size_t i = 0; i < 6; i++) {
     r[i] = roundq(r[i]);
   }
-  printf("r: %.Lf %.Lf %.Lf %.Lf %.Lf %.Lf\n", (ld) r[0], (ld) r[1], (ld) r[2], (ld) r[3], (ld) r[4], (ld) r[5]);
+  debug("r: %.Lf %.Lf %.Lf %.Lf %.Lf %.Lf\n", (ld) r[0], (ld) r[1], (ld) r[2], (ld) r[3], (ld) r[4], (ld) r[5]);
 
   i128 sum = r[0] + r[1] + r[2];
   printf("sum = %lld\n", (ll) sum);
@@ -416,8 +416,8 @@ i128 part2(char *filename) {
 }
 
 int main(void) {
-  assert(part1("../../inputs/2023/day24/sample", 7, 27, true) == 2);
-  assert(part1("../../inputs/2023/day24/data", 200000000000000, 400000000000000, false) == 18184);
+  assert(part1("../../inputs/2023/day24/sample", 7, 27) == 2);
+  assert(part1("../../inputs/2023/day24/data", 200000000000000, 400000000000000) == 18184);
   assert(part2("../../inputs/2023/day24/sample") == 47);
   assert(part2("../../inputs/2023/day24/data") == 557789988450159);
 

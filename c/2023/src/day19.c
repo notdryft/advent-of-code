@@ -6,6 +6,7 @@
 #include <string.h>
 
 #include "array.h"
+#include "commons.h"
 #include "string.h"
 
 constexpr size_t BUFFER_LENGTH = 1024;
@@ -57,7 +58,7 @@ typedef struct {
   Range s;
 } Ranges;
 
-void debug(Array *nodes) {
+void debug_nodes(Array *nodes) {
   printf("Nodes[ ");
   for (size_t i = 0; i < nodes->size; i++) {
     Node *node = array_get(nodes, i);
@@ -73,11 +74,11 @@ void debug(Array *nodes) {
   printf(" ]\n");
 }
 
-void debug_ranges_solo(Ranges *ranges) {
+void debug_ranges(Ranges *ranges) {
   printf("{ next = %s, x = [%d %d], m = [%d %d], a = [%d %d], s = [%d %d] }\n", ranges->next, ranges->x.min, ranges->x.max, ranges->m.min, ranges->m.max, ranges->a.min, ranges->a.max, ranges->s.min, ranges->s.max);
 }
 
-void debug_ranges(Array *array) {
+void debug_array_ranges(Array *array) {
   printf("Ranges[ ");
   for (size_t i = 0; i < array->size; i++) {
     Ranges *ranges = array_get(array, i);
@@ -97,17 +98,15 @@ Node *find_node(Array *array, char *name) {
 }
 
 bool accept_or_reject(Array *nodes, Node *node, int x, int m, int a, int s) {
-  printf("new node name=%s\n", node->name);
+  debug("new node name=%s\n", node->name);
   for (size_t i = 0; i < node->rules->size; i++) {
-    printf("1\n");
     Rule *rule = array_get(node->rules, i);
-    printf("2\n");
-    printf("{ %d %d '%c' %d %d \"%s\" }\n", rule->rule_type, rule->action, rule->category, rule->op, rule->quantity, rule->next);
+    debug("{ %d %d '%c' %d %d \"%s\" }\n", rule->rule_type, rule->action, rule->category, rule->op, rule->quantity, rule->next);
     if (rule->rule_type == AR) {
       if (rule->action == A) return true;
       else if (rule->action == R) return false;
     } else if (rule->rule_type == FOLLOW_NODE) {
-      printf("next %s\n", rule->next);
+      debug("next %s\n", rule->next);
       Node *next = find_node(nodes, rule->next);
       return accept_or_reject(nodes, next, x, m, a, s);
     } else if (rule->rule_type == COMPARE_AR) {
@@ -138,12 +137,12 @@ bool accept_or_reject(Array *nodes, Node *node, int x, int m, int a, int s) {
         else if (rule->category == 'a') comparison_succeeded = a > rule->quantity;
         else if (rule->category == 's') comparison_succeeded = s > rule->quantity;
       }
-      printf("next %s\n", rule->next);
+      debug("next %s\n", rule->next);
       Node *next = find_node(nodes, rule->next);
       if (comparison_succeeded) return accept_or_reject(nodes, next, x, m, a, s);
     }
   }
-  printf("end\n");
+  debug("end\n");
   return false;
 }
 
@@ -155,41 +154,41 @@ int min(int a, int b) {
   return (a < b) ? a : b;
 }
 
-int range(enum Op op, int a, int b) {
+int apply_op(enum Op op, int a, int b) {
   if (op == LT)      return min(a, b - 1);
   else if (op == GT) return max(a, b + 1);
   else if (op == LE) return min(a, b);
   else               return max(a, b);
 }
 
-void do_something(Rule *rule, Ranges *ranges, Ranges *copy) {
+void apply_rule(Rule *rule, Ranges *ranges, Ranges *copy) {
   if (rule->op == LT) {
     if (rule->category == 'x') {
-      ranges->x.max = range(rule->op, ranges->x.max, rule->quantity);
-      copy->x.min = range(GE, copy->x.min, rule->quantity);
+      ranges->x.max = apply_op(rule->op, ranges->x.max, rule->quantity);
+      copy->x.min = apply_op(GE, copy->x.min, rule->quantity);
     } else if (rule->category == 'm') {
-      ranges->m.max = range(rule->op, ranges->m.max, rule->quantity);
-      copy->m.min  = range(GE, copy->m.min, rule->quantity);
+      ranges->m.max = apply_op(rule->op, ranges->m.max, rule->quantity);
+      copy->m.min  = apply_op(GE, copy->m.min, rule->quantity);
     } else if (rule->category == 'a') {
-      ranges->a.max = range(rule->op, ranges->a.max, rule->quantity);
-      copy->a.min = range(GE, copy->a.min, rule->quantity);
+      ranges->a.max = apply_op(rule->op, ranges->a.max, rule->quantity);
+      copy->a.min = apply_op(GE, copy->a.min, rule->quantity);
     } else if (rule->category == 's') {
-      ranges->s.max = range(rule->op, ranges->s.max, rule->quantity);
-      copy->s.min = range(GE, copy->s.min, rule->quantity);
+      ranges->s.max = apply_op(rule->op, ranges->s.max, rule->quantity);
+      copy->s.min = apply_op(GE, copy->s.min, rule->quantity);
     }
   } else if (rule->op == GT) {
     if (rule->category == 'x') {
-      ranges->x.min = range(rule->op, ranges->x.min, rule->quantity);
-      copy->x.max = range(LE, copy->x.max, rule->quantity);
+      ranges->x.min = apply_op(rule->op, ranges->x.min, rule->quantity);
+      copy->x.max = apply_op(LE, copy->x.max, rule->quantity);
     } else if (rule->category == 'm') {
-      ranges->m.min = range(rule->op, ranges->m.min, rule->quantity);
-      copy->m.max = range(LE, copy->m.max, rule->quantity);
+      ranges->m.min = apply_op(rule->op, ranges->m.min, rule->quantity);
+      copy->m.max = apply_op(LE, copy->m.max, rule->quantity);
     } else if (rule->category == 'a') {
-      ranges->a.min = range(rule->op, ranges->a.min, rule->quantity);
-      copy->a.max = range(LE, copy->a.max, rule->quantity);
+      ranges->a.min = apply_op(rule->op, ranges->a.min, rule->quantity);
+      copy->a.max = apply_op(LE, copy->a.max, rule->quantity);
     } else if (rule->category == 's') {
-      ranges->s.min = range(rule->op, ranges->s.min, rule->quantity);
-      copy->s.max = range(LE, copy->s.max, rule->quantity);
+      ranges->s.min = apply_op(rule->op, ranges->s.min, rule->quantity);
+      copy->s.max = apply_op(LE, copy->s.max, rule->quantity);
     }
   }
 }
@@ -198,25 +197,25 @@ void reduce(Array *queue, Array *valid, Node *node, Ranges ranges) {
   for (size_t i = 0; i < node->rules->size; i++) {
     Ranges copy = ranges;
     Rule *rule = array_get(node->rules, i);
-    printf("rule = %s\n", rule->next);
+    debug("rule = %s\n", rule->next);
     if (rule->rule_type == AR) {
-      printf("AR\n");
+      debug("AR\n");
       if (rule->action == A) {
         array_push(valid, &ranges);
       }
       break;
     } else if (rule->rule_type == FOLLOW_NODE) {
-      printf("FOLLOW_NODE\n");
+      debug("FOLLOW_NODE\n");
       strncpy(ranges.next, rule->next, 4);
       array_push(queue, &ranges);
     } else if (rule->rule_type == COMPARE_AR) {
-      printf("COMPARE_AR\n");
-      do_something(rule, &ranges, &copy);
-      debug_ranges_solo(&copy);
+      debug("COMPARE_AR\n");
+      apply_rule(rule, &ranges, &copy);
+      debugf(debug_ranges, &copy);
       if (rule->action == A) array_push(valid, &ranges);
     } else if (rule->rule_type == COMPARE_NODE) {
-      printf("COMPARE_NODE\n");
-      do_something(rule, &ranges, &copy);
+      debug("COMPARE_NODE\n");
+      apply_rule(rule, &ranges, &copy);
       strncpy(ranges.next, rule->next, 4);
       array_push(queue, &ranges);
     }
@@ -253,34 +252,34 @@ int part1(char *filename) {
     int x = -1, m = -1, a = -1, s = -1;
 
     if (sscanf(buffer, "%[a-z]{%[^}]}", name, str)) {
-      //printf("name: %s\n", name);
-      //printf("rules: %s\n", str);
+      debug("name: %s\n", name);
+      debug("rules: %s\n", str);
 
       Node node = {};
       strncpy(node.name, name, 4);
       node.rules = array_new(Rule);
 
       StringArray *rules = string_split(str, ",");
-      //string_array_print(rules);
+      //debugf(string_array_print, rules);
       for (size_t i = 0; i < rules->size; i++) {
         char *rule_str = rules->items[i];
         if (rule_str[1] == '<' || rule_str[1] == '>') {
           StringArray *split = string_split(rule_str, ":");
-          string_array_print(split);
+          debugf(string_array_print, split);
           char *op_str = split->items[0];
           char *action_str = split->items[1];
 
           Rule rule = { .category = op_str[0] };
           if (op_str[1] == '<') {
             StringArray *op_split = string_split(op_str, "<");
-            string_array_print(op_split);
+            debugf(string_array_print, op_split);
             rule.category = op_split->items[0][0];
             rule.op = LT;
             rule.quantity = atoi(op_split->items[1]);
             string_array_free(op_split);
           } else {
             StringArray *op_split = string_split(op_str, ">");
-            string_array_print(op_split);
+            debugf(string_array_print, op_split);
             rule.category = op_split->items[0][0];
             rule.op = GT;
             rule.quantity = atoi(op_split->items[1]);
@@ -322,23 +321,23 @@ int part1(char *filename) {
       if (root == nullptr) {
         root = find_node(nodes, "in");
       }
-      printf("%s\n", root->name);
-      printf("x = %d, m = %d, a = %d, s = %d\n", x, m, a, s);
-      debug(nodes);
+      debug("%s\n", root->name);
+      debug("x = %d, m = %d, a = %d, s = %d\n", x, m, a, s);
+      debugf(debug_nodes, nodes);
       if (accept_or_reject(nodes, root, x, m, a, s)) {
-        printf("x = %d, m = %d, a = %d, s = %d\n", x, m, a, s);
-        printf("accepted\n");
+        debug("x = %d, m = %d, a = %d, s = %d\n", x, m, a, s);
+        debug("accepted\n");
         sum += x + m + a + s;
       } else {
-        printf("x = %d, m = %d, a = %d, s = %d\n", x, m, a, s);
-        printf("rejected\n");
+        debug("x = %d, m = %d, a = %d, s = %d\n", x, m, a, s);
+        debug("rejected\n");
       }
     }
   }
 
-  debug(nodes);
-
   fclose(fp);
+
+  debugf(debug_nodes, nodes);
 
   printf("sum = %d\n", sum);
 
@@ -369,34 +368,34 @@ unsigned long long part2(char *filename) {
     memset(str, 0, sizeof(char) * 40);
 
     if (sscanf(buffer, "%[a-z]{%[^}]}", name, str)) {
-      //printf("name: %s\n", name);
-      //printf("rules: %s\n", str);
+      debug("name: %s\n", name);
+      debug("rules: %s\n", str);
 
       Node node = {};
       strncpy(node.name, name, 4);
       node.rules = array_new(Rule);
 
       StringArray *rules = string_split(str, ",");
-      //string_array_print(rules);
+      //debugf(string_array_print, rules);
       for (size_t i = 0; i < rules->size; i++) {
         char *rule_str = rules->items[i];
         if (rule_str[1] == '<' || rule_str[1] == '>') {
           StringArray *split = string_split(rule_str, ":");
-          //string_array_print(split);
+          //debugf(string_array_print, split);
           char *op_str = split->items[0];
           char *action_str = split->items[1];
 
           Rule rule = { .category = op_str[0] };
           if (op_str[1] == '<') {
             StringArray *op_split = string_split(op_str, "<");
-            //string_array_print(op_split);
+            //debugf(string_array_print, op_split);
             rule.category = op_split->items[0][0];
             rule.op = LT;
             rule.quantity = atoi(op_split->items[1]);
             string_array_free(op_split);
           } else {
             StringArray *op_split = string_split(op_str, ">");
-            //string_array_print(op_split);
+            //debugf(string_array_print, op_split);
             rule.category = op_split->items[0][0];
             rule.op = GT;
             rule.quantity = atoi(op_split->items[1]);
@@ -438,7 +437,7 @@ unsigned long long part2(char *filename) {
   }
   fclose(fp);
 
-  debug(nodes);
+  debugf(debug_nodes, nodes);
 
   Ranges start = {
     .next = "in",
@@ -477,9 +476,9 @@ unsigned long long part2(char *filename) {
     }
     Node *node = find_node(nodes, ranges->next);
     reduce(queue, valid, node, *ranges);
-    //debug_ranges(queue);
-    debug_ranges(valid);
-    printf("-------\n");
+    //debugf(debug_array_ranges, queue);
+    //debugf(debug_array_ranges, valid);
+    //debug("-------\n");
     //if (i==2) exit(1);
     i++;
   }
@@ -492,7 +491,7 @@ unsigned long long part2(char *filename) {
     unsigned long long a = (r->a.max - r->a.min + 1);
     unsigned long long s = (r->s.max - r->s.min + 1);
     unsigned long long score = x * m * a * s;
-    printf("%llu\n", score);
+    debug("%llu\n", score);
     sum += score;
   }
   printf("sum = %llu\n", sum);

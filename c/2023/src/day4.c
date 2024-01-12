@@ -5,6 +5,7 @@
 #include <string.h>
 
 #include "array.h"
+#include "commons.h"
 #include "string.h"
 
 constexpr size_t BUFFER_LENGTH = 1024;
@@ -51,25 +52,26 @@ int part1(char *filename) {
     char *winning_numbers_buf = substring(buffer, colon_offset + 2, winning_numbers_len);
     char *numbers_buf = substring(buffer, pipe_offset + 2, numbers_len);
 
-    //printf("winning numbers buffer: |%s|\n", winning_numbers_buf);
-    //printf("numbers buffer: |%s|\n", numbers_buf);
+    debug("winning numbers buffer: |%s|\n", winning_numbers_buf);
+    debug("numbers buffer: |%s|\n", numbers_buf);
 
     Array *winning_numbers = get_numbers(winning_numbers_buf);
-    //int_array_print(winning_numbers);
+    debugf(int_array_print, winning_numbers);
     Array *numbers = get_numbers(numbers_buf);
-    //int_array_print(numbers);
+    debugf(int_array_print, numbers);
 
     int points = 0;
     for (size_t i = 0; i < winning_numbers->size; i++) {
       int winning_number = int_array_get(winning_numbers, i);
-      //printf("%d? %s\n", winning_number, array_contains(numbers, winning_number) ? "true" : "false");
+      debug("%d? %s\n", winning_number, int_array_contains(numbers, winning_number) ? "true" : "false");
       if (int_array_contains(numbers, winning_number)) {
         points = points == 0 ? 1 : points * 2;
-        //printf("%d\n", points);
+        debug("%d\n", points);
       }
     }
 
-    printf("Card %d is worth %d points\n", card++, points);
+    card++;
+    debug("Card %d is worth %d points\n", card, points);
     sum += points;
 
     array_free(numbers);
@@ -123,26 +125,26 @@ int part2(char *filename) {
     char *winning_numbers_buf = substring(buffer, colon_offset + 2, winning_numbers_len);
     char *numbers_buf = substring(buffer, pipe_offset + 2, numbers_len);
 
-    //printf("winning numbers buffer: |%s|\n", winning_numbers_buf);
-    //printf("numbers buffer: |%s|\n", numbers_buf);
+    debug("winning numbers buffer: |%s|\n", winning_numbers_buf);
+    debug("numbers buffer: |%s|\n", numbers_buf);
 
     Array *winning_numbers = get_numbers(winning_numbers_buf);
-    //int_array_print(winning_numbers);
+    debugf(int_array_print, winning_numbers);
     Array *numbers = get_numbers(numbers_buf);
-    //int_array_print(numbers);
+    debugf(int_array_print, numbers);
 
     int points = 0;
     for (size_t i = 0; i < winning_numbers->size; i++) {
       int winning_number = int_array_get(winning_numbers, i);
-      //printf("%d? %s\n", winning_number, array_contains(numbers, winning_number) ? "true" : "false");
+      debug("%d? %s\n", winning_number, int_array_contains(numbers, winning_number) ? "true" : "false");
       if (int_array_contains(numbers, winning_number)) {
         points++;
-        //printf("%d\n", points);
+        debug("%d\n", points);
       }
     }
 
     int iterations = cards[card - 1];
-    printf("Game %d adds %d times to the next %d cards\n", card, iterations, points);
+    debug("Game %d adds %d times to the next %d cards\n", card, iterations, points);
     if (points > 0) {
       for (int i = card; i < card + points; i++) {
         cards[i] += iterations;

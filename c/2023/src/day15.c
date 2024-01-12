@@ -6,6 +6,7 @@
 #include <string.h>
 
 #include "array.h"
+#include "commons.h"
 #include "string.h"
 
 constexpr size_t BUFFER_LENGTH = 100000;
@@ -119,12 +120,12 @@ int part1(char *filename) {
     buffer[buffer_len - 1] = '\0';
 
     StringArray *split = string_split(buffer, ",");
-    printf("instructions = %zu\n", split->size);
+    debug("instructions = %zu\n", split->size);
     for (size_t i = 0; i < split->size; i++) {
       char *instruction = string_array_get(split, i);
       size_t len = strlen(instruction);
       int h = hash(instruction, len);
-      printf("%s (%zu) = %d\n", instruction, len, h);
+      debug("%s (%zu) = %d\n", instruction, len, h);
       sum += h;
     }
     string_array_free(split);
@@ -152,7 +153,7 @@ int part2(char *filename) {
     buffer[buffer_len - 1] = '\0';
 
     StringArray *split = string_split(buffer, ",");
-    printf("instructions = %zu\n", split->size);
+    debug("instructions = %zu\n", split->size);
 
     for (size_t i = 0; i < split->size; i++) {
       char *instruction_raw = string_array_get(split, i);
@@ -163,19 +164,19 @@ int part2(char *filename) {
         instruction[len - 2] = '\0';
         int focal = atoi(instruction + len - 1);
         len -= 2;
-        printf("After \"%s=%d\" (%zu):\n", instruction, focal, len);
+        debug("After \"%s=%d\" (%zu):\n", instruction, focal, len);
 
         map_add(map, instruction, len, focal);
       } else if (instruction[len - 1] == '-') {
         instruction[len - 1] = '\0';
         len--;
-        printf("After \"%s-\" (%zu):\n", instruction, len);
+        debug("After \"%s-\" (%zu):\n", instruction, len);
 
         map_remove(map, instruction, len);
       }
 
-      map_print(map);
-      printf("\n");
+      debugf(map_print, map);
+      debug("\n");
 
       free(instruction);
     }
@@ -190,7 +191,7 @@ int part2(char *filename) {
     for (size_t j = 0; j < array->size; j++) {
       BoxItem *item = array_get(array, j);
       int power = (i + 1) * (j + 1) * item->focal;
-      //printf("sum += %d\n", power);
+      //debug("sum += %d\n", power);
       sum += power;
     }
   }

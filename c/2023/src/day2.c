@@ -5,8 +5,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-constexpr size_t BUFFER_LENGTH = 1024;
+#include "commons.h"
 
+constexpr size_t BUFFER_LENGTH = 1024;
 constexpr size_t GROUPS = 3; // ignoring the last group
 
 int part1(char *filename) {
@@ -90,7 +91,7 @@ int part1(char *filename) {
   fclose(fp);
   regfree(&regex);
 
-  printf("sum: %d\n", sum);
+  printf("sum = %d\n", sum);
 
   return sum;
 }
@@ -162,7 +163,7 @@ int part2(char *filename) {
           token2 = strtok_r(nullptr, ";", &p_token2_save);
         }
         int power = reds * greens * blues;
-        printf("(%d, %d, %d) = %d\n", reds, greens, blues, power);
+        debug("(%d, %d, %d) = %d\n", reds, greens, blues, power);
         sum += power;
       }
       token = strtok_r(nullptr, ":", &p_token_save);
@@ -172,7 +173,7 @@ int part2(char *filename) {
   fclose(fp);
   regfree(&regex);
 
-  printf("sum: %d\n", sum);
+  printf("sum = %d\n", sum);
 
   return sum;
 }

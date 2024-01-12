@@ -6,6 +6,7 @@
 #include <string.h>
 
 #include "array.h"
+#include "commons.h"
 #include "string.h"
 
 constexpr size_t BUFFER_LENGTH = 1024;
@@ -88,7 +89,7 @@ int part1(char *filename) {
 
   fclose(fp);
 
-  //string_array_print_raw(lines);
+  //debugf(string_array_print_raw, lines);
   Array* patterns = array_new(int);
   array_push_rval(patterns, 0);
   for (size_t i = 0; i < lines->size; i++) {
@@ -98,7 +99,7 @@ int part1(char *filename) {
     }
   }
   array_push_rval(patterns, lines->size);
-  int_array_print(patterns);
+  debugf(int_array_print, patterns);
 
   int sum = 0;
 
@@ -110,20 +111,21 @@ int part1(char *filename) {
     size_t len = strlen(string_array_get(lines, start));
     int col = find_column_reflection(lines, len, start, end, -1);
     if (col != -1) {
-      printf("pattern %zu: col %d\n", i + 1, col);
+      debug("pattern %zu: col %d\n", i + 1, col);
       sum += col;
     }
 
     int row = find_row_reflection(lines, start, end, -1);
     if (row != -1) {
-      printf("pattern %zu: row %d\n", i + 1, row);
+      debug("pattern %zu: row %d\n", i + 1, row);
       sum += row * 100;
     }
 
+#ifdef DEBUG
     if (col == -1 && row == -1) {
-      printf("pattern %zu: nothing found?\n", i + 1);
+      debug("pattern %zu: nothing found?\n", i + 1);
     }
-    //printf("\n");
+#endif
   }
 
   array_free(patterns);
@@ -152,7 +154,7 @@ int part2(char *filename) {
 
   fclose(fp);
 
-  //string_array_print_raw(lines);
+  //debugf(string_array_print_raw, lines);
   Array* patterns = array_new(int);
   array_push_rval(patterns, 0);
   for (size_t i = 0; i < lines->size; i++) {
@@ -162,7 +164,7 @@ int part2(char *filename) {
     }
   }
   array_push_rval(patterns, lines->size);
-  //int_array_print(patterns);
+  //debugf(int_array_print, patterns);
 
   int sum = 0;
 
@@ -172,39 +174,41 @@ int part2(char *filename) {
     size_t end = int_array_get(patterns, i + 1);
 
     StringArray *dup = string_array_subset(lines, start, end);
-    //string_array_print_raw(dup);
+    //debugf(string_array_print_raw, dup);
 
     int initial_col = find_column_reflection(dup, strlen(string_array_get(dup, 0)), 0, dup->size, -1);
+#ifdef DEBUG
     if (initial_col != -1) {
-      printf("pattern %zu: initial col %d\n", i + 1, initial_col);
+      debug("pattern %zu: initial col %d\n", i + 1, initial_col);
     }
+#endif
 
     int initial_row = find_row_reflection(dup, 0, dup->size, -1);
+#ifdef DEBUG
     if (initial_row != -1) {
-      printf("pattern %zu: initial row %d\n", i + 1, initial_row);
+      debug("pattern %zu: initial row %d\n", i + 1, initial_row);
     }
-
     if (initial_col == -1 && initial_row == -1) {
-      printf("pattern %zu: no initial col or row??\n", i + 1);
+      debug("pattern %zu: no initial col or row??\n", i + 1);
     }
+#endif
 
     bool stop = false;
     for (size_t j = 0; j < dup->size && !stop; j++) {
       char *line = string_array_get(dup, j);
       for (size_t k = 0; k < strlen(line) && !stop; k++) {
         line[k] = line[k] == '.' ? '#' : '.';
-        //string_array_print_raw(dup);
-        //printf("\n");
+        //debugf(string_array_print_raw, dup);
         int col = find_column_reflection(dup, strlen(line), 0, dup->size, initial_col);
         if (col != -1 && col != initial_col) {
-          printf("pattern %zu: col %d by swapping (%zu, %zu)\n", i + 1, col, j, k);
+          debug("pattern %zu: col %d by swapping (%zu, %zu)\n", i + 1, col, j, k);
           sum += col;
           stop = true;
         }
         int row = find_row_reflection(dup, 0, dup->size, initial_row);
-        //printf("(%zu, %zu) -> %d\n", j, k, row);
+        debug("(%zu, %zu) -> %d\n", j, k, row);
         if (row != -1 && row != initial_row) {
-          printf("pattern %zu: row %d by swapping (%zu, %zu)\n", i + 1, row, j, k);
+          debug("pattern %zu: row %d by swapping (%zu, %zu)\n", i + 1, row, j, k);
           sum += row * 100;
           stop = true;
         }
@@ -213,7 +217,7 @@ int part2(char *filename) {
       }
     }
     if (!stop) {
-      printf("pattern %zu: no col or row?\n", i + 1);
+      debug("pattern %zu: no col or row?\n", i + 1);
     }
     string_array_free(dup);
   }

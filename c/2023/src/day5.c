@@ -38,19 +38,6 @@ int range_cmp(const void *a, const void *b) {
 #define min(a,b) ((a<b)?a:b)
 #define max(a,b) ((a>b)?a:b)
 
-void debug_ranges(Array *ranges) {
-  printf("Ranges[ ");
-  for (size_t i = 0; i < ranges->size; i++) {
-    Range *range = array_get(ranges, i);
-    if (i < ranges->size - 1) {
-      printf("[%lld, %lld), ", range->start, range->end);
-    } else {
-      printf("[%lld, %lld) ", range->start, range->end);
-    }
-  }
-  printf("]\n");
-}
-
 typedef struct {
   enum AlmanachEntryType source_type;
   Range range;
@@ -84,39 +71,6 @@ int entry_cmp(const void *a, const void *b) {
   return ea->source_type < eb->source_type ? -1 : 1;
 }
 
-void dump_entries(Array *entries) {
-  printf("Array{ %zu %zu %zu [ ", entries->capacity, entries->size, entries->stride);
-  for (size_t i = 0; i < entries->size; i++) {
-    AlmanachEntry *entry = array_get(entries, i);
-    if (i < entries->size - 1) {
-      printf("{ %d [%lld, %lld) %lld }, ", entry->source_type, entry->range.start, entry->range.end, entry->offset);
-    } else {
-      printf("{ %d [%lld, %lld) %lld }", entry->source_type, entry->range.start, entry->range.end, entry->offset);
-    }
-  }
-  printf(" }\n");
-}
-
-void debug_entries(Array *entries) {
-  printf("Map{\n  0 -> ");
-  size_t source_type = 0;
-  for (size_t i = 0; i < entries->size; i++) {
-    AlmanachEntry *entry = array_get(entries, i);
-    if (entry->source_type != source_type) {
-      printf("\n  %zu -> ", ++source_type);
-    }
-    if (i < entries->size - 1) {
-      AlmanachEntry *next = array_get(entries, i + 1);
-      if (next->source_type == source_type) {
-        printf("[%lld, %lld), ", entry->range.start, entry->range.end);
-      }
-    } else {
-      printf("[%lld, %lld)", entry->range.start, entry->range.end);
-    }
-  }
-  printf("\n}\n");
-}
-
 ll part1(char *filename) {
   FILE *fp = fopen(filename, "r");
   if (fp == nullptr) {
@@ -136,7 +90,7 @@ ll part1(char *filename) {
     buffer[buffer_len - 1] = '\0';
 
     if (buffer[0] == '\0') {
-      //printf("reset state\n\n");
+      debug("reset state\n\n");
       continue;
     }
 
@@ -168,13 +122,13 @@ ll part1(char *filename) {
       } else if (strcmp(source_type_str, "humidity") == 0) {
         source_type = HUMIDITY_TO_LOCATION;
       }
-      //printf("new source type: \033[97;4m%s\033[0m\n", source_type_str);
+      debug("new source type: \033[97;4m%s\033[0m\n", source_type_str);
     } else if ('0' <= buffer[0] && buffer[0] <= '9') {
       char *p;
       ll destination = strtoll(buffer, &p, 10);
       ll source = strtoll(p + 1, &p, 10);
       ll range = strtoll(p + 1, nullptr, 10);
-      //printf("entry for source type \033[97;1m%s\033[0m: %lld %lld %lld\n", source_type_str, destination, source, range);
+      debug("entry for source type \033[97;1m%s\033[0m: %lld %lld %lld\n", source_type_str, destination, source, range);
 
       AlmanachEntry entry = {
         .source_type = source_type,
@@ -236,7 +190,7 @@ ll part2(char *filename) {
     buffer[buffer_len - 1] = '\0';
 
     if (buffer[0] == '\0') {
-      //printf("reset state\n\n");
+      debug("reset state\n\n");
       continue;
     }
 
@@ -268,13 +222,13 @@ ll part2(char *filename) {
       } else if (strcmp(source_type_str, "humidity") == 0) {
         source_type = HUMIDITY_TO_LOCATION;
       }
-      //printf("new source type: \033[97;4m%s\033[0m\n", source_type_str);
+      debug("new source type: \033[97;4m%s\033[0m\n", source_type_str);
     } else if ('0' <= buffer[0] && buffer[0] <= '9') {
       char *p;
       ll destination = strtoll(buffer, &p, 10);
       ll source = strtoll(p + 1, &p, 10);
       ll range = strtoll(p + 1, nullptr, 10);
-      //printf("entry for source type \033[97;1m%s\033[0m: %lld %lld %lld\n", source_type_str, destination, source, range);
+      debug("entry for source type \033[97;1m%s\033[0m: %lld %lld %lld\n", source_type_str, destination, source, range);
 
       AlmanachEntry entry = {
         .source_type = source_type,

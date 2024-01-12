@@ -6,6 +6,7 @@
 #include <string.h>
 
 #include "array.h"
+#include "commons.h"
 #include "string.h"
 
 constexpr size_t BUFFER_LENGTH = 1024;
@@ -84,9 +85,9 @@ long long area_from_instructions(Array *instructions) {
     else if (instruction->direction == L) x -= instruction->distance;
     else y -= instruction->distance;
 
-    //printf("%zu %zu\n", x, y);
+    debug("%llu %llu\n", x, y);
   }
-  //vec2_array_print(vecs);
+  debugf(vec2_array_print, vecs);
 
   long long area = polygon_area(vecs);
   long long points = points_inside_polygon(area, perimeter);
@@ -127,7 +128,7 @@ long long part1(char *filename) {
   fclose(fp);
   string_array_free(lines);
 
-  //instruction_array_print(instructions);
+  debugf(instruction_array_print, instructions);
 
   long long area = area_from_instructions(instructions);
   printf("area = %lld\n", area);
@@ -168,7 +169,7 @@ long long part2(char *filename) {
   fclose(fp);
   string_array_free(lines);
 
-  //instruction_array_print(instructions);
+  debugf(instruction_array_print, instructions);
 
   long long area = area_from_instructions(instructions);
   printf("area = %lld\n", area);

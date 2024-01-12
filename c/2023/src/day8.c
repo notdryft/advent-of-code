@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "commons.h"
 #include "math.h"
 #include "string.h"
 
@@ -23,7 +24,7 @@ typedef struct {
 } Nodes;
 
 Node *find_node(Node **nodes, char *value, size_t size) {
-  //printf("find_node(?, %s, %zu)\n", value, size);
+  //debug("find_node(?, %s, %zu)\n", value, size);
   for (size_t i = 0; i < size; i++) {
     Node *node = nodes[i];
     if (strncmp(node->value, value, 3) == 0) {
@@ -76,6 +77,7 @@ int part1(char *filename) {
     buffer[buffer_len - 1] = '\0';
     strncpy(instructions, buffer, buffer_len - 1);
   }
+
   fgets(buffer, BUFFER_LENGTH, fp);
   while (fgets(buffer, BUFFER_LENGTH, fp)) {
     size_t buffer_len = strlen(buffer);
@@ -105,7 +107,7 @@ int part1(char *filename) {
       if (right == nullptr) {
         right = malloc(sizeof(Node));
         strncpy(right->value, right_str, 4);
-        printf("copied node value: %s\n", node->value);
+        debug("copied node value: %s\n", node->value);
         nodes[nodes_size++] = right;
       }
       node->right = right;
@@ -113,32 +115,34 @@ int part1(char *filename) {
   }
   fclose(fp);
 
+#ifdef DEBUG
   for (size_t i = 0; i < nodes_size; i++) {
     Node *n = nodes[i];
-    printf("%s = (", n->value);
+    debug("%s = (", n->value);
     if (n->left != nullptr) {
-      printf("%s", n->left->value);
+      debug("%s", n->left->value);
     } else {
-      printf("null");
+      debug("null");
     }
     if (n->right != nullptr) {
-      printf(", %s)\n", n->right->value);
+      debug(", %s)\n", n->right->value);
     } else {
-      printf(", null)\n");
+      debug(", null)\n");
     }
   }
+#endif
 
-  printf("nodes = %zu\n", nodes_size);
+  debug("nodes = %zu\n", nodes_size);
   Node *node = find_node(nodes, "AAA", nodes_size);
 
   size_t instructions_len = strlen(instructions);
-  //printf("instructions(%zu) = %s\n", instructions_len, instructions);
+  debug("instructions(%zu) = %s\n", instructions_len, instructions);
 
   int steps = 0;
   bool stop = false;
   while (!stop) {
     int mod = steps % instructions_len;
-    //printf("%s = (%s, %s) -> %c\n", node->value, node->left->value, node->right->value, instructions[mod]);
+    debug("%s = (%s, %s) -> %c\n", node->value, node->left->value, node->right->value, instructions[mod]);
     if (instructions[mod] == 'L') {
       node = node->left;
     } else {
@@ -176,6 +180,7 @@ long long part2(char *filename) {
     buffer[buffer_len - 1] = '\0';
     strncpy(instructions, buffer, buffer_len - 1);
   }
+
   fgets(buffer, BUFFER_LENGTH, fp);
   while (fgets(buffer, BUFFER_LENGTH, fp)) {
     size_t buffer_len = strlen(buffer);
@@ -205,7 +210,7 @@ long long part2(char *filename) {
       if (right == nullptr) {
         right = malloc(sizeof(Node));
         strncpy(right->value, right_str, 4);
-        printf("copied node value: %s\n", node->value);
+        debug("copied node value: %s\n", node->value);
         nodes[nodes_size++] = right;
       }
       node->right = right;
@@ -213,26 +218,28 @@ long long part2(char *filename) {
   }
   fclose(fp);
 
+#ifdef DEBUG
   for (size_t i = 0; i < nodes_size; i++) {
     Node *n = nodes[i];
-    printf("%s = (", n->value);
+    debug("%s = (", n->value);
     if (n->left != nullptr) {
-      printf("%s", n->left->value);
+      debug("%s", n->left->value);
     } else {
-      printf("null");
+      debug("null");
     }
     if (n->right != nullptr) {
-      printf(", %s)\n", n->right->value);
+      debug(", %s)\n", n->right->value);
     } else {
-      printf(", null)\n");
+      debug(", null)\n");
     }
   }
+#endif
 
-  printf("nodes = %zu\n", nodes_size);
+  debug("nodes = %zu\n", nodes_size);
   Nodes *ghost_nodes = find_nodes(nodes, 'A', nodes_size);
 
   size_t instructions_len = strlen(instructions);
-  //printf("instructions(%zu) = %s\n", instructions_len, instructions);
+  debug("instructions(%zu) = %s\n", instructions_len, instructions);
 
   int *ghost_steps = calloc(ghost_nodes->size, sizeof(int));
 
@@ -243,7 +250,7 @@ long long part2(char *filename) {
     bool stop = false;
     while (!stop) {
       int mod = steps % instructions_len;
-      //printf("%s = (%s, %s) -> %c\n", node->value, node->left->value, node->right->value, instructions[mod]);
+      debug("%s = (%s, %s) -> %c\n", node->value, node->left->value, node->right->value, instructions[mod]);
       if (instructions[mod] == 'L') {
         node = node->left;
       } else {
@@ -255,14 +262,14 @@ long long part2(char *filename) {
       steps++;
     }
     ghost_steps[i] = steps;
-    printf("steps = %d\n", steps);
+    debug("steps = %d\n", steps);
   }
 
   long long result = ghost_steps[0];
   for (size_t i = 1; i < ghost_nodes->size; i++) {
-    printf("lcm(%llu, %d) = ", result, ghost_steps[i]);
+    debug("lcm(%llu, %d) = ", result, ghost_steps[i]);
     result = lcm(result, ghost_steps[i]);
-    printf("%llu\n", result);
+    debug("%llu\n", result);
   }
 
   printf("result = %llu\n", result);

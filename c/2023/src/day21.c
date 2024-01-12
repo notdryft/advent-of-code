@@ -6,6 +6,7 @@
 #include <string.h>
 
 #include "array.h"
+#include "commons.h"
 #include "string.h"
 
 constexpr size_t BUFFER_LENGTH = 1024;
@@ -46,7 +47,7 @@ StringArray *find_map(Array *infinity, long long ix, long long iy) {
 StringArray *find_map_or_dup(Array *infinity, StringArray *original, long long ix, long long iy) {
   StringArray *map = find_map(infinity, ix, iy);
   if (map == nullptr) {
-    //printf("new map for ix = %lld, iy = %lld\n", ix, iy);
+    //debug("new map for ix = %lld, iy = %lld\n", ix, iy);
     map = string_array_dup(original);
     array_push(infinity, &(Space) { .ix = ix, .iy = iy, .map = map });
   }
@@ -95,13 +96,13 @@ long long part1(char *filename, int steps) {
   }
   fclose(fp);
 
-  string_array_print_raw(map);
+  debugf(string_array_print_raw, map);
 
   long long mx = strlen(map->items[0]);
   long long my = map->size;
 
   Vec2 start = find_start(map->items, mx, my);
-  printf("S = %lld %lld\n", start.x, start.y);
+  debug("S = %lld %lld\n", start.x, start.y);
 
   int step = 0;
   Array *q = array_new(Vec2);
@@ -135,7 +136,7 @@ long long part1(char *filename, int steps) {
       array_priority_push(q, &(Vec2) { .step = u->step + 1, .x = u->x + 1, .y = u->y });
     }
     free(u);
-    //string_array_print_raw(map);
+    //debugf(string_array_print_raw, map);
   }
 
   long long sum = q->size;
@@ -164,7 +165,7 @@ long long part2(char *filename, int steps) {
   }
   fclose(fp);
 
-  //string_array_print_raw(map);
+  //debugf(string_array_print_raw, map);
 
   Array *infinity = array_new(Space);
 
@@ -172,7 +173,7 @@ long long part2(char *filename, int steps) {
   long long my = map->size;
 
   Vec2 start = find_start(map->items, mx, my);
-  printf("S = %lld %lld\n", start.x, start.y);
+  debug("S = %lld %lld\n", start.x, start.y);
   map->items[start.y][start.x] = '.';
 
   int step = 0;
@@ -185,9 +186,9 @@ long long part2(char *filename, int steps) {
     Vec2 *peek = array_first(q);
     if (peek->step == step+1) {
       step++;
-      //infinity_print_raw(infinity, map, -1, 1, -1, 1, my);
+      //debugf(infinity_print_raw, infinity, map, -1, 1, -1, 1, my);
       if (step % mx == mx / 2) { // step % 131 == 65
-        printf("step %d: %zu\n", step, q->size);
+        debug("step %d: %zu\n", step, q->size);
         array_push_rval(n, q->size);
       }
       if (step == steps) {
@@ -203,7 +204,7 @@ long long part2(char *filename, int steps) {
     long long bx = (u->x % mx + mx) % mx;
     long long by = (u->y % my + my) % my;
     long long x = bx, y = by;
-    //printf("(%lld %lld) (%lld %lld) (%lld %lld) (%lld %lld)\n", u->x, u->y, bx, by, mx, my, ix, iy);
+    //debug("(%lld %lld) (%lld %lld) (%lld %lld) (%lld %lld)\n", u->x, u->y, bx, by, mx, my, ix, iy);
     imap->items[y][x] = '.';
 
     StringArray *umap = imap;

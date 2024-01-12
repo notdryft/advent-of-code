@@ -6,6 +6,7 @@
 #include <string.h>
 
 #include "array.h"
+#include "commons.h"
 #include "string.h"
 
 constexpr size_t BUFFER_LENGTH = 1024;
@@ -36,16 +37,16 @@ int part1(char *filename) {
     }
     buffer[j] = '\0';
     buffer_len = strlen(buffer);
-    printf("buffer = [%c]|%s| (%zu)\n", buffer[0], buffer, j);
+    debug("buffer = [%c]|%s| (%zu)\n", buffer[0], buffer, j);
 
     if (buffer[0] == 'T') {
       char *colon_offset_p = strchr(buffer, ':');
       size_t colon_offset = colon_offset_p - buffer + 2;
       char *times_str = substring(buffer, colon_offset, buffer_len - colon_offset);
-      printf("Time: %s\n", times_str);
+      debug("Time: %s\n", times_str);
 
       StringArray* times_split = string_split(times_str, " ");
-      string_array_print(times_split);
+      debugf(string_array_print, times_split);
       for (size_t i = 0; i < times_split->size; i++) {
         array_push_rval(times, atoi(string_array_get(times_split, i)));
       }
@@ -56,10 +57,10 @@ int part1(char *filename) {
       char *colon_offset_p = strchr(buffer, ':');
       size_t colon_offset = colon_offset_p - buffer + 2;
       char *distances_str = substring(buffer, colon_offset, buffer_len - colon_offset);
-      printf("Distance: %s\n", distances_str);
+      debug("Distance: %s\n", distances_str);
 
       StringArray* distances_split = string_split(distances_str, " ");
-      string_array_print(distances_split);
+      debugf(string_array_print, distances_split);
       for (size_t i = 0; i < distances_split->size; i++) {
         array_push_rval(distances, atoi(string_array_get(distances_split, i)));
       }
@@ -67,7 +68,7 @@ int part1(char *filename) {
       free(distances_str);
       string_array_free(distances_split);
     }
-    printf("\n");
+    debug("\n");
   }
 
   if (times->size != distances->size) {
@@ -77,7 +78,7 @@ int part1(char *filename) {
   for (size_t i = 0; i < times->size; i++) {
     int time = int_array_get(times, i);
     int distance = int_array_get(distances, i);
-    printf("t = %d, d = %d\n", time, distance);
+    debug("t = %d, d = %d\n", time, distance);
 
     int winning_count = 0;
     for (int hold = 0; hold <= time; hold++) {
@@ -86,15 +87,15 @@ int part1(char *filename) {
         d += hold;
       }
 
-      printf("hold = %d, distance = %d", hold, d);
+      debug("hold = %d, distance = %d", hold, d);
       if (d > distance) {
         winning_count++;
-        printf(" (win)\n");
+        debug(" (win)\n");
       } else {
-        printf("\n");
+        debug("\n");
       }
     }
-    printf("wins = %d\n\n", winning_count);
+    debug("wins = %d\n\n", winning_count);
 
     result *= winning_count;
   }
@@ -135,16 +136,16 @@ int part2(char *filename) {
     }
     buffer[j] = '\0';
     buffer_len = strlen(buffer);
-    printf("buffer = [%c]|%s| (%zu)\n", buffer[0], buffer, j);
+    debug("buffer = [%c]|%s| (%zu)\n", buffer[0], buffer, j);
 
     if (buffer[0] == 'T') {
       char *colon_offset_p = strchr(buffer, ':');
       size_t colon_offset = colon_offset_p - buffer + 1;
       char *times_str = substring(buffer, colon_offset, buffer_len - colon_offset);
-      printf("Time: %s\n", times_str);
+      debug("Time: %s\n", times_str);
 
       StringArray* times_split = string_split(times_str, " ");
-      string_array_print(times_split);
+      debugf(string_array_print, times_split);
       for (size_t i = 0; i < times_split->size; i++) {
         array_push_rval(times, atoll(string_array_get(times_split, i)));
       }
@@ -155,10 +156,10 @@ int part2(char *filename) {
       char *colon_offset_p = strchr(buffer, ':');
       size_t colon_offset = colon_offset_p - buffer + 1;
       char *distances_str = substring(buffer, colon_offset, buffer_len - colon_offset);
-      printf("Distance: %s\n", distances_str);
+      debug("Distance: %s\n", distances_str);
 
       StringArray* distances_split = string_split(distances_str, " ");
-      string_array_print(distances_split);
+      debugf(string_array_print, distances_split);
       for (size_t i = 0; i < distances_split->size; i++) {
         array_push_rval(distances, atoll(string_array_get(distances_split, i)));
       }
@@ -166,7 +167,7 @@ int part2(char *filename) {
       free(distances_str);
       string_array_free(distances_split);
     }
-    printf("\n");
+    debug("\n");
   }
 
   if (times->size != distances->size) {
@@ -176,24 +177,24 @@ int part2(char *filename) {
   for (size_t i = 0; i < times->size; i++) {
     long long time = ll_array_get(times, i);
     long long distance = ll_array_get(distances, i);
-    //printf("t = %d, d = %d\n", time, distance);
+    debug("t = %lld, d = %lld\n", time, distance);
 
     long long winning_count = 0;
-    for (int hold = 0; hold <= time; hold++) {
+    for (long long hold = 0; hold <= time; hold++) {
       long long d = 0;
       for (long long time_left = 0; time_left < time - hold; time_left++) {
         d += hold;
       }
 
-      //printf("hold = %lld, distance = %lld", hold, d);
+      //debug("hold = %lld, distance = %lld", hold, d);
       if (d > distance) {
         winning_count++;
-        //printf(" (win)\n");
+        //debug(" (win)\n");
       } else {
-        //printf("\n");
+        //debug("\n");
       }
     }
-    //printf("wins = %lld\n\n", winning_count);
+    debug("wins = %lld\n\n", winning_count);
 
     result *= winning_count;
   }

@@ -6,6 +6,7 @@
 #include <string.h>
 
 #include "array.h"
+#include "commons.h"
 #include "math.h"
 #include "string.h"
 
@@ -136,28 +137,28 @@ unsigned long long part1(char *filename) {
       StringArray *split = string_split(buffer, " -> ");
       StringArray *csplit = string_split(split->items[1], ", ");
       if (strncmp(buffer, "broadcaster", 11) == 0) {
-        array_module_print(modules);
+        debugf(array_module_print, modules);
         for (size_t i = 0; i < csplit->size; i++) {
           char *name = csplit->items[i];
           strncpy(broadcast->connections[broadcast->connections_size++], name, 64);
-          array_module_print(modules);
+          debugf(array_module_print, modules);
         }
       } else if (buffer[0] == '%') {
         Module *fp = find_or_init_module(modules, split->items[0] + 1);
         fp->module_type = FLIP_FLOP;
-        array_module_print(modules);
+        debugf(array_module_print, modules);
         for (size_t i = 0; i < csplit->size; i++) {
           strncpy(fp->connections[fp->connections_size++], csplit->items[i], 64);
-          array_module_print(modules);
+          debugf(array_module_print, modules);
         }
       } else if (buffer[0] == '&') {
         Module *conj = find_or_init_module(modules, split->items[0] + 1);
         conj->module_type = CONJUNCTION;
-        array_module_print(modules);
+        debugf(array_module_print, modules);
         for (size_t i = 0; i < csplit->size; i++) {
           strncpy(conj->connections[conj->connections_size++], csplit->items[i], 64);
           find_or_init_module(modules, csplit->items[i]);
-          array_module_print(modules);
+          debugf(array_module_print, modules);
         }
       }
 
@@ -179,7 +180,7 @@ unsigned long long part1(char *filename) {
       }
     }
   }
-  array_module_print(modules);
+  debugf(array_module_print, modules);
 
   unsigned long long lows = 0;
   unsigned long long highs = 0;
@@ -194,13 +195,13 @@ unsigned long long part1(char *filename) {
         free(s);
         continue;
       } else if (s->destination->module_type == BROADCASTER) {
-        //signal_print(s);
+        debugf(signal_print, s);
         lows++;
         for (size_t j = 0; j < s->destination->connections_size; j++) {
           lows++;
           Module *m = find_module(modules, s->destination->connections[j]);
           Signal ns = { .source = s->destination, .signal_type = LOW, .destination = m };
-          //signal_print(&ns);
+          debugf(signal_print, &ns);
           array_push(q, &ns);
         }
       } else if (s->destination->module_type == FLIP_FLOP) {
@@ -220,7 +221,7 @@ unsigned long long part1(char *filename) {
           Signal ns = { .source = s->destination, .signal_type = st, .destination = m };
           if (st == LOW) lows++;
           else highs++;
-          //signal_print(&ns);
+          debugf(signal_print, &ns);
           array_push(q, &ns);
         }
       } else if (s->destination->module_type == CONJUNCTION) {
@@ -239,7 +240,7 @@ unsigned long long part1(char *filename) {
           Signal ns = { .source = s->destination, .signal_type = st, .destination = m };
           if (st == LOW) lows++;
           else highs++;
-          //signal_print(&ns);
+          debugf(signal_print, &ns);
           array_push(q, &ns);
         }
       }
@@ -248,7 +249,7 @@ unsigned long long part1(char *filename) {
     array_free(q);
   }
 
-  printf("lows = %llu, highs = %llu\n", lows, highs);
+  debug("lows = %llu, highs = %llu\n", lows, highs);
 
   unsigned long long result = lows * highs;
   printf("result = %llu\n", result);
@@ -282,28 +283,28 @@ long long part2(char *filename) {
       StringArray *split = string_split(buffer, " -> ");
       StringArray *csplit = string_split(split->items[1], ", ");
       if (strncmp(buffer, "broadcaster", 11) == 0) {
-        array_module_print(modules);
+        debugf(array_module_print, modules);
         for (size_t i = 0; i < csplit->size; i++) {
           char *name = csplit->items[i];
           strncpy(broadcast->connections[broadcast->connections_size++], name, 64);
-          array_module_print(modules);
+          debugf(array_module_print, modules);
         }
       } else if (buffer[0] == '%') {
         Module *fp = find_or_init_module(modules, split->items[0] + 1);
         fp->module_type = FLIP_FLOP;
-        array_module_print(modules);
+        debugf(array_module_print, modules);
         for (size_t i = 0; i < csplit->size; i++) {
           strncpy(fp->connections[fp->connections_size++], csplit->items[i], 64);
-          array_module_print(modules);
+          debugf(array_module_print, modules);
         }
       } else if (buffer[0] == '&') {
         Module *conj = find_or_init_module(modules, split->items[0] + 1);
         conj->module_type = CONJUNCTION;
-        array_module_print(modules);
+        debugf(array_module_print, modules);
         for (size_t i = 0; i < csplit->size; i++) {
           strncpy(conj->connections[conj->connections_size++], csplit->items[i], 64);
           find_or_init_module(modules, csplit->items[i]);
-          array_module_print(modules);
+          debugf(array_module_print, modules);
         }
       }
 
@@ -326,8 +327,8 @@ long long part2(char *filename) {
       }
     }
   }
-  array_module_print(modules);
-  printf("conjunctions: %zu\n", conjunctions);
+  debugf(array_module_print, modules);
+  debug("conjunctions: %zu\n", conjunctions);
 
   bool done[26*27];
   memset(done, 0, 26*27*sizeof(bool));
@@ -379,7 +380,7 @@ long long part2(char *filename) {
           strncmp(s->destination->name, "gc", 2) == 0 ||
           strncmp(s->destination->name, "tx", 2) == 0
         )) {
-          //printf("all high for %s at %lld (%zu)\n", s->destination->name, cycle, cycles->size);
+          debug("all high for %s at %lld (%zu)\n", s->destination->name, cycle, cycles->size);
           int h = hash(s->destination->name);
           if (!done[h]) {
             array_push_rval(cycles, cycle);

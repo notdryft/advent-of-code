@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "commons.h"
 #include "string.h"
 
 constexpr size_t BUFFER_LENGTH = 1024;
@@ -44,7 +45,7 @@ int part1(char *filename) {
   for (size_t j = 0; j < lines->size; j++) {
     char *line = string_array_get(lines, j);
     size_t line_len = strlen(line);
-    printf("%s: %zu\n", line, line_len);
+    debug("%s: %zu\n", line, line_len);
     size_t digit_so = SIZE_MAX;
     for (size_t i = 0; i <= line_len; i++) {
       if (is_digit(line[i]) && digit_so == SIZE_MAX) {
@@ -72,7 +73,7 @@ int part1(char *filename) {
 
         if (is_near_symbol) {
           sum += atoi(digit_str);
-          printf("digit: %s (%zu, %zu) is next to a symbol\n", digit_str, digit_so, digit_eo);
+          debug("digit: %s (%zu, %zu) is next to a symbol\n", digit_str, digit_so, digit_eo);
         }
 
         digit_so = SIZE_MAX;
@@ -113,7 +114,7 @@ int part2(char *filename) {
   for (size_t j = 0; j < lines->size; j++) {
     char *line = string_array_get(lines, j);
     size_t line_len = strlen(line);
-    printf("%s: %zu\n", line, line_len);
+    debug("%s: %zu\n", line, line_len);
     size_t digit_so = SIZE_MAX;
     for (size_t i = 0; i <= line_len; i++) {
       if (is_digit(line[i]) && digit_so == SIZE_MAX) {
@@ -149,7 +150,7 @@ int part2(char *filename) {
 
         if (is_near_gear_symbol) {
           if (lol_x == gear_x && lol_y == gear_y) {
-            printf("(%zu, %zu)", lol_x, lol_y);
+            debug("(%zu, %zu)", lol_x, lol_y);
             exit(42);
           }
 
@@ -158,16 +159,16 @@ int part2(char *filename) {
           size_t nsx = ((long) gear_x - 1 < 0) ? 0 : gear_x - 1;
           size_t nex = (gear_x + 1 >= line_len) ? gear_x : gear_x + 1;
 
-          printf("scanning from (%zu, %zu) to (%zu, %zu)\n", nsx, nsy, nex, ney);
+          debug("scanning from (%zu, %zu) to (%zu, %zu)\n", nsx, nsy, nex, ney);
 
           size_t digit_x;
           size_t digit_y;
           bool is_gear_near_another_digit = false;
-          printf("nline: ");
+          debug("nline: ");
           for (size_t y = nsy; y <= ney; y++) {
             char *nline = string_array_get(lines, y);
             for (size_t x = nsx; x <= nex; x++) {
-              printf("%c", nline[x]);
+              debug("%c", nline[x]);
               if (is_digit(nline[x])) {
                 is_gear_near_another_digit = true;
                 digit_x = x;
@@ -175,9 +176,9 @@ int part2(char *filename) {
               }
             }
           }
-          printf("\n");
+          debug("\n");
 
-          printf("digit: %s (%zu, %zu) is next to a symbol (%zu, %zu)\n", digit_str, digit_so, digit_eo, gear_x, gear_y);
+          debug("digit: %s (%zu, %zu) is next to a symbol (%zu, %zu)\n", digit_str, digit_so, digit_eo, gear_x, gear_y);
 
           if (is_gear_near_another_digit) {
             char *pline = string_array_get(lines, digit_y);
@@ -202,7 +203,7 @@ int part2(char *filename) {
               pline[ip] = 'P';
             }
 
-            printf("paired digit: %s (%zu, %zu) from symbol (%zu, %zu)\n", pair_str, digit_x, digit_y, gear_x, gear_y);
+            debug("paired digit: %s (%zu, %zu) from symbol (%zu, %zu)\n", pair_str, digit_x, digit_y, gear_x, gear_y);
             sum += atoi(digit_str) * atoi(pair_str);
             free(pair_str);
 
@@ -218,9 +219,9 @@ int part2(char *filename) {
     }
   }
 
-  printf("\n");
+  debug("\n");
   for (size_t i = 0; i < lines->size; i++) {
-    printf("%s\n", string_array_get(lines, i));
+    debug("%s\n", string_array_get(lines, i));
   }
 
   fclose(fp);

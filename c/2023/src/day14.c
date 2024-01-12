@@ -6,6 +6,7 @@
 #include <string.h>
 
 #include "algos.h"
+#include "commons.h"
 #include "array.h"
 #include "string.h"
 
@@ -121,12 +122,12 @@ int part1(char *filename) {
 
   fclose(fp);
 
-  string_array_print_raw(rocks);
-  printf("\n");
+  debugf(string_array_print_raw, rocks);
+  debug("\n");
 
   tilt(rocks, strlen(rocks->items[0]), NORTH);
-  string_array_print_raw(rocks);
-  printf("\n");
+  debugf(string_array_print_raw, rocks);
+  debug("\n");
 
   int sum = load(rocks);
   printf("sum = %d\n", sum);
@@ -154,21 +155,21 @@ int part2(char *filename) {
 
   fclose(fp);
 
-  string_array_print_raw(rocks);
-  printf("\n");
+  debugf(string_array_print_raw, rocks);
+  debug("\n");
 
   Array *loads = array_new(int);
 
   int cycles = 1000000000;
-  printf("%d\n", cycles);
+  debug("%d\n", cycles);
   Cycle *c = nullptr;
   size_t len = strlen(rocks->items[0]);
   for (int i = 0; i < cycles; i++) {
     for (int d = 0; d < DIRECTIONS; d++) {
       tilt(rocks, len, d);
     }
-    //string_array_print_raw(rocks);
-    //printf("\n");
+    //debugf(string_array_print_raw, rocks);
+    //debug("\n");
     int l = load(rocks);
     array_push_rval(loads, l);
     c = find_longest_cycle(loads, 2);
@@ -176,14 +177,14 @@ int part2(char *filename) {
       break;
     }
   }
-  //string_array_print_raw(rocks);
-  //printf("\n");
-  int_array_print(loads);
+  //debugf(string_array_print_raw, rocks);
+  //debug("\n");
+  debugf(int_array_print, loads);
 
   int sum = -1;
   if (c != nullptr) {
     int n = c->start + (cycles - 1 - c->start) % c->period;
-    printf("start = %zu, period = %zu, result = %d\n", c->start, c->period, n);
+    debug("start = %zu, period = %zu, result = %d\n", c->start, c->period, n);
     sum = int_array_get(loads, n);
   }
 

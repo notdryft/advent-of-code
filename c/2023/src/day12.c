@@ -6,6 +6,7 @@
 #include <string.h>
 
 #include "array.h"
+#include "commons.h"
 #include "map.h"
 #include "string.h"
 
@@ -87,9 +88,9 @@ unsigned long long find_arrangements_dp(char *springs, Array *damaged, Map *dp, 
   if (entry != nullptr) {
     return entry->value;
   }
-  //printf("cache miss: (%zu, %zu, %zu)\n", si, di, dlen);
+  //debug("cache miss: (%zu, %zu, %d)\n", si, di, dlen);
   if (si == strlen(springs)) {
-    //printf("case: (%zu, %zu, %zu), %zu, %d\n", si, di, dlen, damaged->size, int_array_get(damaged, di));
+    //debug("case: (%zu, %zu, %d), %zu, %d\n", si, di, dlen, damaged->size, int_array_get(damaged, di));
     if (di == damaged->size && dlen == 0) {
       return 1;
     } else if (di == damaged->size - 1 && int_array_get(damaged, di) == dlen) {
@@ -112,7 +113,7 @@ unsigned long long find_arrangements_dp(char *springs, Array *damaged, Map *dp, 
       }
     }
   }
-  //printf("cache push: (%zu, %zu, %zu) -> %llu\n", si, di, dlen, arrangements);
+  //debug("cache push: (%zu, %zu, %d) -> %llu\n", si, di, dlen, arrangements);
   dp_put(dp, .si = si, .di = di, .dlen = dlen, .value = arrangements);
   return arrangements;
 }
@@ -138,7 +139,7 @@ int part1(char *filename) {
 
   for (size_t i = 0; i < records->size; i++) {
     char *record = string_array_get(records, i);
-    printf("%s\n", record);
+    debug("%s\n", record);
 
     StringArray* split = string_split(record, " ");
     char *springs = string_array_get(split, 0);
@@ -146,7 +147,7 @@ int part1(char *filename) {
     Array *damaged = string_atoi(damaged_stra);
 
     int a = find_arrangements_rec(springs, damaged, strlen(springs), 0);
-    printf("arrangements += %d\n", a);
+    debug("arrangements += %d\n", a);
     arrangements += a;
 
     array_free(damaged);
@@ -154,7 +155,6 @@ int part1(char *filename) {
     string_array_free(split);
   }
   string_array_free(records);
-
 
   printf("arrangements = %d\n", arrangements);
 
@@ -182,22 +182,22 @@ unsigned long long part2(char *filename) {
 
   for (size_t i = 0; i < records->size; i++) {
     char *record = string_array_get(records, i);
-    printf("%s\n", record);
+    debug("%s\n", record);
 
     StringArray* split = string_split(record, " ");
     char *springs = string_array_get(split, 0);
     char *springs_repeated = repeat_with_delimiter(springs, 5, "?");
-    printf("repeated = %s\n", springs_repeated);
+    debug("repeated = %s\n", springs_repeated);
 
     char *damaged_str = string_array_get(split, 1);
     StringArray *damaged_stra = string_split(damaged_str, ",");
     StringArray *damaged_repeated_stra = string_array_repeat(damaged_stra, 5);
     Array *damaged = string_atoi(damaged_repeated_stra);
-    int_array_print(damaged);
+    debugf(int_array_print, damaged);
 
     Map* dp = map_new(DPEntry, DP_KEY_STRIDE);
     unsigned long long a = find_arrangements_dp(springs_repeated, damaged, dp, 0, 0, 0);
-    printf("arrangements += %llu\n", a);
+    debug("arrangements += %llu\n", a);
     arrangements += a;
 
     array_free(damaged);

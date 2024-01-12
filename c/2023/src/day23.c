@@ -6,6 +6,7 @@
 #include <string.h>
 
 #include "array.h"
+#include "commons.h"
 #include "string.h"
 
 constexpr size_t BUFFER_LENGTH = 1024;
@@ -50,7 +51,7 @@ void dfs(char **trail, bool **seen, size_t mx, size_t my, size_t x, size_t y, in
 
   if (vecs->size == 0 && x == mx - 2 && y == mx - 1) {
     if (increment > *max) {
-      printf("new max = %d\n", increment);
+      debug("new max = %d\n", increment);
       *max = increment;
     }
   }
@@ -69,7 +70,7 @@ void dfs(char **trail, bool **seen, size_t mx, size_t my, size_t x, size_t y, in
 void dfs2(char **trail, bool **seen, size_t mx, size_t my, size_t x, size_t y, int increment, int *max) {
   if (x == mx - 2 && y == mx - 1) {
     if (increment > *max) {
-      printf("new max = %d\n", increment);
+      debug("new max = %d\n", increment);
       *max = increment;
     }
     return;
@@ -115,7 +116,7 @@ int part1(char *filename) {
   }
   fclose(fp);
 
-  string_array_print_raw(trail);
+  debugf(string_array_print_raw, trail);
 
   size_t mx = strlen(trail->items[0]), my = trail->size;
   size_t sx = 1, sy = 0;
@@ -149,7 +150,7 @@ int part2(char *filename) {
   }
   fclose(fp);
 
-  string_array_print_raw(trail);
+  debugf(string_array_print_raw, trail);
 
   size_t mx = strlen(trail->items[0]), my = trail->size;
   size_t sx = 1, sy = 0;

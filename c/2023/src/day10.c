@@ -6,6 +6,7 @@
 #include <string.h>
 
 #include "array.h"
+#include "commons.h"
 #include "string.h"
 
 constexpr size_t BUFFER_LENGTH = 1024;
@@ -81,39 +82,12 @@ Array *vecs_from(StringArray *schema, size_t rows, size_t cols, size_t x, size_t
   return vecs;
 }
 
-void debug_steps(int **steps, size_t rows, size_t cols) {
-  for (size_t i = 0; i < cols * 4; i++) {
-    printf(">");
-  }
-  printf("\n");
-  for (size_t j = 0; j < rows; j++) {
-    for (size_t i = 0; i < cols; i++) {
-      if (steps[j][i] == -1) {
-        printf("    ");
-      } else {
-        printf("%4d", steps[j][i]);
-      }
-    }
-    printf("\n");
-  }
-  for (size_t i = 0; i < cols * 4; i++) {
-    printf("<");
-  }
-  printf("\n");
-}
-
 void traverse_rec(StringArray *schema, int **steps, size_t rows, size_t cols, size_t x, size_t y, int count, int *highest) {
-  //printf("%d\n", count);
   Array *vecs = vecs_from(schema, rows, cols, x, y);
-  //printf("size: %zu\n", vecs->size);
   for (size_t i = 0; i < vecs->size; i++) {
     Vec2 *u = array_get(vecs, i);
-    //char *yrow = string_array_get(schema, y);
-    //char *vyrow = string_array_get(schema, v->y);
-    //printf("from { %zu, %zu } = '%c' to { %zu, %zu } = '%c' \n", x, y, yrow[x], v->x, v->y, vyrow[v->x]);
     int step = steps[u->y][u->x];
     if (step == 0 && count > 2) {
-      //printf("highest = %d\n", count);
       *highest = count;
     } else if (step == -1) {
       steps[u->y][u->x] = count;
@@ -138,7 +112,6 @@ Array *traverse_steps(StringArray *schema, int **steps, size_t rows, size_t cols
     }
   }
 
-  printf("Start at (%zu, %zu)\n", x, y);
   array_push(vecs, &(Vec2) { x, y });
 
   int count = 0;
@@ -152,9 +125,6 @@ Array *traverse_steps(StringArray *schema, int **steps, size_t rows, size_t cols
       y++;
     } else if (x > 0 && steps[y][x - 1] == next) {
       x--;
-    } else {
-      printf("unknown case at (%zu, %zu)\n", x, y);
-      exit(42);
     }
     if (steps[y][x] == 0) {
       break;
@@ -162,7 +132,6 @@ Array *traverse_steps(StringArray *schema, int **steps, size_t rows, size_t cols
     count = next;
     char *row = string_array_get(schema, y);
     if (is_edge(row[x])) {
-      //printf("(%zu, %zu)\n", x, y);
       array_push(vecs, &(Vec2) { x, y });
     }
   }
@@ -228,12 +197,12 @@ int part1(char *filename) {
   size_t rows = strlen(string_array_get(schema, 0));
   size_t cols = schema->size;
 
+#ifdef DEBUG
   for (size_t j = 0; j < rows; j++) {
     char *row = string_array_get(schema, j);
-    printf("%s\n", row);
+    debug("%s\n", row);
   }
-
-  printf("schema = %zux%zu\n", rows, cols);
+#endif
 
   size_t sx = 0, sy = 0;
   bool stop = false;
@@ -247,7 +216,7 @@ int part1(char *filename) {
       }
     }
   }
-  printf("Start at (%zu, %zu)\n", sx, sy);
+  debug("Start at (%zu, %zu)\n", sx, sy);
 
   int **steps = malloc(sizeof(int *) * rows);
   for (size_t j = 0; j < rows; j++) {
@@ -258,17 +227,17 @@ int part1(char *filename) {
   steps[sy][sx] = 0;
   int highest = -1;
   traverse_rec(schema, steps, rows, cols, sx, sy, 1, &highest);
-  //debug_steps(steps, rows, cols);
+  //debug(debug_steps, steps, rows, cols);
 
-  printf("loop = %d\n", highest);
+  debug("loop = %d\n", highest);
   int result = (highest % 2 == 0) ? highest / 2 : (highest + 1) / 2;
   printf("result = %d\n", result);
 
-  string_array_free(schema);
   for (size_t j = 0; j < cols; j++) {
     free(steps[j]);
   }
   free(steps);
+  string_array_free(schema);
 
   return result;
 }
@@ -295,12 +264,12 @@ int part2(char *filename) {
   size_t cols = strlen(string_array_get(schema, 0));
   size_t rows = schema->size;
 
+#ifdef DEBUG
   for (size_t j = 0; j < rows; j++) {
     char *row = string_array_get(schema, j);
-    printf("%s\n", row);
+    debug("%s\n", row);
   }
-
-  printf("schema = %zux%zu\n", rows, cols);
+#endif
 
   size_t sx = 0, sy = 0;
   bool stop = false;
@@ -314,7 +283,7 @@ int part2(char *filename) {
       }
     }
   }
-  printf("Start at (%zu, %zu)\n", sx, sy);
+  debug("Start at (%zu, %zu)\n", sx, sy);
 
   int **steps = malloc(sizeof(int *) * rows);
   for (size_t j = 0; j < rows; j++) {
@@ -324,20 +293,18 @@ int part2(char *filename) {
     }
   }
 
-  printf("1\n");
   steps[sy][sx] = 0;
   int highest = -1;
   traverse_rec(schema, steps, rows, cols, sx, sy, 1, &highest);
-  debug_steps(steps, rows, cols);
+  //debug(debug_steps, steps, rows, cols);
 
   Array *edges = traverse_steps(schema, steps, rows, cols, highest);
-  printf("edges = %zu\n", edges->size);
+  debug("edges = %zu\n", edges->size);
 
   int inside = 0;
   for (size_t j = 0; j < rows; j++) {
     char *row = string_array_get(schema, j);
     for (size_t i = 0; i < cols; i++) {
-      //printf("(%zu, %zu)\n", i, j);
       if (steps[j][i] == -1) { // ignoring pipes that are not part of the loop
         if (winding_number(edges, i, j) != 0) {
           row[i] = 'I';
@@ -346,15 +313,17 @@ int part2(char *filename) {
           row[i] = 'O';
         }
       }
+#ifdef DEBUG
       if (row[i] == 'O') {
-        printf("\033[97;1m%c\033[0m", row[i]);
+        debug("\033[97;1m%c\033[0m", row[i]);
       } else if (row[i] == 'I') {
-        printf("\033[91;1m%c\033[0m", row[i]);
+        debug("\033[91;1m%c\033[0m", row[i]);
       } else {
-        printf("%c", row[i]);
+        debug("%c", row[i]);
       }
+#endif
     }
-    printf("\n");
+    debug("\n");
   }
   printf("inside = %d\n", inside);
 
