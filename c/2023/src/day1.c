@@ -5,7 +5,7 @@
 
 #include "array.h"
 
-#define BUFFER_LENGTH 1024
+constexpr size_t BUFFER_LENGTH = 1024;
 
 int part1(char *filename) {
   FILE *fp = fopen(filename, "r");

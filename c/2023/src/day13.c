@@ -8,7 +8,7 @@
 #include "array.h"
 #include "string.h"
 
-#define BUFFER_LENGTH 1024
+constexpr size_t BUFFER_LENGTH = 1024;
 
 int find_column_reflection(StringArray* lines, size_t len, size_t start, size_t end, int cmp) {
   for (size_t i = 1; i < len; i++) {

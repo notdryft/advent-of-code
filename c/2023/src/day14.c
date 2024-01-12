@@ -9,7 +9,7 @@
 #include "array.h"
 #include "string.h"
 
-#define BUFFER_LENGTH 1024
+constexpr size_t BUFFER_LENGTH = 1024;
 
 size_t highest(StringArray *rocks, size_t x, size_t y) {
   while (y > 0 && rocks->items[y - 1][x] == '.') {

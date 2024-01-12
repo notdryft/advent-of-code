@@ -7,7 +7,7 @@
 #include "array.h"
 #include "string.h"
 
-#define BUFFER_LENGTH 1024
+constexpr size_t BUFFER_LENGTH = 1024;
 
 Array *get_numbers(char *str) {
   Array *numbers = array_new(int);

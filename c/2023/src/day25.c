@@ -8,7 +8,7 @@
 #include "array.h"
 #include "string.h"
 
-#define BUFFER_LENGTH 1024
+constexpr size_t BUFFER_LENGTH = 1024;
 
 #define HASHES 26*26*26
 #define hash(key) (key[0]-'a'+(key[1]-'a')*26+(key[2]-'a')*26*26)

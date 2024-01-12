@@ -8,7 +8,7 @@
 #include "math.h"
 #include "string.h"
 
-#define BUFFER_LENGTH 1024
+constexpr size_t BUFFER_LENGTH = 1024;
 
 typedef struct _Node {
  char value[4];

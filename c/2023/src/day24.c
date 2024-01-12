@@ -10,7 +10,7 @@
 #include "array.h"
 #include "string.h"
 
-#define BUFFER_LENGTH 1024
+constexpr size_t BUFFER_LENGTH = 1024;
 
 typedef long long ll;
 typedef long double ld;

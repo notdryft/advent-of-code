@@ -7,7 +7,7 @@
 
 #include "string.h"
 
-#define BUFFER_LENGTH 1024
+constexpr size_t BUFFER_LENGTH = 1024;
 
 bool is_digit(char c) {
   return '0' <= c && c <= '9';

@@ -7,7 +7,7 @@
 
 #include "string.h"
 
-#define BUFFER_LENGTH 1024
+constexpr size_t BUFFER_LENGTH = 1024;
 
 enum HandType {
   HIGH_CARD, // 0

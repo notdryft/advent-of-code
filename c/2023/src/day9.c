@@ -8,7 +8,7 @@
 #include "array.h"
 #include "string.h"
 
-#define BUFFER_LENGTH 1024
+constexpr size_t BUFFER_LENGTH = 1024;
 
 int predict_first_rec(Array *array) {
   Array *sub = array_new(int);

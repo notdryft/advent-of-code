@@ -9,7 +9,7 @@
 #include "math.h"
 #include "string.h"
 
-#define BUFFER_LENGTH 1024
+constexpr size_t BUFFER_LENGTH = 1024;
 
 #define hash(key) ((size_t)(strlen(key)>1?(26+(key[0]-'a')+(key[1]-'a')*26):(key[0]-'a')))
 

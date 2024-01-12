@@ -9,7 +9,7 @@
 #include "map.h"
 #include "string.h"
 
-#define BUFFER_LENGTH 1024
+constexpr size_t BUFFER_LENGTH = 1024;
 
 bool arrangements_cmp(Array *a, Array *b) {
   if (a->size != b->size) {

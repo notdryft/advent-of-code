@@ -8,7 +8,7 @@
 #include "array.h"
 #include "string.h"
 
-#define BUFFER_LENGTH 100000
+constexpr size_t BUFFER_LENGTH = 100000;
 
 typedef struct {
   char lens[32];
