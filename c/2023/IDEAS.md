@@ -27,6 +27,10 @@ day 25: max flow/min cut (stoer wagner, push-relabel or preflow-push, etc.)
 ANSI:
 - https://stackoverflow.com/questions/4842424/list-of-ansi-color-escape-sequences
 
+C stuff:
+- https://www.youtube.com/watch?v=QpAhX-gsHMs
+- https://www.youtube.com/watch?v=lLv1s7rKeCM
+
 Ref:
 - https://github.com/Bogdanp/awesome-advent-of-code
 
