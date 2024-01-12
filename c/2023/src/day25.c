@@ -66,7 +66,7 @@ int stoer_wagner(int **graph, size_t graph_size) {
     if (contracted == 3) {
       result = contractions[s] + contractions[t];
       result = result * (graph_size - result);
-      goto leave;
+      goto defer;
     }
     contractions[s] += contractions[t];
 
@@ -78,7 +78,7 @@ int stoer_wagner(int **graph, size_t graph_size) {
     }
   }
 
-  leave:
+  defer:
   free(contractions);
   free(visited);
   free(weights);

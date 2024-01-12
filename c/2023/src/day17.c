@@ -80,7 +80,7 @@ int dijkstra(char **grid, int mx, int my, int mindist, int maxdist) {
     if (x == mx - 1 && y == my - 1) {
       cost = current->cost;
       free(current);
-      goto leave;
+      goto defer;
     }
 
     //printf("visited(%d, %d, %d) = %s\n", x, y, dd, visited[dim(x, y, dd)] ? "true" : "false");
@@ -131,7 +131,7 @@ int dijkstra(char **grid, int mx, int my, int mindist, int maxdist) {
     free(current);
   }
 
-  leave:
+  defer:
   free(costs);
   free(visited);
   array_free(q);
