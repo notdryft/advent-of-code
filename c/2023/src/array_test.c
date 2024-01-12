@@ -12,23 +12,23 @@ void int_array_tests(void) {
   Array *longs = array_new(long);
   int_array_print(longs);
 
-  array_push(ints, 7);
+  array_push_rval(ints, 7);
   int_array_print(ints);
   printf("first = %d, last = %d\n", int_array_first(ints), int_array_last(ints));
 
-  array_push(ints, 3);
+  array_push_rval(ints, 3);
   int_array_print(ints);
   printf("first = %d, last = %d\n", int_array_first(ints), int_array_last(ints));
 
   printf("result = [ %d, %d ]\n", int_array_get(ints, 0), int_array_get(ints, 1));
 
-  array_set(ints, 10, 42);
+  array_set_rval(ints, 10, 42);
   int_array_print(ints);
 
-  array_add_first(ints, 11);
+  array_add_first_rval(ints, 11);
   int_array_print(ints);
 
-  array_insert(ints, 5, 12);
+  array_insert_rval(ints, 5, 12);
   int_array_print(ints);
 
   array_free(ints);
@@ -57,35 +57,35 @@ void dyn_array_tests(void) {
   Array *items = array_new(Item);
   item_array_print(items);
 
-  array_push(items, ((Item) { .a = 1, .b = 2 }));
+  array_push(items, &(Item) { .a = 1, .b = 2 });
   item_array_print(items);
 
-  array_push(items, ((Item) { .a = 3, .b = 4 }));
-  item_array_print(items);
-
-  array_remove_first(items);
+  array_push(items, &(Item) { .a = 3, .b = 4 });
   item_array_print(items);
 
   array_remove_first(items);
   item_array_print(items);
 
-  array_push(items, ((Item) { .a = 5, .b = 6 }));
-  array_push(items, ((Item) { .a = 7, .b = 8 }));
-  array_push(items, ((Item) { .a = 9, .b = 10 }));
-  array_push(items, ((Item) { .a = 11, .b = 12 }));
+  array_remove_first(items);
+  item_array_print(items);
+
+  array_push(items, &(Item) { .a = 5, .b = 6 });
+  array_push(items, &(Item) { .a = 7, .b = 8 });
+  array_push(items, &(Item) { .a = 9, .b = 10 });
+  array_push(items, &(Item) { .a = 11, .b = 12 });
   item_array_print(items);
 
   array_remove(items, 2);
   item_array_print(items);
 
-  array_add_first(items, ((Item) { .a = 13, .b = 14 }));
+  array_add_first(items, &(Item) { .a = 13, .b = 14 });
   item_array_print(items);
 
-  array_insert(items, 2, ((Item) { .a = 15, .b = 16 }));
+  array_insert(items, 2, &(Item) { .a = 15, .b = 16 });
   array_remove_first(items);
   item_array_print(items);
 
-  array_insert(items, 4, ((Item) { .a = 17, .b = 18 }));
+  array_insert(items, 4, &(Item) { .a = 17, .b = 18 });
   array_remove_first(items);
   item_array_print(items);
 
@@ -97,14 +97,14 @@ void dyn_array_tests(void) {
 
 void array_priority_push(Array *array, Item *value) {
   if (array->size == 0) {
-    _array_push(array, value);
+    array_push(array, value);
   } else {
     size_t i = 0;
     Item *other;
     do {
       other = array_get(array, i++);
     } while (other->a < value->a && i <= array->size);
-    _array_insert(array, i - 1, value);
+    array_insert(array, i - 1, value);
   }
 }
 

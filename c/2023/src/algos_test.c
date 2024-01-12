@@ -8,7 +8,7 @@
 void find_longest_cycle_test(int *numbers, size_t len) {
   Array *array = array_new(int);
   for (size_t i = 0; i < len; i++) {
-    array_push(array, numbers[i]);
+    array_push_rval(array, numbers[i]);
   }
   int_array_print(array);
 

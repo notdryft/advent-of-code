@@ -59,7 +59,7 @@ int part1(char *filename) {
         size_t sy = ((long) j - 1 < 0) ? 0 : j - 1;
         size_t ey = (j + 1 >= lines->size) ? j : j + 1;
         size_t sx = ((long) digit_so - 1 < 0) ? 0 : digit_so - 1;
-        size_t ex = ( digit_eo + 1 > line_len) ? digit_eo : digit_eo + 1;
+        size_t ex = (digit_eo + 1 > line_len) ? digit_eo : digit_eo + 1;
 
         bool is_near_symbol = false;
         for (size_t y = sy; y <= ey; y++) {
