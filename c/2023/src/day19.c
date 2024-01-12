@@ -465,7 +465,7 @@ unsigned long long part2(char *filename) {
 
   int i = 0;
   while (queue->size > 0) {
-    Ranges *ranges = (Ranges *) array_pop(queue);
+    Ranges *ranges = array_pop(queue);
     if (
       ranges->x.max < ranges->x.min ||
       ranges->m.max < ranges->m.min ||
