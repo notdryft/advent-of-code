@@ -1,9 +1,8 @@
-#include <inttypes.h>
 #include <stdio.h>
-#include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
 
+#include "commons.h"
 #include "array.h"
 
 Array *_array_new(size_t stride) {
@@ -26,7 +25,7 @@ void array_free(Array *array) {
 }
 
 void *array_get(Array *array, size_t index) {
-  return (uint8_t *) array->items + array->stride * index;
+  return (u8 *) array->items + array->stride * index;
 }
 
 void *array_first(Array *array) {
@@ -38,7 +37,7 @@ void *array_first(Array *array) {
 
 void *array_last(Array *array) {
   if (array->size > 0) {
-    return (uint8_t *) array->items + array->stride * (array->size - 1);
+    return (u8 *) array->items + array->stride * (array->size - 1);
   }
   return nullptr;
 }
@@ -53,7 +52,7 @@ void array_push(Array *array, void *value) {
     _array_resize(array);
   }
 
-  memcpy((uint8_t *) array->items + array->stride * array->size, value, array->stride);
+  memcpy((u8 *) array->items + array->stride * array->size, value, array->stride);
   array->size++;
 }
 
@@ -76,10 +75,10 @@ void array_set(Array *array, size_t index, void *value) {
     _array_resize(array);
   }
   if (overflow > array->size) {
-    memset((uint8_t *) array->items + array->stride * array->size, 0, array->stride * (index - array->size));
+    memset((u8 *) array->items + array->stride * array->size, 0, array->stride * (index - array->size));
     array->size = overflow;
   }
-  memcpy((uint8_t *) array->items + array->stride * index, value, array->stride);
+  memcpy((u8 *) array->items + array->stride * index, value, array->stride);
 }
 
 inline void array_add_first(Array *array, void *value) {
@@ -91,7 +90,7 @@ void array_insert(Array *array, size_t index, void *value) {
     _array_resize(array);
   }
 
-  uint8_t *insertp = (uint8_t *) array->items + array->stride * index;
+  u8 *insertp = (u8 *) array->items + array->stride * index;
   memmove(insertp + array->stride, insertp, array->stride * (array->size - index));
   memcpy(insertp, value, array->stride);
   array->size++;
@@ -99,9 +98,9 @@ void array_insert(Array *array, size_t index, void *value) {
 
 void array_move_first(Array *array, size_t index) {
   void *tmp = malloc(sizeof(array->stride));
-  memcpy(tmp, (uint8_t *) array->items + array->stride * index, array->stride);
+  memcpy(tmp, (u8 *) array->items + array->stride * index, array->stride);
 
-  memmove((uint8_t *) array->items + array->stride, array->items, array->stride * index);
+  memmove((u8 *) array->items + array->stride, array->items, array->stride * index);
   memcpy(array->items, tmp, array->stride);
 
   free(tmp);
@@ -118,14 +117,14 @@ inline void array_remove_last(Array *array) {
 void array_remove(Array *array, size_t index) {
   array->size--;
 
-  uint8_t *destp = (uint8_t *) array->items + array->stride * index;
+  u8 *destp = (u8 *) array->items + array->stride * index;
   memmove(destp, destp + array->stride, array->stride * (array->size - index));
 }
 
 // utils
 
 int array_cmp(Array *array, size_t i, size_t j) {
-  return memcmp((uint8_t *) array->items + array->stride * i, (uint8_t *) array->items + array->stride * j, array->stride);
+  return memcmp((u8 *) array->items + array->stride * i, (u8 *) array->items + array->stride * j, array->stride);
 }
 
 Array *array_concat(Array *a, Array *b) {

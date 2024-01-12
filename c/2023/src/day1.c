@@ -31,7 +31,7 @@ int part1(char *filename) {
 
   fclose(fp);
 
-  printf("sum: %d\n", sum);
+  printf("sum = %d\n", sum);
 
   return sum;
 }
@@ -73,7 +73,7 @@ int part2(char *filename) {
 
   fclose(fp);
 
-  printf("sum: %d\n", sum);
+  printf("sum = %d\n", sum);
 
   return sum;
 }

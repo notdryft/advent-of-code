@@ -1,17 +1,17 @@
-#include <stdint.h>
 #include <stdio.h>
 #include <string.h>
 
+#include "commons.h"
 #include "map.h"
 
 typedef struct {
   size_t key1;
   size_t key2;
-  int32_t key3;
+  i32 key3;
   unsigned long long value;
 } MapEntry;
 
-constexpr size_t KEY_STRIDE = sizeof(size_t) * 2 + sizeof(int32_t);
+constexpr size_t KEY_STRIDE = sizeof(size_t) * 2 + sizeof(i32);
 
 void map_print(Map *map) {
   printf("Map{\n");

@@ -6,11 +6,10 @@
 #include <string.h>
 
 #include "array.h"
+#include "commons.h"
 #include "string.h"
 
 constexpr size_t BUFFER_LENGTH = 1024;
-
-typedef long long ll;
 
 enum AlmanachEntryType {
   SEED_TO_SOIL,

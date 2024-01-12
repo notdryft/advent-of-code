@@ -1,10 +1,9 @@
-#include <inttypes.h>
 #include <stdbool.h>
-#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
+#include "commons.h"
 #include "map.h"
 
 Map *_map_new(size_t entry_stride, size_t key_stride) {
@@ -36,10 +35,10 @@ void map_free(Map *map) {
 // gets
 
 // https://en.wikipedia.org/wiki/Jenkins_hash_function#one_at_a_time
-uint32_t _map_hash(Map *map, const void *entry) {
-  const uint8_t *key = (uint8_t *) entry;
+u32 _map_hash(Map *map, const void *entry) {
+  const u8 *key = (u8 *) entry;
 
-  uint32_t hash = 0;
+  u32 hash = 0;
   for (size_t i = 0; i < map->key_stride; i++) {
     hash += key[i];
     hash += hash << 10;
@@ -53,7 +52,7 @@ uint32_t _map_hash(Map *map, const void *entry) {
 }
 
 void *map_get(Map *map, void *entry) {
-  uint32_t hash = _map_hash(map, entry);
+  u32 hash = _map_hash(map, entry);
 
   Array *htable = map->table[hash];
   if (htable != nullptr) {
@@ -69,7 +68,7 @@ void *map_get(Map *map, void *entry) {
 }
 
 bool map_contains_key(Map *map, void *entry) {
-  uint32_t hash = _map_hash(map, entry);
+  u32 hash = _map_hash(map, entry);
 
   Array *htable = map->table[hash];
   if (htable != nullptr) {
@@ -87,7 +86,7 @@ bool map_contains_key(Map *map, void *entry) {
 // sets
 
 void map_put(Map *map, void *entry) {
-  uint32_t hash = _map_hash(map, entry);
+  u32 hash = _map_hash(map, entry);
   if (map->table[hash] == nullptr) {
     map->table[hash] = _array_new(map->entry_stride);
   }
