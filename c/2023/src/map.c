@@ -7,13 +7,13 @@
 
 #include "map.h"
 
-Map *_map_new(size_t key_stride, size_t entry_stride) {
+Map *_map_new(size_t entry_stride, size_t key_stride) {
   Map *map = malloc(sizeof(Map));
   map->capacity = MAP_CAPACITY;
   map->table = calloc(map->capacity, sizeof(Array *));
 
-  map->key_stride = key_stride;
   map->entry_stride = entry_stride;
+  map->key_stride = key_stride;
 
   return map;
 }

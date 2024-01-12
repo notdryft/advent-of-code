@@ -74,14 +74,10 @@ typedef struct {
   size_t si;
   size_t di;
   int dlen;
-} DPKey;
-
-typedef struct {
-  size_t si;
-  size_t di;
-  int dlen;
   unsigned long long value;
 } DPEntry;
+
+constexpr size_t DP_KEY_STRIDE = sizeof(size_t) * 2 + sizeof(int);
 
 #define dp_get(dp, ...) map_get(dp, &(DPEntry) { __VA_ARGS__ })
 #define dp_put(dp, ...) map_put(dp, &(DPEntry) { __VA_ARGS__ })
@@ -199,7 +195,7 @@ unsigned long long part2(char *filename) {
     Array *damaged = string_atoi(damaged_repeated_stra);
     int_array_print(damaged);
 
-    Map* dp = map_new(DPKey, DPEntry);
+    Map* dp = map_new(DPEntry, DP_KEY_STRIDE);
     unsigned long long a = find_arrangements_dp(springs_repeated, damaged, dp, 0, 0, 0);
     printf("arrangements += %llu\n", a);
     arrangements += a;

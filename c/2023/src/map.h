@@ -15,8 +15,8 @@ typedef struct {
   Array **table;
 } Map;
 
-Map *_map_new(size_t key_stride, size_t entry_stride);
-#define map_new(key_type, entry_type) _map_new(sizeof(key_type), sizeof(entry_type))
+Map *_map_new(size_t entry_stride, size_t key_stride);
+#define map_new(entry_type, key_stride) _map_new(sizeof(entry_type), key_stride)
 
 void map_free(Map *map);
 
