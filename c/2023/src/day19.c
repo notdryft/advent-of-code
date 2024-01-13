@@ -7,6 +7,7 @@
 
 #include "array.h"
 #include "commons.h"
+#include "math.h"
 #include "string.h"
 
 constexpr size_t BUFFER_LENGTH = 1024;
@@ -144,14 +145,6 @@ bool accept_or_reject(Array *nodes, Node *node, int x, int m, int a, int s) {
   }
   debug("end\n");
   return false;
-}
-
-int max(int a, int b) {
-  return (a > b) ? a : b;
-}
-
-int min(int a, int b) {
-  return (a < b) ? a : b;
 }
 
 int apply_op(enum Op op, int a, int b) {

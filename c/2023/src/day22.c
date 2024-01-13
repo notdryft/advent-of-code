@@ -7,6 +7,7 @@
 
 #include "array.h"
 #include "commons.h"
+#include "math.h"
 #include "string.h"
 
 constexpr size_t BUFFER_LENGTH = 1024;
@@ -28,14 +29,6 @@ void brick_array_print(Array *bricks) {
     printf("{ %d %d %d, %d %d %d }, ", brick->start.x, brick->start.y, brick->start.z, brick->end.x, brick->end.y, brick->end.z );
   }
   printf("\n");
-}
-
-int min(int a, int b) {
-  return a < b ? a : b;
-}
-
-int max(int a, int b) {
-  return a > b ? a : b;
 }
 
 bool collides(Brick *a, Brick *b, int z) {

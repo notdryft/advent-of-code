@@ -7,6 +7,7 @@
 
 #include "array.h"
 #include "commons.h"
+#include "math.h"
 #include "string.h"
 
 constexpr size_t BUFFER_LENGTH = 1024;
@@ -34,9 +35,6 @@ inline bool range_contains(Range range, ll value) {
 int range_cmp(const void *a, const void *b) {
   return ((Range *)a)->start < ((Range *)b)->start ? -1 : 1;
 }
-
-#define min(a,b) ((a<b)?a:b)
-#define max(a,b) ((a>b)?a:b)
 
 typedef struct {
   enum AlmanachEntryType source_type;
