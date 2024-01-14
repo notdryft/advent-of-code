@@ -1,4 +1,3 @@
-#include <assert.h>
 #include <limits.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -8,8 +7,6 @@
 #include "array.h"
 #include "commons.h"
 #include "string.h"
-
-constexpr size_t BUFFER_LENGTH = 1024;
 
 #define HASHES 26*26*26
 #define hash(key) (key[0]-'a'+(key[1]-'a')*26+(key[2]-'a')*26*26)
@@ -92,13 +89,7 @@ void set_add(StringArray *array, char *name) {
   }
 }
 
-int part1(char *filename) {
-  FILE *fp = fopen(filename, "r");
-  if (fp == nullptr) {
-    fprintf(stderr, "Error: could not open file %s\n", filename);
-    return 1;
-  }
-
+int part1(StringArray *lines) {
   size_t hashes_size = HASHES;
   int **hashes = malloc(sizeof(int *) * hashes_size);
   for (size_t j = 0; j < hashes_size; j++) {
@@ -106,12 +97,10 @@ int part1(char *filename) {
   }
   StringArray *nodes = string_array_new();
 
-  char buffer[BUFFER_LENGTH] = {};
-  while (fgets(buffer, BUFFER_LENGTH, fp)) {
-    size_t buffer_len = strlen(buffer);
-    buffer[buffer_len - 1] = '\0';
+  for (size_t l = 0; l < lines->size; l++) {
+    char *line = lines->items[l];
 
-    StringArray *split = string_split(buffer, ": ");
+    StringArray *split = string_split(line, ": ");
     StringArray *ssplit = string_split(split->items[1], " ");
 
     char *u_str = split->items[0];
@@ -128,8 +117,6 @@ int part1(char *filename) {
     string_array_free(ssplit);
     string_array_free(split);
   }
-
-  fclose(fp);
 
   int *permutations = calloc(hashes_size, sizeof(int));
   // Algorithm seems to be sensible to nodes ordering?
@@ -156,7 +143,6 @@ int part1(char *filename) {
   }
 
   int result = stoer_wagner(graph, graph_size);
-  printf("result = %d\n", result);
 
   for (size_t j = 0; j < graph_size; j++) {
     free(graph[j]);
@@ -174,9 +160,9 @@ int part1(char *filename) {
 
 int main(void) {
   // dot -Kdot -Tsvg ../../inputs/2023/day25/sample.dot > ../../inputs/2023/day25/sample.svg
-  assert(part1("../../inputs/2023/day25/sample") == 54);
+  test_case(day25, part1, sample, 54);
   // dot -Kneato -Tsvg ../../inputs/2023/day25/data.dot > ../../inputs/2023/day25/data.svg
-  assert(part1("../../inputs/2023/day25/data") == 580800);
+  test_case(day25, part1, data, 580800);
 
   return 0;
 }

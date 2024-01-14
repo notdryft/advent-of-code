@@ -1,4 +1,3 @@
-#include <assert.h>
 #include <limits.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -8,8 +7,6 @@
 #include "array.h"
 #include "commons.h"
 #include "string.h"
-
-constexpr size_t BUFFER_LENGTH = 100000;
 
 typedef struct {
   char lens[32];
@@ -105,54 +102,34 @@ void map_free(Map *map) {
   free(map);
 }
 
-int part1(char *filename) {
-  FILE *fp = fopen(filename, "r");
-  if (fp == nullptr) {
-    fprintf(stderr, "Error: could not open file %s\n", filename);
-    return 1;
-  }
+int part1(StringArray *lines) {
+  int result = 0;
 
-  int sum = 0;
+  for (size_t l = 0; l < lines->size; l++) {
+    char *line = lines->items[l];
 
-  char buffer[BUFFER_LENGTH] = {};
-  while (fgets(buffer, BUFFER_LENGTH, fp)) {
-    size_t buffer_len = strlen(buffer);
-    buffer[buffer_len - 1] = '\0';
-
-    StringArray *split = string_split(buffer, ",");
+    StringArray *split = string_split(line, ",");
     debug("instructions = %zu\n", split->size);
     for (size_t i = 0; i < split->size; i++) {
       char *instruction = string_array_get(split, i);
       size_t len = strlen(instruction);
       int h = hash(instruction, len);
       debug("%s (%zu) = %d\n", instruction, len, h);
-      sum += h;
+      result += h;
     }
     string_array_free(split);
   }
 
-  fclose(fp);
-
-  printf("sum = %d\n", sum);
-
-  return sum;
+  return result;
 }
 
-int part2(char *filename) {
-  FILE *fp = fopen(filename, "r");
-  if (fp == nullptr) {
-    fprintf(stderr, "Error: could not open file %s\n", filename);
-    return 1;
-  }
-
+int part2(StringArray *lines) {
   Map *map = map_new();
 
-  char buffer[BUFFER_LENGTH] = {};
-  while (fgets(buffer, BUFFER_LENGTH, fp)) {
-    size_t buffer_len = strlen(buffer);
-    buffer[buffer_len - 1] = '\0';
+  for (size_t l = 0; l < lines->size; l++) {
+    char *line = lines->items[l];
 
-    StringArray *split = string_split(buffer, ",");
+    StringArray *split = string_split(line, ",");
     debug("instructions = %zu\n", split->size);
 
     for (size_t i = 0; i < split->size; i++) {
@@ -183,31 +160,27 @@ int part2(char *filename) {
     string_array_free(split);
   }
 
-  fclose(fp);
-
-  int sum = 0;
+  int result = 0;
   for (size_t i = 0; i < map->size; i++) {
     Array *array = map->arrays[i];
     for (size_t j = 0; j < array->size; j++) {
       BoxItem *item = array_get(array, j);
       int power = (i + 1) * (j + 1) * item->focal;
-      //debug("sum += %d\n", power);
-      sum += power;
+      //debug("result += %d\n", power);
+      result += power;
     }
   }
 
-  printf("sum = %d\n", sum);
-
   map_free(map);
 
-  return sum;
+  return result;
 }
 
 int main(void) {
-  assert(part1("../../inputs/2023/day15/sample") == 1320);
-  assert(part1("../../inputs/2023/day15/data") == 514639);
-  assert(part2("../../inputs/2023/day15/sample") == 145);
-  assert(part2("../../inputs/2023/day15/data") == 279470);
+  test_case(day15, part1, sample, 1320);
+  test_case(day15, part1, data, 514639);
+  test_case(day15, part2, sample, 145);
+  test_case(day15, part2, data, 279470);
 
   return 0;
 }

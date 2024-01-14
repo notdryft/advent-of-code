@@ -1,4 +1,3 @@
-#include <assert.h>
 #include <limits.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -8,8 +7,6 @@
 #include "array.h"
 #include "commons.h"
 #include "string.h"
-
-constexpr size_t BUFFER_LENGTH = 1024;
 
 bool can_go_north(char c) {
   return c == 'S' || c == '|' || c == 'L' || c == 'J';
@@ -175,31 +172,13 @@ int winding_number(Array *vecs, size_t x, size_t y) {
   return wn;
 }
 
-int part1(char *filename) {
-  FILE *fp = fopen(filename, "r");
-  if (fp == nullptr) {
-    fprintf(stderr, "Error: could not open file %s\n", filename);
-    return 1;
-  }
-
-  StringArray *schema = string_array_new();
-
-  char buffer[BUFFER_LENGTH] = {};
-  while (fgets(buffer, BUFFER_LENGTH, fp)) {
-    size_t buffer_len = strlen(buffer);
-    buffer[buffer_len - 1] = '\0';
-
-    string_array_push(schema, buffer);
-  }
-
-  fclose(fp);
-
-  size_t rows = strlen(string_array_get(schema, 0));
-  size_t cols = schema->size;
+int part1(StringArray *lines) {
+  size_t rows = strlen(string_array_get(lines, 0));
+  size_t cols = lines->size;
 
 #ifdef DEBUG
   for (size_t j = 0; j < rows; j++) {
-    char *row = string_array_get(schema, j);
+    char *row = string_array_get(lines, j);
     debug("%s\n", row);
   }
 #endif
@@ -207,7 +186,7 @@ int part1(char *filename) {
   size_t sx = 0, sy = 0;
   bool stop = false;
   for (size_t j = 0; j < rows && !stop; j++) {
-    char *row = string_array_get(schema, j);
+    char *row = string_array_get(lines, j);
     for (size_t i = 0; i < cols && !stop; i++) {
       if (row[i] == 'S') {
         sx = i;
@@ -226,47 +205,27 @@ int part1(char *filename) {
 
   steps[sy][sx] = 0;
   int highest = -1;
-  traverse_rec(schema, steps, rows, cols, sx, sy, 1, &highest);
+  traverse_rec(lines, steps, rows, cols, sx, sy, 1, &highest);
   //debug(debug_steps, steps, rows, cols);
 
   debug("loop = %d\n", highest);
   int result = (highest % 2 == 0) ? highest / 2 : (highest + 1) / 2;
-  printf("result = %d\n", result);
 
   for (size_t j = 0; j < cols; j++) {
     free(steps[j]);
   }
   free(steps);
-  string_array_free(schema);
 
   return result;
 }
 
-int part2(char *filename) {
-  FILE *fp = fopen(filename, "r");
-  if (fp == nullptr) {
-    fprintf(stderr, "Error: could not open file %s\n", filename);
-    return 1;
-  }
-
-  StringArray *schema = string_array_new();
-
-  char buffer[BUFFER_LENGTH] = {};
-  while (fgets(buffer, BUFFER_LENGTH, fp)) {
-    size_t buffer_len = strlen(buffer);
-    buffer[buffer_len - 1] = '\0';
-
-    string_array_push(schema, buffer);
-  }
-
-  fclose(fp);
-
-  size_t cols = strlen(string_array_get(schema, 0));
-  size_t rows = schema->size;
+int part2(StringArray *lines) {
+  size_t cols = strlen(string_array_get(lines, 0));
+  size_t rows = lines->size;
 
 #ifdef DEBUG
   for (size_t j = 0; j < rows; j++) {
-    char *row = string_array_get(schema, j);
+    char *row = string_array_get(lines, j);
     debug("%s\n", row);
   }
 #endif
@@ -274,7 +233,7 @@ int part2(char *filename) {
   size_t sx = 0, sy = 0;
   bool stop = false;
   for (size_t j = 0; j < rows && !stop; j++) {
-    char *row = string_array_get(schema, j);
+    char *row = string_array_get(lines, j);
     for (size_t i = 0; i < cols && !stop; i++) {
       if (row[i] == 'S') {
         sx = i;
@@ -295,15 +254,15 @@ int part2(char *filename) {
 
   steps[sy][sx] = 0;
   int highest = -1;
-  traverse_rec(schema, steps, rows, cols, sx, sy, 1, &highest);
+  traverse_rec(lines, steps, rows, cols, sx, sy, 1, &highest);
   //debug(debug_steps, steps, rows, cols);
 
-  Array *edges = traverse_steps(schema, steps, rows, cols, highest);
+  Array *edges = traverse_steps(lines, steps, rows, cols, highest);
   debug("edges = %zu\n", edges->size);
 
   int inside = 0;
   for (size_t j = 0; j < rows; j++) {
-    char *row = string_array_get(schema, j);
+    char *row = string_array_get(lines, j);
     for (size_t i = 0; i < cols; i++) {
       if (steps[j][i] == -1) { // ignoring pipes that are not part of the loop
         if (winding_number(edges, i, j) != 0) {
@@ -325,25 +284,23 @@ int part2(char *filename) {
     }
     debug("\n");
   }
-  printf("inside = %d\n", inside);
 
   array_free(edges);
   for (size_t j = 0; j < rows; j++) {
     free(steps[j]);
   }
   free(steps);
-  string_array_free(schema);
 
   return inside;
 }
 
 int main(void) {
-  assert(part1("../../inputs/2023/day10/sample1") == 8);
-  assert(part1("../../inputs/2023/day10/data") == 6768);
-  assert(part2("../../inputs/2023/day10/sample2") == 4);
-  assert(part2("../../inputs/2023/day10/sample3") == 8);
-  assert(part2("../../inputs/2023/day10/sample4") == 10);
-  assert(part2("../../inputs/2023/day10/data") == 351);
+  test_case(day10, part1, sample1, 8);
+  test_case(day10, part1, data, 6768);
+  test_case(day10, part2, sample2, 4);
+  test_case(day10, part2, sample3, 8);
+  test_case(day10, part2, sample4, 10);
+  test_case(day10, part2, data, 351);
 
   return 0;
 }

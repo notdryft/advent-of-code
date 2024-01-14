@@ -1,4 +1,3 @@
-#include <assert.h>
 #include <limits.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -9,8 +8,6 @@
 #include "commons.h"
 #include "map.h"
 #include "string.h"
-
-constexpr size_t BUFFER_LENGTH = 1024;
 
 bool arrangements_cmp(Array *a, Array *b) {
   if (a->size != b->size) {
@@ -118,27 +115,11 @@ unsigned long long find_arrangements_dp(char *springs, Array *damaged, Map *dp, 
   return arrangements;
 }
 
-int part1(char *filename) {
-  FILE *fp = fopen(filename, "r");
-  if (fp == nullptr) {
-    fprintf(stderr, "Error: could not open file %s\n", filename);
-    return 1;
-  }
+int part1(StringArray *lines) {
+  int result = 0;
 
-  StringArray *records = string_array_new();
-
-  char buffer[BUFFER_LENGTH] = {};
-  while (fgets(buffer, BUFFER_LENGTH, fp)) {
-    size_t buffer_len = strlen(buffer);
-    buffer[buffer_len - 1] = '\0';
-    string_array_push(records, buffer);
-  }
-  fclose(fp);
-
-  int arrangements = 0;
-
-  for (size_t i = 0; i < records->size; i++) {
-    char *record = string_array_get(records, i);
+  for (size_t i = 0; i < lines->size; i++) {
+    char *record = string_array_get(lines, i);
     debug("%s\n", record);
 
     StringArray* split = string_split(record, " ");
@@ -146,42 +127,23 @@ int part1(char *filename) {
     StringArray *damaged_stra = string_split(string_array_get(split, 1), ",");
     Array *damaged = string_atoi(damaged_stra);
 
-    int a = find_arrangements_rec(springs, damaged, strlen(springs), 0);
-    debug("arrangements += %d\n", a);
-    arrangements += a;
+    int arrangements = find_arrangements_rec(springs, damaged, strlen(springs), 0);
+    debug("result += %d\n", arrangements);
+    result += arrangements;
 
     array_free(damaged);
     string_array_free(damaged_stra);
     string_array_free(split);
   }
-  string_array_free(records);
 
-  printf("arrangements = %d\n", arrangements);
-
-  return arrangements;
+  return result;
 }
 
-unsigned long long part2(char *filename) {
-  FILE *fp = fopen(filename, "r");
-  if (fp == nullptr) {
-    fprintf(stderr, "Error: could not open file %s\n", filename);
-    return 1;
-  }
+unsigned long long part2(StringArray *lines) {
+  unsigned long long result = 0;
 
-  StringArray *records = string_array_new();
-
-  char buffer[BUFFER_LENGTH] = {};
-  while (fgets(buffer, BUFFER_LENGTH, fp)) {
-    size_t buffer_len = strlen(buffer);
-    buffer[buffer_len - 1] = '\0';
-    string_array_push(records, buffer);
-  }
-  fclose(fp);
-
-  unsigned long long arrangements = 0;
-
-  for (size_t i = 0; i < records->size; i++) {
-    char *record = string_array_get(records, i);
+  for (size_t i = 0; i < lines->size; i++) {
+    char *record = string_array_get(lines, i);
     debug("%s\n", record);
 
     StringArray* split = string_split(record, " ");
@@ -196,9 +158,9 @@ unsigned long long part2(char *filename) {
     debugf(int_array_print, damaged);
 
     Map* dp = map_new(DPEntry, DP_KEY_STRIDE);
-    unsigned long long a = find_arrangements_dp(springs_repeated, damaged, dp, 0, 0, 0);
-    debug("arrangements += %llu\n", a);
-    arrangements += a;
+    unsigned long long arrangements = find_arrangements_dp(springs_repeated, damaged, dp, 0, 0, 0);
+    debug("result += %llu\n", arrangements);
+    result += arrangements;
 
     array_free(damaged);
     free(springs_repeated);
@@ -207,18 +169,15 @@ unsigned long long part2(char *filename) {
     string_array_free(damaged_stra);
     string_array_free(split);
   }
-  string_array_free(records);
 
-  printf("arrangements = %llu\n", arrangements);
-
-  return arrangements;
+  return result;
 }
 
 int main(void) {
-  assert(part1("../../inputs/2023/day12/sample") == 21);
-  assert(part1("../../inputs/2023/day12/data") == 7694);
-  assert(part2("../../inputs/2023/day12/sample") == 525152);
-  assert(part2("../../inputs/2023/day12/data") == 5071883216318);
+  test_case(day12, part1, sample, 21);
+  test_case(day12, part1, data, 7694);
+  test_case(day12, part2, sample, 525152);
+  test_case(day12, part2, data, 5071883216318);
 
   return 0;
 }

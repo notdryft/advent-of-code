@@ -1,4 +1,3 @@
-#include <assert.h>
 #include <limits.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -8,8 +7,6 @@
 #include "array.h"
 #include "commons.h"
 #include "string.h"
-
-constexpr size_t BUFFER_LENGTH = 1024;
 
 enum Direction {
  R,
@@ -97,25 +94,16 @@ long long area_from_instructions(Array *instructions) {
   return perimeter + points;
 }
 
-long long part1(char *filename) {
-  FILE *fp = fopen(filename, "r");
-  if (fp == nullptr) {
-    fprintf(stderr, "Error: could not open file %s\n", filename);
-    return 1;
-  }
-
-  StringArray *lines = string_array_new();
+long long part1(StringArray *lines) {
   Array *instructions = array_new(Instruction);
 
-  char buffer[BUFFER_LENGTH] = {};
-  while (fgets(buffer, BUFFER_LENGTH, fp)) {
-    size_t buffer_len = strlen(buffer);
-    buffer[buffer_len - 1] = '\0';
+  for (size_t l = 0; l < lines->size; l++) {
+    char *line = lines->items[l];
 
     char direction_str[2];
     long long distance;
 
-    if (sscanf(buffer, "%[RDLU] %lld (#[a-z0-9]+)", direction_str, &distance)) {
+    if (sscanf(line, "%[RDLU] %lld (#[a-z0-9]+)", direction_str, &distance)) {
       enum Direction direction;
       if (direction_str[0] == 'R') direction = R;
       else if (direction_str[0] == 'D') direction = D;
@@ -125,37 +113,23 @@ long long part1(char *filename) {
       array_push(instructions, &(Instruction) { direction, distance });
     }
   }
-  fclose(fp);
-  string_array_free(lines);
-
   debugf(instruction_array_print, instructions);
 
   long long area = area_from_instructions(instructions);
-  printf("area = %lld\n", area);
-
   array_free(instructions);
 
   return area;
 }
 
-long long part2(char *filename) {
-  FILE *fp = fopen(filename, "r");
-  if (fp == nullptr) {
-    fprintf(stderr, "Error: could not open file %s\n", filename);
-    return 1;
-  }
-
-  StringArray *lines = string_array_new();
+long long part2(StringArray *lines) {
   Array *instructions = array_new(Instruction);
 
-  char buffer[BUFFER_LENGTH] = {};
-  while (fgets(buffer, BUFFER_LENGTH, fp)) {
-    size_t buffer_len = strlen(buffer);
-    buffer[buffer_len - 1] = '\0';
+  for (size_t l = 0; l < lines->size; l++) {
+    char *line = lines->items[l];
 
     char color_str[7];
 
-    if (sscanf(buffer, "%*s %*s (#%6s)", color_str)) {
+    if (sscanf(line, "%*s %*s (#%6s)", color_str)) {
       enum Direction direction = color_str[5] - '0';
 
       char distance_str[6];
@@ -166,24 +140,19 @@ long long part2(char *filename) {
       array_push(instructions, &(Instruction) { direction, distance });
     }
   }
-  fclose(fp);
-  string_array_free(lines);
-
   debugf(instruction_array_print, instructions);
 
   long long area = area_from_instructions(instructions);
-  printf("area = %lld\n", area);
-
   array_free(instructions);
 
   return area;
 }
 
 int main(void) {
-  assert(part1("../../inputs/2023/day18/sample") == 62);
-  assert(part1("../../inputs/2023/day18/data") == 70253);
-  assert(part2("../../inputs/2023/day18/sample") == 952408144115);
-  assert(part2("../../inputs/2023/day18/data") == 131265059885080);
+  test_case(day18, part1, sample, 62);
+  test_case(day18, part1, data, 70253);
+  test_case(day18, part2, sample, 952408144115);
+  test_case(day18, part2, data, 131265059885080);
 
   return 0;
 }

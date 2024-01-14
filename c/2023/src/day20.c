@@ -1,4 +1,3 @@
-#include <assert.h>
 #include <limits.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -9,8 +8,6 @@
 #include "commons.h"
 #include "math.h"
 #include "string.h"
-
-constexpr size_t BUFFER_LENGTH = 1024;
 
 #define hash(key) ((size_t)(strlen(key)>1?(26+(key[0]-'a')+(key[1]-'a')*26):(key[0]-'a')))
 
@@ -117,33 +114,25 @@ Module *find_or_init_module(Array *modules, char *name) {
   return module;
 }
 
-unsigned long long part1(char *filename) {
-  FILE *fp = fopen(filename, "r");
-  if (fp == nullptr) {
-    fprintf(stderr, "Error: could not open file %s\n", filename);
-    return 1;
-  }
-
+unsigned long long part1(StringArray *lines) {
   Array *modules = array_new(Module);
   Module *broadcast = find_or_init_module(modules, "broadcaster");
   broadcast->module_type = BROADCASTER;
 
-  char buffer[BUFFER_LENGTH] = {};
-  while (fgets(buffer, BUFFER_LENGTH, fp)) {
-    size_t buffer_len = strlen(buffer);
-    buffer[buffer_len - 1] = '\0';
+  for (size_t l = 0; l < lines->size; l++) {
+    char *line = lines->items[l];
 
-    if (strncmp(buffer, "broadcaster", 11) == 0 || buffer[0] == '%' || buffer[0] == '&') {
-      StringArray *split = string_split(buffer, " -> ");
+    if (strncmp(line, "broadcaster", 11) == 0 || line[0] == '%' || line[0] == '&') {
+      StringArray *split = string_split(line, " -> ");
       StringArray *csplit = string_split(split->items[1], ", ");
-      if (strncmp(buffer, "broadcaster", 11) == 0) {
+      if (strncmp(line, "broadcaster", 11) == 0) {
         debugf(array_module_print, modules);
         for (size_t i = 0; i < csplit->size; i++) {
           char *name = csplit->items[i];
           strncpy(broadcast->connections[broadcast->connections_size++], name, 64);
           debugf(array_module_print, modules);
         }
-      } else if (buffer[0] == '%') {
+      } else if (line[0] == '%') {
         Module *fp = find_or_init_module(modules, split->items[0] + 1);
         fp->module_type = FLIP_FLOP;
         debugf(array_module_print, modules);
@@ -151,7 +140,7 @@ unsigned long long part1(char *filename) {
           strncpy(fp->connections[fp->connections_size++], csplit->items[i], 64);
           debugf(array_module_print, modules);
         }
-      } else if (buffer[0] == '&') {
+      } else if (line[0] == '&') {
         Module *conj = find_or_init_module(modules, split->items[0] + 1);
         conj->module_type = CONJUNCTION;
         debugf(array_module_print, modules);
@@ -169,7 +158,6 @@ unsigned long long part1(char *filename) {
       exit(42);
     }
   }
-  fclose(fp);
 
   for (size_t i = 0; i < modules->size; i++) {
     Module *m = array_get(modules, i);
@@ -252,7 +240,6 @@ unsigned long long part1(char *filename) {
   debug("lows = %llu, highs = %llu\n", lows, highs);
 
   unsigned long long result = lows * highs;
-  printf("result = %llu\n", result);
 
   for (size_t i = 0; i < modules->size; i++) {
     Module *module = array_get(modules, i);
@@ -263,33 +250,25 @@ unsigned long long part1(char *filename) {
   return result;
 }
 
-long long part2(char *filename) {
-  FILE *fp = fopen(filename, "r");
-  if (fp == nullptr) {
-    fprintf(stderr, "Error: could not open file %s\n", filename);
-    return 1;
-  }
-
+long long part2(StringArray *lines) {
   Array *modules = array_new(Module);
   Module *broadcast = find_or_init_module(modules, "broadcaster");
   broadcast->module_type = BROADCASTER;
 
-  char buffer[BUFFER_LENGTH] = {};
-  while (fgets(buffer, BUFFER_LENGTH, fp)) {
-    size_t buffer_len = strlen(buffer);
-    buffer[buffer_len - 1] = '\0';
+  for (size_t l = 0; l < lines->size; l++) {
+    char *line = lines->items[l];
 
-    if (strncmp(buffer, "broadcaster", 11) == 0 || buffer[0] == '%' || buffer[0] == '&') {
-      StringArray *split = string_split(buffer, " -> ");
+    if (strncmp(line, "broadcaster", 11) == 0 || line[0] == '%' || line[0] == '&') {
+      StringArray *split = string_split(line, " -> ");
       StringArray *csplit = string_split(split->items[1], ", ");
-      if (strncmp(buffer, "broadcaster", 11) == 0) {
+      if (strncmp(line, "broadcaster", 11) == 0) {
         debugf(array_module_print, modules);
         for (size_t i = 0; i < csplit->size; i++) {
           char *name = csplit->items[i];
           strncpy(broadcast->connections[broadcast->connections_size++], name, 64);
           debugf(array_module_print, modules);
         }
-      } else if (buffer[0] == '%') {
+      } else if (line[0] == '%') {
         Module *fp = find_or_init_module(modules, split->items[0] + 1);
         fp->module_type = FLIP_FLOP;
         debugf(array_module_print, modules);
@@ -297,7 +276,7 @@ long long part2(char *filename) {
           strncpy(fp->connections[fp->connections_size++], csplit->items[i], 64);
           debugf(array_module_print, modules);
         }
-      } else if (buffer[0] == '&') {
+      } else if (line[0] == '&') {
         Module *conj = find_or_init_module(modules, split->items[0] + 1);
         conj->module_type = CONJUNCTION;
         debugf(array_module_print, modules);
@@ -315,7 +294,6 @@ long long part2(char *filename) {
       exit(42);
     }
   }
-  fclose(fp);
 
   size_t conjunctions = 4;
   for (size_t i = 0; i < modules->size; i++) {
@@ -405,7 +383,6 @@ long long part2(char *filename) {
   for (size_t i = 1; i < cycles->size; i++) {
     result = lcm(result, ll_array_get(cycles, i));
   }
-  printf("result = %llu\n", result);
 
   for (size_t i = 0; i < modules->size; i++) {
     Module *module = array_get(modules, i);
@@ -417,10 +394,10 @@ long long part2(char *filename) {
 }
 
 int main(void) {
-  //assert(part1("../../inputs/2023/day20/sample1") == 32000000);
-  //assert(part1("../../inputs/2023/day20/sample2") == 11687500);
-  //assert(part1("../../inputs/2023/day20/data") == 681194780); // random result???
-  assert(part2("../../inputs/2023/day20/data") == 238593356738827); // 68631138420
+  //test_case(day20, part1, sample1, 32000000);
+  //test_case(day20, part1, sample2, 11687500);
+  //test_case(day20, part1, data, 681194780); // random result???
+  test_case(day20, part2, data, 238593356738827);
 
   return 0;
 }

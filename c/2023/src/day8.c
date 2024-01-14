@@ -1,4 +1,3 @@
-#include <assert.h>
 #include <limits.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -8,8 +7,6 @@
 #include "commons.h"
 #include "math.h"
 #include "string.h"
-
-constexpr size_t BUFFER_LENGTH = 1024;
 
 typedef struct _Node {
  char value[4];
@@ -58,36 +55,20 @@ void free_nodes(Node **nodes, size_t nodes_size) {
   free(nodes);
 }
 
-int part1(char *filename) {
-  FILE *fp = fopen(filename, "r");
-  if (fp == nullptr) {
-    fprintf(stderr, "Error: could not open file %s\n", filename);
-    return 1;
-  }
-
-  char instructions[BUFFER_LENGTH] = {};
-
+int part1(StringArray *lines) {
   size_t nodes_capacity = 1000;
   size_t nodes_size = 0;
   Node **nodes = malloc(sizeof(Node *) * nodes_capacity);
 
-  char buffer[BUFFER_LENGTH] = {};
-  if (fgets(buffer, BUFFER_LENGTH, fp)) {
-    size_t buffer_len = strlen(buffer);
-    buffer[buffer_len - 1] = '\0';
-    strncpy(instructions, buffer, buffer_len - 1);
-  }
-
-  fgets(buffer, BUFFER_LENGTH, fp);
-  while (fgets(buffer, BUFFER_LENGTH, fp)) {
-    size_t buffer_len = strlen(buffer);
-    buffer[buffer_len - 1] = '\0';
+  char *instructions = strdup(lines->items[0]);
+  for (size_t l = 1; l < lines->size; l++) {
+    char *line = lines->items[l];
 
     char value[4];
     char left_str[4];
     char right_str[4];
 
-    if (sscanf(buffer, "%3s = (%3s, %3s)", value, left_str, right_str)) {
+    if (sscanf(line, "%3s = (%3s, %3s)", value, left_str, right_str)) {
       Node *node = find_node(nodes, value, nodes_size);
       if (node == nullptr) {
         node = malloc(sizeof(Node));
@@ -113,7 +94,6 @@ int part1(char *filename) {
       node->right = right;
     }
   }
-  fclose(fp);
 
 #ifdef DEBUG
   for (size_t i = 0; i < nodes_size; i++) {
@@ -138,10 +118,10 @@ int part1(char *filename) {
   size_t instructions_len = strlen(instructions);
   debug("instructions(%zu) = %s\n", instructions_len, instructions);
 
-  int steps = 0;
+  int result = 0;
   bool stop = false;
   while (!stop) {
-    int mod = steps % instructions_len;
+    int mod = result % instructions_len;
     debug("%s = (%s, %s) -> %c\n", node->value, node->left->value, node->right->value, instructions[mod]);
     if (instructions[mod] == 'L') {
       node = node->left;
@@ -151,46 +131,29 @@ int part1(char *filename) {
     if (strncmp(node->value, "ZZZ", 3) == 0) {
       stop = true;
     }
-    steps++;
+    result++;
   }
 
-  printf("steps = %d\n", steps);
-
+  free(instructions);
   free_nodes(nodes, nodes_size);
 
-  return steps;
+  return result;
 }
 
-long long part2(char *filename) {
-  FILE *fp = fopen(filename, "r");
-  if (fp == nullptr) {
-    fprintf(stderr, "Error: could not open file %s\n", filename);
-    return 1;
-  }
-
-  char instructions[BUFFER_LENGTH] = {};
-
+long long part2(StringArray *lines) {
   size_t nodes_capacity = 1000;
   size_t nodes_size = 0;
   Node **nodes = malloc(sizeof(Node *) * nodes_capacity);
 
-  char buffer[BUFFER_LENGTH] = {};
-  if (fgets(buffer, BUFFER_LENGTH, fp)) {
-    size_t buffer_len = strlen(buffer);
-    buffer[buffer_len - 1] = '\0';
-    strncpy(instructions, buffer, buffer_len - 1);
-  }
-
-  fgets(buffer, BUFFER_LENGTH, fp);
-  while (fgets(buffer, BUFFER_LENGTH, fp)) {
-    size_t buffer_len = strlen(buffer);
-    buffer[buffer_len - 1] = '\0';
+  char *instructions = strdup(lines->items[0]);
+  for (size_t l = 0; l < lines->size; l++) {
+    char *line = lines->items[l];
 
     char value[4];
     char left_str[4];
     char right_str[4];
 
-    if (sscanf(buffer, "%3s = (%3s, %3s)", value, left_str, right_str)) {
+    if (sscanf(line, "%3s = (%3s, %3s)", value, left_str, right_str)) {
       Node *node = find_node(nodes, value, nodes_size);
       if (node == nullptr) {
         node = malloc(sizeof(Node));
@@ -216,7 +179,6 @@ long long part2(char *filename) {
       node->right = right;
     }
   }
-  fclose(fp);
 
 #ifdef DEBUG
   for (size_t i = 0; i < nodes_size; i++) {
@@ -272,8 +234,7 @@ long long part2(char *filename) {
     debug("%llu\n", result);
   }
 
-  printf("result = %llu\n", result);
-
+  free(instructions);
   free(ghost_steps);
   free_nodes(nodes, nodes_size);
 
@@ -281,11 +242,11 @@ long long part2(char *filename) {
 }
 
 int main(void) {
-  assert(part1("../../inputs/2023/day8/sample1") == 2);
-  assert(part1("../../inputs/2023/day8/sample2") == 6);
-  assert(part1("../../inputs/2023/day8/data") == 22411);
-  assert(part2("../../inputs/2023/day8/sample3") == 6);
-  assert(part2("../../inputs/2023/day8/data") == 11188774513823);
+  test_case(day8, part1, sample1, 2);
+  test_case(day8, part1, sample2, 6);
+  test_case(day8, part1, data, 22411);
+  test_case(day8, part2, sample3, 6);
+  test_case(day8, part2, data, 11188774513823);
 
   return 0;
 }

@@ -1,4 +1,3 @@
-#include <assert.h>
 #include <limits.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -7,8 +6,6 @@
 
 #include "commons.h"
 #include "string.h"
-
-constexpr size_t BUFFER_LENGTH = 1024;
 
 enum HandType {
   HIGH_CARD, // 0
@@ -66,27 +63,19 @@ int int_reverse_cmp(const void *a, const void *b) {
   return *(int *) b - *(int *) a;
 }
 
-int part1(char *filename) {
-  FILE *fp = fopen(filename, "r");
-  if (fp == nullptr) {
-    fprintf(stderr, "Error: could not open file %s\n", filename);
-    return 1;
-  }
-
-  int sum = 0;
+int part1(StringArray *lines) {
+  int result = 0;
 
   size_t hands_size = 0;
   Hand hands[1000];
 
-  char buffer[BUFFER_LENGTH] = {};
-  while (fgets(buffer, BUFFER_LENGTH, fp)) {
-    size_t buffer_len = strlen(buffer);
-    buffer[buffer_len - 1] = '\0';
+  for (size_t l = 0; l < lines->size; l++) {
+    char *line = lines->items[l];
 
     char hand_str[6];
     int bid = 0;
 
-    if (sscanf(buffer, "%s %d", hand_str, &bid)) {
+    if (sscanf(line, "%s %d", hand_str, &bid)) {
       debug("hand = %s, bid = %d\n", hand_str, bid);
 
       char sorted_hand_str[6];
@@ -135,7 +124,7 @@ int part1(char *filename) {
       hands[hands_size++] = hand;
     }
 
-    debug("%s\n", buffer);
+    debug("%s\n", line);
   }
 
 #ifdef DEBUG
@@ -153,37 +142,25 @@ int part1(char *filename) {
     Hand hand = hands[i];
     debug("hand = %s, bid = %d\n", hand.hand, hand.bid);
 
-    sum += hand.bid * (i + 1);
+    result += hand.bid * (i + 1);
   }
 
-  fclose(fp);
-
-  printf("sum = %d\n", sum);
-
-  return sum;
+  return result;
 }
 
-int part2(char *filename) {
-  FILE *fp = fopen(filename, "r");
-  if (fp == nullptr) {
-    fprintf(stderr, "Error: could not open file %s\n", filename);
-    return 1;
-  }
-
-  int sum = 0;
+int part2(StringArray *lines) {
+  int result = 0;
 
   size_t hands_size = 0;
   Hand hands[1000];
 
-  char buffer[BUFFER_LENGTH] = {};
-  while (fgets(buffer, BUFFER_LENGTH, fp)) {
-    size_t buffer_len = strlen(buffer);
-    buffer[buffer_len - 1] = '\0';
+  for (size_t l = 0; l < lines->size; l++) {
+    char *line = lines->items[l];
 
     char hand_str[6];
     int bid = 0;
 
-    if (sscanf(buffer, "%s %d", hand_str, &bid)) {
+    if (sscanf(line, "%s %d", hand_str, &bid)) {
       debug("hand = %s, bid = %d\n", hand_str, bid);
 
       char sorted_hand_str[6];
@@ -269,7 +246,7 @@ int part2(char *filename) {
       hands[hands_size++] = hand;
     }
 
-    debug("%s\n", buffer);
+    debug("%s\n", line);
   }
 
 #ifdef DEBUG
@@ -289,26 +266,22 @@ int part2(char *filename) {
       debug("hand = %s, type = %d, bid = %d\n", hand.hand, hand.hand_type, hand.bid);
     }
 
-    sum += hand.bid * (i + 1);
+    result += hand.bid * (i + 1);
   }
 
-  fclose(fp);
-
-  printf("sum = %d\n", sum);
-
-  return sum;
+  return result;
 }
 
 int main(void) {
   init_cards_ordering(false);
 
-  assert(part1("../../inputs/2023/day7/sample") == 6440);
-  assert(part1("../../inputs/2023/day7/data") == 246424613);
+  test_case(day7, part1, sample, 6440);
+  test_case(day7, part1, data, 246424613);
 
   init_cards_ordering(true);
 
-  assert(part2("../../inputs/2023/day7/sample") == 5905);
-  assert(part2("../../inputs/2023/day7/data") == 248256639);
+  test_case(day7, part2, sample, 5905);
+  test_case(day7, part2, data, 248256639);
 
   return 0;
 }

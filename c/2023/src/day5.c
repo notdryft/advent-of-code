@@ -1,4 +1,3 @@
-#include <assert.h>
 #include <limits.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -9,8 +8,6 @@
 #include "commons.h"
 #include "math.h"
 #include "string.h"
-
-constexpr size_t BUFFER_LENGTH = 1024;
 
 enum AlmanachEntryType {
   SEED_TO_SOIL,
@@ -69,31 +66,24 @@ int entry_cmp(const void *a, const void *b) {
   return ea->source_type < eb->source_type ? -1 : 1;
 }
 
-ll part1(char *filename) {
-  FILE *fp = fopen(filename, "r");
-  if (fp == nullptr) {
-    fprintf(stderr, "Error: could not open file %s\n", filename);
-    return 1;
-  }
-
+ll part1(StringArray *lines) {
   Array *seeds = array_new(ll);
   Array *entries = array_new(AlmanachEntry);
 
-  char source_type_str[BUFFER_LENGTH];
+  char source_type_str[100] = {};
   enum AlmanachEntryType source_type = 0;
 
-  char buffer[BUFFER_LENGTH] = {};
-  while (fgets(buffer, BUFFER_LENGTH, fp)) {
-    size_t buffer_len = strlen(buffer);
-    buffer[buffer_len - 1] = '\0';
+  for (size_t l = 0; l < lines->size; l++) {
+    char *line = lines->items[l];
+    size_t line_len = strlen(line);
 
-    if (buffer[0] == '\0') {
+    if (line_len == 0) {
       debug("reset state\n\n");
       continue;
     }
 
-    if (strncmp(buffer, "seeds: ", 6) == 0) {
-      char *seeds_str = substring(buffer, 7, buffer_len - 7 - 1);
+    if (strncmp(line, "seeds: ", 6) == 0) {
+      char *seeds_str = substring(line, 7, line_len - 7);
       StringArray *split = string_split(seeds_str, " ");
       for (size_t i = 0; i < split->size; i++) {
         array_push_rval(seeds, strtoll(split->items[i], nullptr, 10));
@@ -102,8 +92,8 @@ ll part1(char *filename) {
       free(seeds_str);
       string_array_free(split);
     } else if (
-      'a' <= buffer[0] && buffer[0] <= 'z' &&
-      sscanf(buffer, "%[^-]-to-%*s map:", source_type_str)
+      'a' <= line[0] && line[0] <= 'z' &&
+      sscanf(line, "%[^-]-to-%*s map:", source_type_str)
     ) {
       if (strcmp(source_type_str, "seed") == 0) {
         source_type = SEED_TO_SOIL;
@@ -121,9 +111,9 @@ ll part1(char *filename) {
         source_type = HUMIDITY_TO_LOCATION;
       }
       debug("new source type: \033[97;4m%s\033[0m\n", source_type_str);
-    } else if ('0' <= buffer[0] && buffer[0] <= '9') {
+    } else if ('0' <= line[0] && line[0] <= '9') {
       char *p;
-      ll destination = strtoll(buffer, &p, 10);
+      ll destination = strtoll(line, &p, 10);
       ll source = strtoll(p + 1, &p, 10);
       ll range = strtoll(p + 1, nullptr, 10);
       debug("entry for source type \033[97;1m%s\033[0m: %lld %lld %lld\n", source_type_str, destination, source, range);
@@ -139,7 +129,6 @@ ll part1(char *filename) {
       array_push(entries, &entry);
     }
   }
-  fclose(fp);
 
   ll min = LLONG_MAX;
   for (size_t i = 0; i < seeds->size; i++) {
@@ -161,39 +150,30 @@ ll part1(char *filename) {
     }
   }
 
-  printf("min = %lld\n", min);
-
   array_free(entries);
   array_free(seeds);
 
   return min;
 }
 
-ll part2(char *filename) {
-  FILE *fp = fopen(filename, "r");
-  if (fp == nullptr) {
-    fprintf(stderr, "Error: could not open file %s\n", filename);
-    return 1;
-  }
-
+ll part2(StringArray *lines) {
   Array *pairs = array_new(ll);
   Array *entries = array_new(AlmanachEntry);
 
-  char source_type_str[BUFFER_LENGTH];
+  char source_type_str[100] = {};
   enum AlmanachEntryType source_type = 0;
 
-  char buffer[BUFFER_LENGTH] = {};
-  while (fgets(buffer, BUFFER_LENGTH, fp)) {
-    size_t buffer_len = strlen(buffer);
-    buffer[buffer_len - 1] = '\0';
+  for (size_t l = 0; l < lines->size; l++) {
+    char *line = lines->items[l];
+    size_t line_len = strlen(line);
 
-    if (buffer[0] == '\0') {
+    if (line_len == 0) {
       debug("reset state\n\n");
       continue;
     }
 
-    if (strncmp(buffer, "seeds: ", 6) == 0) {
-      char *pairs_str = substring(buffer, 7, buffer_len - 7 - 1);
+    if (strncmp(line, "seeds: ", 6) == 0) {
+      char *pairs_str = substring(line, 7, line_len - 7);
       StringArray *split = string_split(pairs_str, " ");
       for (size_t i = 0; i < split->size; i++) {
         array_push_rval(pairs, strtoll(split->items[i], nullptr, 0));
@@ -202,8 +182,8 @@ ll part2(char *filename) {
       free(pairs_str);
       string_array_free(split);
     } else if (
-      'a' <= buffer[0] && buffer[0] <= 'z' &&
-      sscanf(buffer, "%[^-]-to-%*s map:", source_type_str)
+      'a' <= line[0] && line[0] <= 'z' &&
+      sscanf(line, "%[^-]-to-%*s map:", source_type_str)
     ) {
       if (strcmp(source_type_str, "seed") == 0) {
         source_type = SEED_TO_SOIL;
@@ -221,9 +201,9 @@ ll part2(char *filename) {
         source_type = HUMIDITY_TO_LOCATION;
       }
       debug("new source type: \033[97;4m%s\033[0m\n", source_type_str);
-    } else if ('0' <= buffer[0] && buffer[0] <= '9') {
+    } else if ('0' <= line[0] && line[0] <= '9') {
       char *p;
-      ll destination = strtoll(buffer, &p, 10);
+      ll destination = strtoll(line, &p, 10);
       ll source = strtoll(p + 1, &p, 10);
       ll range = strtoll(p + 1, nullptr, 10);
       debug("entry for source type \033[97;1m%s\033[0m: %lld %lld %lld\n", source_type_str, destination, source, range);
@@ -239,7 +219,6 @@ ll part2(char *filename) {
       array_push(entries, &entry);
     }
   }
-  fclose(fp);
 
   Array *ranges = array_new(Range);
   for (size_t i = 0; i < pairs->size; i += 2) {
@@ -275,7 +254,6 @@ ll part2(char *filename) {
       min = r->start;
     }
   }
-  printf("min = %lld\n", min);
 
   array_free(entries);
   array_free(pairs);
@@ -285,10 +263,10 @@ ll part2(char *filename) {
 }
 
 int main(void) {
-  assert(part1("../../inputs/2023/day5/sample") == 35);
-  assert(part1("../../inputs/2023/day5/data") == 403695602);
-  assert(part2("../../inputs/2023/day5/sample") == 46);
-  assert(part2("../../inputs/2023/day5/data") == 219529182);
+  test_case(day5, part1, sample, 35);
+  test_case(day5, part1, data, 403695602);
+  test_case(day5, part2, sample, 46);
+  test_case(day5, part2, data, 219529182);
 
   return 0;
 }

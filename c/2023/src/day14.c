@@ -1,4 +1,3 @@
-#include <assert.h>
 #include <limits.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -9,8 +8,6 @@
 #include "commons.h"
 #include "array.h"
 #include "string.h"
-
-constexpr size_t BUFFER_LENGTH = 1024;
 
 size_t highest(StringArray *rocks, size_t x, size_t y) {
   while (y > 0 && rocks->items[y - 1][x] == '.') {
@@ -104,58 +101,19 @@ int load(StringArray *rocks) {
   return sum;
 }
 
-int part1(char *filename) {
-  FILE *fp = fopen(filename, "r");
-  if (fp == nullptr) {
-    fprintf(stderr, "Error: could not open file %s\n", filename);
-    return 1;
-  }
-
-  StringArray *rocks = string_array_new();
-
-  char buffer[BUFFER_LENGTH] = {};
-  while (fgets(buffer, BUFFER_LENGTH, fp)) {
-    size_t buffer_len = strlen(buffer);
-    buffer[buffer_len - 1] = '\0';
-    string_array_push(rocks, buffer);
-  }
-
-  fclose(fp);
-
-  debugf(string_array_print_raw, rocks);
+int part1(StringArray *lines) {
+  debugf(string_array_print_raw, lines);
   debug("\n");
 
-  tilt(rocks, strlen(rocks->items[0]), NORTH);
-  debugf(string_array_print_raw, rocks);
+  tilt(lines, strlen(lines->items[0]), NORTH);
+  debugf(string_array_print_raw, lines);
   debug("\n");
 
-  int sum = load(rocks);
-  printf("sum = %d\n", sum);
-
-  string_array_free(rocks);
-
-  return sum;
+  return load(lines);
 }
 
-int part2(char *filename) {
-  FILE *fp = fopen(filename, "r");
-  if (fp == nullptr) {
-    fprintf(stderr, "Error: could not open file %s\n", filename);
-    return 1;
-  }
-
-  StringArray *rocks = string_array_new();
-
-  char buffer[BUFFER_LENGTH] = {};
-  while (fgets(buffer, BUFFER_LENGTH, fp)) {
-    size_t buffer_len = strlen(buffer);
-    buffer[buffer_len - 1] = '\0';
-    string_array_push(rocks, buffer);
-  }
-
-  fclose(fp);
-
-  debugf(string_array_print_raw, rocks);
+int part2(StringArray *lines) {
+  debugf(string_array_print_raw, lines);
   debug("\n");
 
   Array *loads = array_new(int);
@@ -163,45 +121,42 @@ int part2(char *filename) {
   int cycles = 1000000000;
   debug("%d\n", cycles);
   Cycle *c = nullptr;
-  size_t len = strlen(rocks->items[0]);
+  size_t len = strlen(lines->items[0]);
   for (int i = 0; i < cycles; i++) {
     for (int d = 0; d < DIRECTIONS; d++) {
-      tilt(rocks, len, d);
+      tilt(lines, len, d);
     }
-    //debugf(string_array_print_raw, rocks);
+    //debugf(string_array_print_raw, lines);
     //debug("\n");
-    int l = load(rocks);
+    int l = load(lines);
     array_push_rval(loads, l);
     c = find_longest_cycle(loads, 2);
     if (c != nullptr) {
       break;
     }
   }
-  //debugf(string_array_print_raw, rocks);
+  //debugf(string_array_print_raw, lines);
   //debug("\n");
   debugf(int_array_print, loads);
 
-  int sum = -1;
+  int result = -1;
   if (c != nullptr) {
     int n = c->start + (cycles - 1 - c->start) % c->period;
     debug("start = %zu, period = %zu, result = %d\n", c->start, c->period, n);
-    sum = int_array_get(loads, n);
+    result = int_array_get(loads, n);
   }
-
-  printf("sum = %d\n", sum);
 
   array_free(loads);
   free(c);
-  string_array_free(rocks);
 
-  return sum;
+  return result;
 }
 
 int main(void) {
-  assert(part1("../../inputs/2023/day14/sample") == 136);
-  assert(part1("../../inputs/2023/day14/data") == 110274);
-  assert(part2("../../inputs/2023/day14/sample") == 64);
-  assert(part2("../../inputs/2023/day14/data") == 90982);
+  test_case(day14, part1, sample, 136);
+  test_case(day14, part1, data, 110274);
+  test_case(day14, part2, sample, 64);
+  test_case(day14, part2, data, 90982);
 
   return 0;
 }

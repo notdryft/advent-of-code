@@ -1,4 +1,3 @@
-#include <assert.h>
 #include <limits.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -9,40 +8,31 @@
 #include "commons.h"
 #include "string.h"
 
-constexpr size_t BUFFER_LENGTH = 1024;
-
-int part1(char *filename) {
-  FILE *fp = fopen(filename, "r");
-  if (fp == nullptr) {
-    fprintf(stderr, "Error: could not open file %s\n", filename);
-    return 1;
-  }
-
+int part1(StringArray *lines) {
   int result = 1;
 
   Array *times = array_new(int);
   Array *distances = array_new(int);
 
-  char buffer[BUFFER_LENGTH] = {};
-  while (fgets(buffer, BUFFER_LENGTH, fp)) {
-    size_t buffer_len = strlen(buffer);
-    buffer[buffer_len - 1] = '\0';
+  for (size_t l = 0; l < lines->size; l++) {
+    char *line = lines->items[l];
+    size_t line_len = strlen(line);
 
     size_t j = 0;
-    for (size_t i = 0; buffer[i] != '\0'; i++) {
-      buffer[j] = buffer[i];
-      if (buffer[i] != ' ' || (buffer[i] == ' ' && buffer[i + 1] != ' ')) {
+    for (size_t i = 0; i < line_len; i++) {
+      line[j] = line[i];
+      if (line[i] != ' ' || (line[i] == ' ' && line[i + 1] != ' ')) {
         j++;
       }
     }
-    buffer[j] = '\0';
-    buffer_len = strlen(buffer);
-    debug("buffer = [%c]|%s| (%zu)\n", buffer[0], buffer, j);
+    line[j] = '\0';
+    line_len = strlen(line);
+    debug("line = [%c]|%s| (%zu)\n", line[0], line, j);
 
-    if (buffer[0] == 'T') {
-      char *colon_offset_p = strchr(buffer, ':');
-      size_t colon_offset = colon_offset_p - buffer + 2;
-      char *times_str = substring(buffer, colon_offset, buffer_len - colon_offset);
+    if (line[0] == 'T') {
+      char *colon_offset_p = strchr(line, ':');
+      size_t colon_offset = colon_offset_p - line + 2;
+      char *times_str = substring(line, colon_offset, line_len - colon_offset);
       debug("Time: %s\n", times_str);
 
       StringArray* times_split = string_split(times_str, " ");
@@ -53,10 +43,10 @@ int part1(char *filename) {
 
       free(times_str);
       string_array_free(times_split);
-    } else if (buffer[0] == 'D') {
-      char *colon_offset_p = strchr(buffer, ':');
-      size_t colon_offset = colon_offset_p - buffer + 2;
-      char *distances_str = substring(buffer, colon_offset, buffer_len - colon_offset);
+    } else if (line[0] == 'D') {
+      char *colon_offset_p = strchr(line, ':');
+      size_t colon_offset = colon_offset_p - line + 2;
+      char *distances_str = substring(line, colon_offset, line_len - colon_offset);
       debug("Distance: %s\n", distances_str);
 
       StringArray* distances_split = string_split(distances_str, " ");
@@ -100,48 +90,37 @@ int part1(char *filename) {
     result *= winning_count;
   }
 
-  fclose(fp);
-
   array_free(times);
   array_free(distances);
-
-  printf("result = %d\n", result);
 
   return result;
 }
 
-int part2(char *filename) {
-  FILE *fp = fopen(filename, "r");
-  if (fp == nullptr) {
-    fprintf(stderr, "Error: could not open file %s\n", filename);
-    return 1;
-  }
-
+long long part2(StringArray *lines) {
   long long result = 1;
 
   Array *times = array_new(long long);
   Array *distances = array_new(long long);
 
-  char buffer[BUFFER_LENGTH] = {};
-  while (fgets(buffer, BUFFER_LENGTH, fp)) {
-    size_t buffer_len = strlen(buffer);
-    buffer[buffer_len - 1] = '\0';
+  for (size_t l = 0; l < lines->size; l++) {
+    char *line = lines->items[l];
+    size_t line_len = strlen(line);
 
     size_t j = 0;
-    for (size_t i = 0; buffer[i] != '\0'; i++) {
-      buffer[j] = buffer[i];
-      if (buffer[i] != ' ') {
+    for (size_t i = 0; i < line_len; i++) {
+      line[j] = line[i];
+      if (line[i] != ' ') {
         j++;
       }
     }
-    buffer[j] = '\0';
-    buffer_len = strlen(buffer);
-    debug("buffer = [%c]|%s| (%zu)\n", buffer[0], buffer, j);
+    line[j] = '\0';
+    line_len = strlen(line);
+    debug("line = [%c]|%s| (%zu)\n", line[0], line, j);
 
-    if (buffer[0] == 'T') {
-      char *colon_offset_p = strchr(buffer, ':');
-      size_t colon_offset = colon_offset_p - buffer + 1;
-      char *times_str = substring(buffer, colon_offset, buffer_len - colon_offset);
+    if (line[0] == 'T') {
+      char *colon_offset_p = strchr(line, ':');
+      size_t colon_offset = colon_offset_p - line + 1;
+      char *times_str = substring(line, colon_offset, line_len - colon_offset);
       debug("Time: %s\n", times_str);
 
       StringArray* times_split = string_split(times_str, " ");
@@ -152,10 +131,10 @@ int part2(char *filename) {
 
       free(times_str);
       string_array_free(times_split);
-    } else if (buffer[0] == 'D') {
-      char *colon_offset_p = strchr(buffer, ':');
-      size_t colon_offset = colon_offset_p - buffer + 1;
-      char *distances_str = substring(buffer, colon_offset, buffer_len - colon_offset);
+    } else if (line[0] == 'D') {
+      char *colon_offset_p = strchr(line, ':');
+      size_t colon_offset = colon_offset_p - line + 1;
+      char *distances_str = substring(line, colon_offset, line_len - colon_offset);
       debug("Distance: %s\n", distances_str);
 
       StringArray* distances_split = string_split(distances_str, " ");
@@ -199,21 +178,17 @@ int part2(char *filename) {
     result *= winning_count;
   }
 
-  fclose(fp);
-
   array_free(times);
   array_free(distances);
-
-  printf("result = %llu\n", result);
 
   return result;
 }
 
 int main(void) {
-  assert(part1("../../inputs/2023/day6/sample") == 288);
-  assert(part1("../../inputs/2023/day6/data") == 449550);
-  assert(part2("../../inputs/2023/day6/sample") == 71503);
-  assert(part2("../../inputs/2023/day6/data") == 28360140);
+  test_case(day6, part1, sample, 288);
+  test_case(day6, part1, data, 449550);
+  test_case(day6, part2, sample, 71503);
+  test_case(day6, part2, data, 28360140);
 
   return 0;
 }

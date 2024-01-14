@@ -1,4 +1,3 @@
-#include <assert.h>
 #include <regex.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -7,21 +6,14 @@
 
 #include "commons.h"
 
-constexpr size_t BUFFER_LENGTH = 1024;
 constexpr size_t GROUPS = 3; // ignoring the last group
 
-int part1(char *filename) {
-  FILE *fp = fopen(filename, "r");
-  if (fp == nullptr) {
-    fprintf(stderr, "Error: could not open file %s\n", filename);
-    return 1;
-  }
-
+int part1(StringArray *lines) {
   int reds = 12;
   int greens = 13;
   int blues = 14;
 
-  int sum = 0;
+  int result = 0;
   int current_game = 0;
 
   regex_t regex;
@@ -32,10 +24,11 @@ int part1(char *filename) {
     return 1;
   }
 
-  char buffer[BUFFER_LENGTH] = {};
-  while (fgets(buffer, BUFFER_LENGTH, fp)) {
+  for (size_t l = 0; l < lines->size; l++) {
+    char *line = lines->items[l];
+
     char *p_token_save;
-    char *token = strtok_r(buffer, ":", &p_token_save);
+    char *token = strtok_r(line, ":", &p_token_save);
     while (token != nullptr) {
       if (token[0] == 'G') { // game
         current_game += 1;
@@ -81,29 +74,19 @@ int part1(char *filename) {
           token2 = strtok_r(nullptr, ";", &p_token2_save);
         }
         if (valid) {
-          sum += current_game;
+          result += current_game;
         }
       }
       token = strtok_r(nullptr, ":", &p_token_save);
     }
   }
-
-  fclose(fp);
   regfree(&regex);
 
-  printf("sum = %d\n", sum);
-
-  return sum;
+  return result;
 }
 
-int part2(char *filename) {
-  FILE *fp = fopen(filename, "r");
-  if (fp == nullptr) {
-    fprintf(stderr, "Error: could not open file %s", filename);
-    return 1;
-  }
-
-  int sum = 0;
+int part2(StringArray *lines) {
+  int result = 0;
 
   regex_t regex;
   regmatch_t match[GROUPS];
@@ -113,10 +96,11 @@ int part2(char *filename) {
     return 1;
   }
 
-  char buffer[BUFFER_LENGTH] = {};
-  while (fgets(buffer, BUFFER_LENGTH, fp)) {
+  for (size_t l = 0; l < lines->size; l++) {
+    char *line = lines->items[l];
+
     char *p_token_save;
-    char *token = strtok_r(buffer, ":", &p_token_save);
+    char *token = strtok_r(line, ":", &p_token_save);
     while (token != nullptr) {
       if (token[0] != 'G') { // game
         int reds = -1;
@@ -164,25 +148,21 @@ int part2(char *filename) {
         }
         int power = reds * greens * blues;
         debug("(%d, %d, %d) = %d\n", reds, greens, blues, power);
-        sum += power;
+        result += power;
       }
       token = strtok_r(nullptr, ":", &p_token_save);
     }
   }
-
-  fclose(fp);
   regfree(&regex);
 
-  printf("sum = %d\n", sum);
-
-  return sum;
+  return result;
 }
 
 int main(void) {
-  assert(part1("../../inputs/2023/day2/sample") == 8);
-  assert(part1("../../inputs/2023/day2/data") == 2913);
-  assert(part2("../../inputs/2023/day2/sample") == 2286);
-  assert(part2("../../inputs/2023/day2/data") == 55593);
+  test_case(day2, part1, sample, 8);
+  test_case(day2, part1, data, 2913);
+  test_case(day2, part2, sample, 2286);
+  test_case(day2, part2, data, 55593);
 
   return 0;
 }

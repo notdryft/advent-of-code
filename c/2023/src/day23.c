@@ -1,4 +1,3 @@
-#include <assert.h>
 #include <limits.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -9,12 +8,10 @@
 #include "commons.h"
 #include "string.h"
 
-constexpr size_t BUFFER_LENGTH = 1024;
-
 bool **seen_new(size_t mx, size_t my) {
   bool **seen = malloc(sizeof(bool *) * my);
   for (size_t y = 0; y < my; y++) {
-    seen[y] = malloc(sizeof(bool) * mx);
+    seen[y] = calloc(mx, sizeof(bool));
     for (size_t x = 0; x < mx ; x++) {
       seen[y][x] = false;
     }
@@ -67,6 +64,8 @@ void dfs(char **trail, bool **seen, size_t mx, size_t my, size_t x, size_t y, in
   array_free(vecs);
 }
 
+// GCC reports seen as uninitiliazed when not printing trail?
+#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
 void dfs2(char **trail, bool **seen, size_t mx, size_t my, size_t x, size_t y, int increment, int *max) {
   if (x == mx - 2 && y == mx - 1) {
     if (increment > *max) {
@@ -98,79 +97,41 @@ void dfs2(char **trail, bool **seen, size_t mx, size_t my, size_t x, size_t y, i
   }
 }
 
-int part1(char *filename) {
-  FILE *fp = fopen(filename, "r");
-  if (fp == nullptr) {
-    fprintf(stderr, "Error: could not open file %s\n", filename);
-    return 1;
-  }
+int part1(StringArray *lines) {
+  debugf(string_array_print_raw, lines);
 
-  StringArray *trail = string_array_new();
-
-  char buffer[BUFFER_LENGTH] = {};
-  while (fgets(buffer, BUFFER_LENGTH, fp)) {
-    size_t buffer_len = strlen(buffer);
-    buffer[buffer_len - 1] = '\0';
-
-    string_array_push(trail, buffer);
-  }
-  fclose(fp);
-
-  debugf(string_array_print_raw, trail);
-
-  size_t mx = strlen(trail->items[0]), my = trail->size;
+  size_t mx = strlen(lines->items[0]), my = lines->size;
   size_t sx = 1, sy = 0;
 
-  int max = -1;
+  int result = -1;
   bool **seen = seen_new(mx, my);
-  dfs(trail->items, seen, mx, my, sx, sy, 0, &max);
-  printf("max = %d\n", max);
+  dfs(lines->items, seen, mx, my, sx, sy, 0, &result);
 
   seen_free(seen, my);
-  string_array_free(trail);
 
-  return max;
+  return result;
 }
 
-int part2(char *filename) {
-  FILE *fp = fopen(filename, "r");
-  if (fp == nullptr) {
-    fprintf(stderr, "Error: could not open file %s\n", filename);
-    return 1;
-  }
+int part2(StringArray *lines) {
+  debugf(string_array_print_raw, lines);
 
-  StringArray *trail = string_array_new();
-
-  char buffer[BUFFER_LENGTH] = {};
-  while (fgets(buffer, BUFFER_LENGTH, fp)) {
-    size_t buffer_len = strlen(buffer);
-    buffer[buffer_len - 1] = '\0';
-
-    string_array_push(trail, buffer);
-  }
-  fclose(fp);
-
-  debugf(string_array_print_raw, trail);
-
-  size_t mx = strlen(trail->items[0]), my = trail->size;
+  size_t mx = strlen(lines->items[0]), my = lines->size;
   size_t sx = 1, sy = 0;
 
-  int max = -1;
+  int result = -1;
   bool **seen = seen_new(mx, my);
-  dfs2(trail->items, seen, mx, my, sx, sy, 0, &max);
-  printf("max = %d\n", max);
+  dfs2(lines->items, seen, mx, my, sx, sy, 0, &result);
 
   seen_free(seen, my);
-  string_array_free(trail);
 
-  return max;
+  return result;
 }
 
 int main(void) {
-  assert(part1("../../inputs/2023/day23/sample") == 94);
-  assert(part1("../../inputs/2023/day23/data") == 2154);
-  assert(part2("../../inputs/2023/day23/sample") == 154);
-  assert(part2("../../inputs/2023/day23/data") == 6654);
+  test_case(day23, part1, sample, 94);
+  test_case(day23, part1, data, 2154);
+  test_case(day23, part2, sample, 154);
+  test_case(day23, part2, data, 6654);
 
   return 0;
 }

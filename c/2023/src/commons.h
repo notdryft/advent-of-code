@@ -1,8 +1,11 @@
 #ifndef COMMONS
 #define COMMONS
 
+#include <assert.h>
 #include <inttypes.h>
 #include <stdint.h>
+
+#include "string.h"
 
 typedef long long ll;
 typedef long double ld;
@@ -28,5 +31,17 @@ __extension__ typedef __float128 f128;
 #define debug(...)
 #define debugf(f, ...)
 #endif
+
+constexpr size_t READ_LINES_BUFFER_LENGTH = 1024*1024;
+
+StringArray *read_lines(char filename[static 1]);
+
+#define test_case(day, part, input, expected, ...) __extension__ ({ \
+  StringArray *data = read_lines("../../inputs/2023/" #day "/" #input); \
+  i64 result = (i64) part(data __VA_OPT__(,) __VA_ARGS__); \
+  string_array_free(data); \
+  printf(#day "/" #part ":" #input " = %" PRId64 "\n", (i64) result); \
+  assert(result == expected); \
+})
 
 #endif

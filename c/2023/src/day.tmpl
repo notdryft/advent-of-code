@@ -1,6 +1,3 @@
-#include <assert.h>
-#include <inttypes.h>
-#include <limits.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -12,34 +9,25 @@
 #include "map.h"
 #include "string.h"
 
-constexpr size_t BUFFER_LENGTH = 1024;
+i64 part1(StringArray *lines) {
+  //debugf(string_array_print_raw, lines);
+  //debug("\n");
+  i64 result = 0;
 
-i64 part1(char *filename) {
-  FILE *fp = fopen(filename, "r");
-  if (fp == nullptr) {
-    fprintf(stderr, "Error: could not open file %s\n", filename);
-    return 1;
+  for (size_t l = 0; l < lines->size; l++) {
+    char *line = lines->items[l];
+    //size_t line_len = strlen(line);
+    //debug("%s: %zu\n", line, line_len);
   }
 
-  i64 sum = 0;
-
-  char buffer[BUFFER_LENGTH] = {};
-  while (fgets(buffer, BUFFER_LENGTH, fp)) {
-    size_t buffer_len = strlen(buffer) - 1;
-    buffer[buffer_len] = '\0';
-  }
-  fclose(fp);
-
-  printf("sum = %" PRId64 "\n", sum);
-
-  return sum;
+  return result;
 }
 
 int main(void) {
-  assert(part1("../../inputs/2023/day$day/sample") == 0);
-  //assert(part1("../../inputs/2023/day$day/data") == 0);
-  //assert(part2("../../inputs/2023/day$day/sample") == 0);
-  //assert(part2("../../inputs/2023/day$day/data") == 0);
+  test_case(day$day, part1, sample, 0);
+  //test_case(day$day, part1, data, 0);
+  //test_case(day$day, part2, sample, 0);
+  //test_case(day$day, part2, data, 0);
 
   return 0;
 }

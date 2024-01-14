@@ -1,4 +1,3 @@
-#include <assert.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -7,8 +6,6 @@
 #include "array.h"
 #include "commons.h"
 #include "string.h"
-
-constexpr size_t BUFFER_LENGTH = 1024;
 
 Array *get_numbers(char *str) {
   Array *numbers = array_new(int);
@@ -25,32 +22,25 @@ Array *get_numbers(char *str) {
   return numbers;
 }
 
-int part1(char *filename) {
-  FILE *fp = fopen(filename, "r");
-  if (fp == nullptr) {
-    fprintf(stderr, "Error: could not open file %s\n", filename);
-    return 1;
-  }
-
+int part1(StringArray *lines) {
   int card = 1;
-  int sum = 0;
+  int result = 0;
 
-  char buffer[BUFFER_LENGTH] = {};
-  while (fgets(buffer, BUFFER_LENGTH, fp)) {
-    size_t buffer_len = strlen(buffer);
-    buffer[buffer_len - 1] = '\0';
+  for (size_t l = 0; l < lines->size; l++) {
+    char *line = lines->items[l];
+    size_t line_len = strlen(line);
 
-    size_t colon_offset = strchr(buffer, ':') - buffer;
-    size_t pipe_offset = strchr(buffer, '|') - buffer;
+    size_t colon_offset = strchr(line, ':') - line;
+    size_t pipe_offset = strchr(line, '|') - line;
     size_t winning_numbers_len = (pipe_offset - 1) - (colon_offset + 2);
-    size_t numbers_len = buffer_len - (pipe_offset + 2);
+    size_t numbers_len = line_len - (pipe_offset + 2);
 
     //           11111111112222222222333333333344444444
     // 012345678901234567890123456789012345678901234567
     // Card 1: 41 48 83 86 17 | 83 86  6 31 17  9 48 53
     //       ^ colon_offset   ^ pipe_offset
-    char *winning_numbers_buf = substring(buffer, colon_offset + 2, winning_numbers_len);
-    char *numbers_buf = substring(buffer, pipe_offset + 2, numbers_len);
+    char *winning_numbers_buf = substring(line, colon_offset + 2, winning_numbers_len);
+    char *numbers_buf = substring(line, pipe_offset + 2, numbers_len);
 
     debug("winning numbers buffer: |%s|\n", winning_numbers_buf);
     debug("numbers buffer: |%s|\n", numbers_buf);
@@ -72,7 +62,7 @@ int part1(char *filename) {
 
     card++;
     debug("Card %d is worth %d points\n", card, points);
-    sum += points;
+    result += points;
 
     array_free(numbers);
     array_free(winning_numbers);
@@ -80,11 +70,7 @@ int part1(char *filename) {
     free(winning_numbers_buf);
   }
 
-  fclose(fp);
-
-  printf("sum = %d\n", sum);
-
-  return sum;
+  return result;
 }
 
 int array_sum(int *array, size_t size) {
@@ -95,35 +81,28 @@ int array_sum(int *array, size_t size) {
   return sum;
 }
 
-int part2(char *filename) {
-  FILE *fp = fopen(filename, "r");
-  if (fp == nullptr) {
-    fprintf(stderr, "Error: could not open file %s\n", filename);
-    return 1;
-  }
-
+int part2(StringArray *lines) {
   int card = 1;
   int cards[1000] = {};
   cards[card - 1] = 0;
 
-  char buffer[BUFFER_LENGTH] = {};
-  while (fgets(buffer, BUFFER_LENGTH, fp)) {
-    size_t buffer_len = strlen(buffer);
-    buffer[buffer_len - 1] = '\0';
+  for (size_t l = 0; l < lines->size; l++) {
+    char *line = lines->items[l];
+    size_t line_len = strlen(line);
 
     cards[card - 1] += 1;
 
-    size_t colon_offset = strchr(buffer, ':') - buffer;
-    size_t pipe_offset = strchr(buffer, '|') - buffer;
+    size_t colon_offset = strchr(line, ':') - line;
+    size_t pipe_offset = strchr(line, '|') - line;
     size_t winning_numbers_len = (pipe_offset - 1) - (colon_offset + 2);
-    size_t numbers_len = buffer_len - (pipe_offset + 2);
+    size_t numbers_len = line_len - (pipe_offset + 2);
 
     //           11111111112222222222333333333344444444
     // 012345678901234567890123456789012345678901234567
     // Card 1: 41 48 83 86 17 | 83 86  6 31 17  9 48 53
     //       ^ colon_offset   ^ pipe_offset
-    char *winning_numbers_buf = substring(buffer, colon_offset + 2, winning_numbers_len);
-    char *numbers_buf = substring(buffer, pipe_offset + 2, numbers_len);
+    char *winning_numbers_buf = substring(line, colon_offset + 2, winning_numbers_len);
+    char *numbers_buf = substring(line, pipe_offset + 2, numbers_len);
 
     debug("winning numbers buffer: |%s|\n", winning_numbers_buf);
     debug("numbers buffer: |%s|\n", numbers_buf);
@@ -158,19 +137,14 @@ int part2(char *filename) {
     free(winning_numbers_buf);
   }
 
-  fclose(fp);
-
-  int sum = array_sum(cards, card - 1);
-  printf("sum = %d\n", sum);
-
-  return sum;
+  return array_sum(cards, card - 1);
 }
 
 int main(void) {
-  assert(part1("../../inputs/2023/day4/sample") == 13);
-  assert(part1("../../inputs/2023/day4/data") == 21088);
-  assert(part2("../../inputs/2023/day4/sample") == 30);
-  assert(part2("../../inputs/2023/day4/data") == 6874754);
+  test_case(day4, part1, sample, 13);
+  test_case(day4, part1, data, 21088);
+  test_case(day4, part2, sample, 30);
+  test_case(day4, part2, data, 6874754);
 
   return 0;
 }

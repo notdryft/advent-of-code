@@ -1,4 +1,3 @@
-#include <assert.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -6,8 +5,6 @@
 
 #include "commons.h"
 #include "string.h"
-
-constexpr size_t BUFFER_LENGTH = 1024;
 
 bool is_digit(char c) {
   return '0' <= c && c <= '9';
@@ -26,26 +23,14 @@ bool is_gear_symbol(char c) {
   return c == '*';
 }
 
-int part1(char *filename) {
-  FILE *fp = fopen(filename, "r");
-  if (fp == nullptr) {
-    fprintf(stderr, "Error: could not open file %s\n", filename);
-    return 1;
-  }
+int part1(StringArray *lines) {
+  int result = 0;
 
-  StringArray *lines = string_array_new();
-
-  char buffer[BUFFER_LENGTH] = {};
-  while (fgets(buffer, BUFFER_LENGTH, fp)) {
-    buffer[strlen(buffer) - 1] = '\0';
-    string_array_push(lines, buffer);
-  }
-
-  int sum = 0;
-  for (size_t j = 0; j < lines->size; j++) {
-    char *line = string_array_get(lines, j);
+  for (size_t l = 0; l < lines->size; l++) {
+    char *line = string_array_get(lines, l);
     size_t line_len = strlen(line);
     debug("%s: %zu\n", line, line_len);
+
     size_t digit_so = SIZE_MAX;
     for (size_t i = 0; i <= line_len; i++) {
       if (is_digit(line[i]) && digit_so == SIZE_MAX) {
@@ -56,8 +41,8 @@ int part1(char *filename) {
         char *digit_str = calloc(digit_len + 1, sizeof(char));
         strncpy(digit_str, line + digit_so, digit_len);
 
-        size_t sy = ((long) j - 1 < 0) ? 0 : j - 1;
-        size_t ey = (j + 1 >= lines->size) ? j : j + 1;
+        size_t sy = ((long) l - 1 < 0) ? 0 : l - 1;
+        size_t ey = (l + 1 >= lines->size) ? l : l + 1;
         size_t sx = ((long) digit_so - 1 < 0) ? 0 : digit_so - 1;
         size_t ex = (digit_eo + 1 > line_len) ? digit_eo : digit_eo + 1;
 
@@ -72,7 +57,7 @@ int part1(char *filename) {
         }
 
         if (is_near_symbol) {
-          sum += atoi(digit_str);
+          result += atoi(digit_str);
           debug("digit: %s (%zu, %zu) is next to a symbol\n", digit_str, digit_so, digit_eo);
         }
 
@@ -83,38 +68,20 @@ int part1(char *filename) {
     }
   }
 
-  string_array_free(lines);
-
-  fclose(fp);
-
-  printf("sum = %d\n", sum);
-
-  return sum;
+  return result;
 }
 
-int part2(char *filename) {
-  FILE *fp = fopen(filename, "r");
-  if (fp == nullptr) {
-    fprintf(stderr, "Error: could not open file %s", filename);
-    return 1;
-  }
-
-  StringArray *lines = string_array_new();
+int part2(StringArray *lines) {
+  int result = 0;
 
   size_t lol_x = SIZE_MAX;
   size_t lol_y = SIZE_MAX;
 
-  char buffer[BUFFER_LENGTH] = {};
-  while (fgets(buffer, BUFFER_LENGTH, fp)) {
-    buffer[strlen(buffer) - 1] = '\0';
-    string_array_push(lines, buffer);
-  }
-
-  int sum = 0;
-  for (size_t j = 0; j < lines->size; j++) {
-    char *line = string_array_get(lines, j);
+  for (size_t l = 0; l < lines->size; l++) {
+    char *line = string_array_get(lines, l);
     size_t line_len = strlen(line);
     debug("%s: %zu\n", line, line_len);
+
     size_t digit_so = SIZE_MAX;
     for (size_t i = 0; i <= line_len; i++) {
       if (is_digit(line[i]) && digit_so == SIZE_MAX) {
@@ -129,8 +96,8 @@ int part2(char *filename) {
           line[id] = 'N';
         }
 
-        size_t sy = ((long) j - 1 < 0) ? 0 : j - 1;
-        size_t ey = (j + 1 >= lines->size) ? j : j + 1;
+        size_t sy = ((long) l - 1 < 0) ? 0 : l - 1;
+        size_t ey = (l + 1 >= lines->size) ? l : l + 1;
         size_t sx = ((long) digit_so - 1 < 0) ? 0 : digit_so - 1;
         size_t ex = (digit_eo + 1 > line_len) ? digit_eo : digit_eo + 1;
 
@@ -204,7 +171,7 @@ int part2(char *filename) {
             }
 
             debug("paired digit: %s (%zu, %zu) from symbol (%zu, %zu)\n", pair_str, digit_x, digit_y, gear_x, gear_y);
-            sum += atoi(digit_str) * atoi(pair_str);
+            result += atoi(digit_str) * atoi(pair_str);
             free(pair_str);
 
             lol_x = gear_x;
@@ -224,19 +191,14 @@ int part2(char *filename) {
     debug("%s\n", string_array_get(lines, i));
   }
 
-  fclose(fp);
-  string_array_free(lines);
-
-  printf("sum = %d\n", sum);
-
-  return sum;
+  return result;
 }
 
 int main(void) {
-  assert(part1("../../inputs/2023/day3/sample") == 4361);
-  assert(part1("../../inputs/2023/day3/data") == 556367);
-  assert(part2("../../inputs/2023/day3/sample") == 467835);
-  assert(part2("../../inputs/2023/day3/data") == 89471771);
+  test_case(day3, part1, sample, 4361);
+  test_case(day3, part1, data, 556367);
+  test_case(day3, part2, sample, 467835);
+  test_case(day3, part2, data, 89471771);
 
   return 0;
 }

@@ -1,4 +1,3 @@
-#include <assert.h>
 #include <limits.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -8,8 +7,6 @@
 #include "array.h"
 #include "commons.h"
 #include "string.h"
-
-constexpr size_t BUFFER_LENGTH = 1024;
 
 typedef struct {
   size_t ordinal;
@@ -47,28 +44,9 @@ unsigned long long distance(Galaxy *a, Galaxy *b) {
   return width + height;
 }
 
-unsigned long long part1(char *filename) {
-  FILE *fp = fopen(filename, "r");
-  if (fp == nullptr) {
-    fprintf(stderr, "Error: could not open file %s\n", filename);
-    return 1;
-  }
-
-  StringArray *universe = string_array_new();
-  size_t universe_width = 0;
-
-  char buffer[BUFFER_LENGTH] = {};
-  while (fgets(buffer, BUFFER_LENGTH, fp)) {
-    size_t buffer_len = strlen(buffer);
-    buffer[buffer_len - 1] = '\0';
-
-    string_array_push(universe, buffer);
-    universe_width = strlen(buffer);
-  }
-
-  fclose(fp);
-
-  //debugf(string_array_print_raw, universe);
+unsigned long long part1(StringArray *lines) {
+  size_t universe_width = strlen(lines->items[0]);
+  //debugf(string_array_print_raw, lines);
 
   size_t galaxies_size = 0;
   Galaxy *galaxies = malloc(sizeof(Galaxy) * 1000);
@@ -78,8 +56,8 @@ unsigned long long part1(char *filename) {
 
   for (size_t i = 0; i < universe_width; i++) {
     bool all = true;
-    for (size_t j = 0; j < universe->size && all; j++) {
-      char *row = string_array_get(universe, j);
+    for (size_t j = 0; j < lines->size && all; j++) {
+      char *row = string_array_get(lines, j);
       if (row[i] != '.') {
         all = false;
       }
@@ -90,8 +68,8 @@ unsigned long long part1(char *filename) {
   }
 
   size_t row_expand = 0;
-  for (size_t j = 0; j < universe->size; j++) {
-    char *row = string_array_get(universe, j);
+  for (size_t j = 0; j < lines->size; j++) {
+    char *row = string_array_get(lines, j);
     size_t col_expand = 0;
     if (string_all(row, '.')) {
       row_expand++;
@@ -111,7 +89,6 @@ unsigned long long part1(char *filename) {
     }
   }
   free(col_expands);
-  string_array_free(universe);
 
   size_t p = galaxies_size * (galaxies_size - 1) / 2;
   debug("galaxies = %zu, pairs = %zu\n", galaxies_size, p);
@@ -131,44 +108,22 @@ unsigned long long part1(char *filename) {
   debug("pairs = %zu\n", pairs_size);
   assert(pairs_size == p);
 
-  unsigned long long sum = 0;
-
+  unsigned long long result = 0;
   for (size_t i = 0; i < pairs_size; i++) {
     Pair pair = pairs[i];
     unsigned long long d = distance(&pair.a, &pair.b);
     debug("Between galaxy %zu and galaxy %zu: %llu\n", pair.a.ordinal, pair.b.ordinal, d);
-    sum += d;
+    result += d;
   }
-
-  printf("sum = %llu\n", sum);
 
   free(pairs);
 
-  return sum;
+  return result;
 }
 
-unsigned long long part2(char *filename) {
-  FILE *fp = fopen(filename, "r");
-  if (fp == nullptr) {
-    fprintf(stderr, "Error: could not open file %s\n", filename);
-    return 1;
-  }
-
-  StringArray *universe = string_array_new();
-  size_t universe_width = 0;
-
-  char buffer[BUFFER_LENGTH] = {};
-  while (fgets(buffer, BUFFER_LENGTH, fp)) {
-    size_t buffer_len = strlen(buffer);
-    buffer[buffer_len - 1] = '\0';
-
-    string_array_push(universe, buffer);
-    universe_width = strlen(buffer);
-  }
-
-  fclose(fp);
-
-  //debugf(string_array_print_raw, universe);
+unsigned long long part2(StringArray *lines) {
+  size_t universe_width = strlen(lines->items[0]);
+  //debugf(string_array_print_raw, lines);
 
   size_t galaxies_size = 0;
   Galaxy *galaxies = malloc(sizeof(Galaxy) * 1000);
@@ -178,8 +133,8 @@ unsigned long long part2(char *filename) {
 
   for (size_t i = 0; i < universe_width; i++) {
     bool all = true;
-    for (size_t j = 0; j < universe->size && all; j++) {
-      char *row = string_array_get(universe, j);
+    for (size_t j = 0; j < lines->size && all; j++) {
+      char *row = string_array_get(lines, j);
       if (row[i] != '.') {
         all = false;
       }
@@ -190,8 +145,8 @@ unsigned long long part2(char *filename) {
   }
 
   size_t row_expand = 0;
-  for (size_t j = 0; j < universe->size; j++) {
-    char *row = string_array_get(universe, j);
+  for (size_t j = 0; j < lines->size; j++) {
+    char *row = string_array_get(lines, j);
     size_t col_expand = 0;
     if (string_all(row, '.')) {
       row_expand += 999999;
@@ -211,7 +166,6 @@ unsigned long long part2(char *filename) {
     }
   }
   free(col_expands);
-  string_array_free(universe);
 
   size_t p = galaxies_size * (galaxies_size - 1) / 2;
   debug("galaxies = %zu, pairs = %zu\n", galaxies_size, p);
@@ -231,27 +185,24 @@ unsigned long long part2(char *filename) {
   debug("pairs = %zu\n", pairs_size);
   assert(pairs_size == p);
 
-  unsigned long long sum = 0;
-
+  unsigned long long result = 0;
   for (size_t i = 0; i < pairs_size; i++) {
     Pair pair = pairs[i];
     unsigned long long d = distance(&pair.a, &pair.b);
     debug("Between galaxy %zu and galaxy %zu: %llu\n", pair.a.ordinal, pair.b.ordinal, d);
-    sum += d;
+    result += d;
   }
-
-  printf("sum = %llu\n", sum);
 
   free(pairs);
 
-  return sum;
+  return result;
 }
 
 int main(void) {
-  assert(part1("../../inputs/2023/day11/sample") == 374);
-  assert(part1("../../inputs/2023/day11/data") == 10292708);
-  assert(part2("../../inputs/2023/day11/sample") == 82000210);
-  assert(part2("../../inputs/2023/day11/data") == 790194712336);
+  test_case(day11, part1, sample, 374);
+  test_case(day11, part1, data, 10292708);
+  test_case(day11, part2, sample, 82000210);
+  test_case(day11, part2, data, 790194712336);
 
   return 0;
 }

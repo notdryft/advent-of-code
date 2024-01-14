@@ -1,4 +1,3 @@
-#include <assert.h>
 #include <limits.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -8,8 +7,6 @@
 #include "array.h"
 #include "commons.h"
 #include "string.h"
-
-constexpr size_t BUFFER_LENGTH = 1024;
 
 int predict_first_rec(Array *array) {
   Array *sub = array_new(int);
@@ -50,70 +47,48 @@ int predict_last_rec(Array *array) {
   }
 }
 
-int part1(char *filename) {
-  FILE *fp = fopen(filename, "r");
-  if (fp == nullptr) {
-    fprintf(stderr, "Error: could not open file %s\n", filename);
-    return 1;
-  }
+int part1(StringArray *lines) {
+  int result = 0;
 
-  int sum = 0;
+  for (size_t l = 0; l < lines->size; l++) {
+    char *line = lines->items[l];
 
-  char buffer[BUFFER_LENGTH] = {};
-  while (fgets(buffer, BUFFER_LENGTH, fp)) {
-    size_t buffer_len = strlen(buffer);
-    buffer[buffer_len - 1] = '\0';
-
-    StringArray *line_split = string_split(buffer, " ");
+    StringArray *line_split = string_split(line, " ");
     Array *array = string_atoi(line_split);
     string_array_free(line_split);
     debugf(int_array_print, array);
 
     int last = predict_last_rec(array);
     array_free(array);
-    sum += last;
+    result += last;
   }
-  fclose(fp);
 
-  printf("sum = %d\n", sum);
-
-  return sum;
+  return result;
 }
 
-int part2(char *filename) {
-  FILE *fp = fopen(filename, "r");
-  if (fp == nullptr) {
-    fprintf(stderr, "Error: could not open file %s\n", filename);
-    return 1;
-  }
+int part2(StringArray *lines) {
+  int result = 0;
 
-  int sum = 0;
+  for (size_t l = 0; l < lines->size; l++) {
+    char *line = lines->items[l];
 
-  char buffer[BUFFER_LENGTH] = {};
-  while (fgets(buffer, BUFFER_LENGTH, fp)) {
-    size_t buffer_len = strlen(buffer);
-    buffer[buffer_len - 1] = '\0';
-
-    StringArray *line_split = string_split(buffer, " ");
+    StringArray *line_split = string_split(line, " ");
     Array *array = string_atoi(line_split);
     string_array_free(line_split);
     debugf(int_array_print, array);
 
     int first = predict_first_rec(array);
-    sum += first;
+    result += first;
   }
-  fclose(fp);
 
-  printf("sum = %d\n", sum);
-
-  return sum;
+  return result;
 }
 
 int main(void) {
-  assert(part1("../../inputs/2023/day9/sample") == 114);
-  assert(part1("../../inputs/2023/day9/data") == 1842168671);
-  assert(part2("../../inputs/2023/day9/sample") == 2);
-  assert(part2("../../inputs/2023/day9/data") == 903);
+  test_case(day9, part1, sample, 114);
+  test_case(day9, part1, data, 1842168671);
+  test_case(day9, part2, sample, 2);
+  test_case(day9, part2, data, 903);
 
   return 0;
 }

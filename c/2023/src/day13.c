@@ -1,4 +1,3 @@
-#include <assert.h>
 #include <limits.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -8,8 +7,6 @@
 #include "array.h"
 #include "commons.h"
 #include "string.h"
-
-constexpr size_t BUFFER_LENGTH = 1024;
 
 int find_column_reflection(StringArray* lines, size_t len, size_t start, size_t end, int cmp) {
   for (size_t i = 1; i < len; i++) {
@@ -71,25 +68,9 @@ int find_row_reflection(StringArray *lines, size_t start, size_t end, int cmp) {
   return -1;
 }
 
-int part1(char *filename) {
-  FILE *fp = fopen(filename, "r");
-  if (fp == nullptr) {
-    fprintf(stderr, "Error: could not open file %s\n", filename);
-    return 1;
-  }
-
-  StringArray *lines = string_array_new();
-
-  char buffer[BUFFER_LENGTH] = {};
-  while (fgets(buffer, BUFFER_LENGTH, fp)) {
-    size_t buffer_len = strlen(buffer);
-    buffer[buffer_len - 1] = '\0';
-    string_array_push(lines, buffer);
-  }
-
-  fclose(fp);
-
+int part1(StringArray *lines) {
   //debugf(string_array_print_raw, lines);
+
   Array* patterns = array_new(int);
   array_push_rval(patterns, 0);
   for (size_t i = 0; i < lines->size; i++) {
@@ -101,8 +82,7 @@ int part1(char *filename) {
   array_push_rval(patterns, lines->size);
   debugf(int_array_print, patterns);
 
-  int sum = 0;
-
+  int result = 0;
   for (size_t i = 0; i < patterns->size - 1; i++) {
     size_t start = int_array_get(patterns, i);
     start = i == 0 ? start : start + 1;
@@ -112,13 +92,13 @@ int part1(char *filename) {
     int col = find_column_reflection(lines, len, start, end, -1);
     if (col != -1) {
       debug("pattern %zu: col %d\n", i + 1, col);
-      sum += col;
+      result += col;
     }
 
     int row = find_row_reflection(lines, start, end, -1);
     if (row != -1) {
       debug("pattern %zu: row %d\n", i + 1, row);
-      sum += row * 100;
+      result += row * 100;
     }
 
 #ifdef DEBUG
@@ -129,32 +109,13 @@ int part1(char *filename) {
   }
 
   array_free(patterns);
-  string_array_free(lines);
 
-  printf("%d\n", sum);
-
-  return sum;
+  return result;
 }
 
-int part2(char *filename) {
-  FILE *fp = fopen(filename, "r");
-  if (fp == nullptr) {
-    fprintf(stderr, "Error: could not open file %s\n", filename);
-    return 1;
-  }
-
-  StringArray *lines = string_array_new();
-
-  char buffer[BUFFER_LENGTH] = {};
-  while (fgets(buffer, BUFFER_LENGTH, fp)) {
-    size_t buffer_len = strlen(buffer);
-    buffer[buffer_len - 1] = '\0';
-    string_array_push(lines, buffer);
-  }
-
-  fclose(fp);
-
+int part2(StringArray *lines) {
   //debugf(string_array_print_raw, lines);
+
   Array* patterns = array_new(int);
   array_push_rval(patterns, 0);
   for (size_t i = 0; i < lines->size; i++) {
@@ -166,8 +127,7 @@ int part2(char *filename) {
   array_push_rval(patterns, lines->size);
   //debugf(int_array_print, patterns);
 
-  int sum = 0;
-
+  int result = 0;
   for (size_t i = 0; i < patterns->size - 1; i++) {
     size_t start = int_array_get(patterns, i);
     start = i == 0 ? start : start + 1;
@@ -202,14 +162,14 @@ int part2(char *filename) {
         int col = find_column_reflection(dup, strlen(line), 0, dup->size, initial_col);
         if (col != -1 && col != initial_col) {
           debug("pattern %zu: col %d by swapping (%zu, %zu)\n", i + 1, col, j, k);
-          sum += col;
+          result += col;
           stop = true;
         }
         int row = find_row_reflection(dup, 0, dup->size, initial_row);
         debug("(%zu, %zu) -> %d\n", j, k, row);
         if (row != -1 && row != initial_row) {
           debug("pattern %zu: row %d by swapping (%zu, %zu)\n", i + 1, row, j, k);
-          sum += row * 100;
+          result += row * 100;
           stop = true;
         }
         line[k] = line[k] == '.' ? '#' : '.';
@@ -223,18 +183,15 @@ int part2(char *filename) {
   }
 
   array_free(patterns);
-  string_array_free(lines);
 
-  printf("%d\n", sum);
-
-  return sum;
+  return result;
 }
 
 int main(void) {
-  assert(part1("../../inputs/2023/day13/sample") == 405);
-  assert(part1("../../inputs/2023/day13/data") == 34821);
-  assert(part2("../../inputs/2023/day13/sample") == 400);
-  assert(part2("../../inputs/2023/day13/data") == 36919);
+  test_case(day13, part1, sample, 405);
+  test_case(day13, part1, data, 34821);
+  test_case(day13, part2, sample, 400);
+  test_case(day13, part2, data, 36919);
 
   return 0;
 }

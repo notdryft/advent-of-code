@@ -1,4 +1,3 @@
-#include <assert.h>
 #include <limits.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -8,8 +7,6 @@
 #include "array.h"
 #include "commons.h"
 #include "string.h"
-
-constexpr size_t BUFFER_LENGTH = 1024;
 
 typedef struct {
   int step;
@@ -79,29 +76,13 @@ void array_priority_push(Array *array, Vec2 *u) {
   }
 }
 
-long long part1(char *filename, int steps) {
-  FILE *fp = fopen(filename, "r");
-  if (fp == nullptr) {
-    fprintf(stderr, "Error: could not open file %s\n", filename);
-    return 1;
-  }
+long long part1(StringArray *lines, int steps) {
+  debugf(string_array_print_raw, lines);
 
-  StringArray *map = string_array_new();
+  long long mx = strlen(lines->items[0]);
+  long long my = lines->size;
 
-  char buffer[BUFFER_LENGTH] = {};
-  while (fgets(buffer, BUFFER_LENGTH, fp)) {
-    size_t buffer_len = strlen(buffer);
-    buffer[buffer_len - 1] = '\0';
-    string_array_push(map, buffer);
-  }
-  fclose(fp);
-
-  debugf(string_array_print_raw, map);
-
-  long long mx = strlen(map->items[0]);
-  long long my = map->size;
-
-  Vec2 start = find_start(map->items, mx, my);
+  Vec2 start = find_start(lines->items, mx, my);
   debug("S = %lld %lld\n", start.x, start.y);
 
   int step = 0;
@@ -118,63 +99,44 @@ long long part1(char *filename, int steps) {
     }
 
     Vec2 *u = array_pop(q);
-    map->items[u->y][u->x] = '.';
-    if (u->y > 0 && map->items[u->y - 1][u->x] == '.') {
-      map->items[u->y - 1][u->x] = 'O';
+    lines->items[u->y][u->x] = '.';
+    if (u->y > 0 && lines->items[u->y - 1][u->x] == '.') {
+      lines->items[u->y - 1][u->x] = 'O';
       array_priority_push(q, &(Vec2) { .step = u->step + 1, .x = u->x, .y = u->y - 1 });
     }
-    if (u->x > 0 && map->items[u->y][u->x - 1] == '.') {
-      map->items[u->y][u->x - 1] = 'O';
+    if (u->x > 0 && lines->items[u->y][u->x - 1] == '.') {
+      lines->items[u->y][u->x - 1] = 'O';
       array_priority_push(q, &(Vec2) { .step = u->step + 1, .x = u->x - 1, .y = u->y });
     }
-    if (u->y < my - 1 && map->items[u->y + 1][u->x] == '.') {
-      map->items[u->y + 1][u->x] = 'O';
+    if (u->y < my - 1 && lines->items[u->y + 1][u->x] == '.') {
+      lines->items[u->y + 1][u->x] = 'O';
       array_priority_push(q, &(Vec2) { .step = u->step + 1, .x = u->x, .y = u->y + 1 });
     }
-    if (u->x < mx - 1 && map->items[u->y][u->x + 1] == '.') {
-      map->items[u->y][u->x + 1] = 'O';
+    if (u->x < mx - 1 && lines->items[u->y][u->x + 1] == '.') {
+      lines->items[u->y][u->x + 1] = 'O';
       array_priority_push(q, &(Vec2) { .step = u->step + 1, .x = u->x + 1, .y = u->y });
     }
     free(u);
-    //debugf(string_array_print_raw, map);
+    //debugf(string_array_print_raw, lines);
   }
 
-  long long sum = q->size;
-  printf("sum = %lld\n", sum);
-
+  long long result = q->size;
   array_free(q);
-  string_array_free(map);
 
-  return sum;
+  return result;
 }
 
-long long part2(char *filename, int steps) {
-  FILE *fp = fopen(filename, "r");
-  if (fp == nullptr) {
-    fprintf(stderr, "Error: could not open file %s\n", filename);
-    return 1;
-  }
-
-  StringArray *map = string_array_new();
-
-  char buffer[BUFFER_LENGTH] = {};
-  while (fgets(buffer, BUFFER_LENGTH, fp)) {
-    size_t buffer_len = strlen(buffer);
-    buffer[buffer_len - 1] = '\0';
-    string_array_push(map, buffer);
-  }
-  fclose(fp);
-
-  //debugf(string_array_print_raw, map);
+long long part2(StringArray *lines, int steps) {
+  //debugf(string_array_print_raw, lines);
 
   Array *infinity = array_new(Space);
 
-  long long mx = strlen(map->items[0]);
-  long long my = map->size;
+  long long mx = strlen(lines->items[0]);
+  long long my = lines->size;
 
-  Vec2 start = find_start(map->items, mx, my);
+  Vec2 start = find_start(lines->items, mx, my);
   debug("S = %lld %lld\n", start.x, start.y);
-  map->items[start.y][start.x] = '.';
+  lines->items[start.y][start.x] = '.';
 
   int step = 0;
   Array *q = array_new(Vec2);
@@ -199,7 +161,7 @@ long long part2(char *filename, int steps) {
     Vec2 *u = array_pop(q);
     long long ix = (u->x < 0) ? -((-u->x - 1 + mx) / mx) : u->x / mx;
     long long iy = (u->y < 0) ? -((-u->y - 1 + my) / my) : u->y / my;
-    StringArray *imap = find_map_or_dup(infinity, map, ix, iy);
+    StringArray *imap = find_map_or_dup(infinity, lines, ix, iy);
 
     long long bx = (u->x % mx + mx) % mx;
     long long by = (u->y % my + my) % my;
@@ -210,7 +172,7 @@ long long part2(char *filename, int steps) {
     StringArray *umap = imap;
     if (by - 1 < 0) {
       y = my - 1;
-      umap = find_map_or_dup(infinity, map, ix, iy - 1);
+      umap = find_map_or_dup(infinity, lines, ix, iy - 1);
     } else {
       y = by - 1;
     }
@@ -223,7 +185,7 @@ long long part2(char *filename, int steps) {
     StringArray *lmap = imap;
     if (bx - 1 < 0) {
       x = mx - 1;
-      lmap = find_map_or_dup(infinity, map, ix - 1, iy);
+      lmap = find_map_or_dup(infinity, lines, ix - 1, iy);
     } else {
       x = bx - 1;
     }
@@ -236,7 +198,7 @@ long long part2(char *filename, int steps) {
     StringArray *bmap = imap;
     if (y + 1 >= my) {
       y = 0;
-      bmap = find_map_or_dup(infinity, map, ix, iy + 1);
+      bmap = find_map_or_dup(infinity, lines, ix, iy + 1);
     } else {
       y = by + 1;
     }
@@ -249,7 +211,7 @@ long long part2(char *filename, int steps) {
     StringArray *rmap = imap;
     if (x + 1 >= mx) {
       x = 0;
-      rmap = find_map_or_dup(infinity, map, ix + 1, iy);
+      rmap = find_map_or_dup(infinity, lines, ix + 1, iy);
     } else {
       x = bx + 1;
     }
@@ -272,8 +234,7 @@ long long part2(char *filename, int steps) {
   //  = 3606 + 28652 * 202300 + 28550 * 202300 * 202299 / 2
   //  = 584211423220706
 
-  long long sum = q->size;
-  printf("sum = %lld\n", sum);
+  long long result = q->size;
 
   array_free(q);
   for (size_t i = 0; i < infinity->size; i++) {
@@ -281,22 +242,21 @@ long long part2(char *filename, int steps) {
     string_array_free(s->map);
   }
   array_free(infinity);
-  string_array_free(map);
 
-  return sum;
+  return result;
 }
 
 int main(void) {
-  assert(part1("../../inputs/2023/day21/sample", 6) == 16);
-  assert(part1("../../inputs/2023/day21/data", 64) == 3503);
-  assert(part2("../../inputs/2023/day21/sample", 6) == 16);
-  assert(part2("../../inputs/2023/day21/sample", 10) == 50);
-  assert(part2("../../inputs/2023/day21/sample", 50) == 1594);
-  assert(part2("../../inputs/2023/day21/sample", 100) == 6536);
-  assert(part2("../../inputs/2023/day21/sample", 500) == 167004);
-  assert(part2("../../inputs/2023/day21/sample", 1000) == 668697);
-  assert(part2("../../inputs/2023/day21/sample", 5000) == 16733044);
-  //assert(part2("../../inputs/2023/day21/data", 26501365) == 584211423220706);
+  test_case(day21, part1, sample, 16, 6);
+  test_case(day21, part1, data, 3503, 64);
+  test_case(day21, part2, sample, 16, 6);
+  test_case(day21, part2, sample, 50, 10);
+  test_case(day21, part2, sample, 1594, 50);
+  test_case(day21, part2, sample, 6536, 100);
+  test_case(day21, part2, sample, 167004, 500);
+  test_case(day21, part2, sample, 668697, 1000);
+  test_case(day21, part2, sample, 16733044, 5000);
+  //test_case(day21, part2, data, 584211423220706, 26501365);
 
   return 0;
 }

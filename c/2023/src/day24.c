@@ -1,4 +1,3 @@
-#include <assert.h>
 #include <limits.h>
 #include <math.h>
 #include <quadmath.h>
@@ -10,8 +9,6 @@
 #include "array.h"
 #include "commons.h"
 #include "string.h"
-
-constexpr size_t BUFFER_LENGTH = 1024;
 
 typedef struct {
   i128 x;
@@ -263,21 +260,13 @@ bool intersects(Hailstone *a, Hailstone *b, Intersection *p) {
   return true;
 }
 
-int part1(char *filename, i128 min, i128 max) {
-  FILE *fp = fopen(filename, "r");
-  if (fp == nullptr) {
-    fprintf(stderr, "Error: could not open file %s\n", filename);
-    return 1;
-  }
-
+int part1(StringArray *lines, i128 min, i128 max) {
   Array *hailstones = array_new(Hailstone);
 
-  char buffer[BUFFER_LENGTH] = {};
-  while (fgets(buffer, BUFFER_LENGTH, fp)) {
-    size_t buffer_len = strlen(buffer);
-    buffer[buffer_len - 1] = '\0';
+  for (size_t l = 0; l < lines->size; l++) {
+    char *line = lines->items[l];
 
-    StringArray *at_split = string_split(buffer, " @ ");
+    StringArray *at_split = string_split(line, " @ ");
     StringArray *positions = string_split(at_split->items[0], ", ");
     i128 px = atoll(positions->items[0]);
     i128 py = atoll(positions->items[1]);
@@ -294,9 +283,7 @@ int part1(char *filename, i128 min, i128 max) {
     string_array_free(at_split);
   }
 
-  fclose(fp);
-
-  int sum = 0;
+  int result = 0;
   for (size_t i = 0; i < hailstones->size - 1; i++) {
     Hailstone *a = array_get(hailstones, i);
     for (size_t j = i + 1; j < hailstones->size; j++) {
@@ -310,7 +297,7 @@ int part1(char *filename, i128 min, i128 max) {
           if (p.futureB) {
             if (min <= p.x && p.x <= max && min <= p.y && p.y <= max) {
               debug("Hailstones' paths will cross inside the test area (at x=%.3Lf, y=%.3Lf).\n",  (ld) p.x, (ld) p.y);
-              sum += 1;
+              result += 1;
             } else {
               debug("Hailstones' paths will cross outside the test area (at x=%.3Lf, y=%.3Lf).\n", (ld) p.x, (ld) p.y);
             }
@@ -329,28 +316,18 @@ int part1(char *filename, i128 min, i128 max) {
     }
   }
 
-  printf("sum = %d\n", sum);
-
   array_free(hailstones);
 
-  return sum;
+  return result;
 }
 
-i128 part2(char *filename) {
-  FILE *fp = fopen(filename, "r");
-  if (fp == nullptr) {
-    fprintf(stderr, "Error: could not open file %s\n", filename);
-    return 1;
-  }
-
+i128 part2(StringArray *lines) {
   Array *hailstones = array_new(Hailstone);
 
-  char buffer[BUFFER_LENGTH] = {};
-  while (fgets(buffer, BUFFER_LENGTH, fp)) {
-    size_t buffer_len = strlen(buffer);
-    buffer[buffer_len - 1] = '\0';
+  for (size_t l = 0; l < lines->size; l++) {
+    char *line = lines->items[l];
 
-    StringArray *at_split = string_split(buffer, " @ ");
+    StringArray *at_split = string_split(line, " @ ");
     StringArray *positions = string_split(at_split->items[0], ", ");
     i128 px = atoll(positions->items[0]);
     i128 py = atoll(positions->items[1]);
@@ -366,8 +343,6 @@ i128 part2(char *filename) {
     string_array_free(positions);
     string_array_free(at_split);
   }
-
-  fclose(fp);
 
   Hailstone *h0 = array_get(hailstones, 0);
   Hailstone *h1 = array_get(hailstones, 1);
@@ -407,19 +382,18 @@ i128 part2(char *filename) {
   }
   debug("r: %.Lf %.Lf %.Lf %.Lf %.Lf %.Lf\n", (ld) r[0], (ld) r[1], (ld) r[2], (ld) r[3], (ld) r[4], (ld) r[5]);
 
-  i128 sum = r[0] + r[1] + r[2];
-  printf("sum = %lld\n", (ll) sum);
+  i128 result = r[0] + r[1] + r[2];
 
   array_free(hailstones);
 
-  return (i128) sum;
+  return result;
 }
 
 int main(void) {
-  assert(part1("../../inputs/2023/day24/sample", 7, 27) == 2);
-  assert(part1("../../inputs/2023/day24/data", 200000000000000, 400000000000000) == 18184);
-  assert(part2("../../inputs/2023/day24/sample") == 47);
-  assert(part2("../../inputs/2023/day24/data") == 557789988450159);
+  test_case(day24, part1, sample, 2, 7, 27);
+  test_case(day24, part1, data, 18184, 200000000000000, 400000000000000);
+  test_case(day24, part2, sample, 47);
+  test_case(day24, part2, data, 557789988450159);
 
   return 0;
 }

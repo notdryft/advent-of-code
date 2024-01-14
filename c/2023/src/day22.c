@@ -1,4 +1,3 @@
-#include <assert.h>
 #include <limits.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -9,8 +8,6 @@
 #include "commons.h"
 #include "math.h"
 #include "string.h"
-
-constexpr size_t BUFFER_LENGTH = 1024;
 
 typedef struct {
   int x;
@@ -133,27 +130,17 @@ int *fall2(Array *bricks) {
   return fallen;
 }
 
-int part1(char *filename) {
-  FILE *fp = fopen(filename, "r");
-  if (fp == nullptr) {
-    fprintf(stderr, "Error: could not open file %s\n", filename);
-    return 1;
-  }
-
+int part1(StringArray *lines) {
   Array *bricks = array_new(Brick);
 
-  char buffer[BUFFER_LENGTH] = {};
-  while (fgets(buffer, BUFFER_LENGTH, fp)) {
-    size_t buffer_len = strlen(buffer);
-    buffer[buffer_len - 1] = '\0';
+  for (size_t l = 0; l < lines->size; l++) {
+    char *line = lines->items[l];
 
     int sx, sy, sz, ex, ey, ez;
-    if (sscanf(buffer, "%d,%d,%d~%d,%d,%d", &sx, &sy, &sz, &ex, &ey, &ez)) {
+    if (sscanf(line, "%d,%d,%d~%d,%d,%d", &sx, &sy, &sz, &ex, &ey, &ez)) {
       array_push(bricks, &(Brick) { .start = { sx, sy, sz }, .end = { ex, ey, ez } });
     }
   }
-  fclose(fp);
-
   //debugf(brick_array_print, bricks);
 
   int falled = fall(bricks);
@@ -164,44 +151,33 @@ int part1(char *filename) {
   bool b __attribute((unused)) = fixed(bricks);
   debug("fixed after fall: %s\n", b ? "true" : "false");
 
-  int sum = 0;
+  int result = 0;
   for (size_t i = 0; i < bricks->size; i++) {
     Array *dup = array_dup(bricks);
     array_remove(dup, i);
     //debug("f = %d\n", f);
     if (fixed(dup)) {
-      sum++;
+      result++;
     }
     array_free(dup);
   }
-  printf("sum = %d\n", sum);
 
   array_free(bricks);
 
-  return sum;
+  return result;
 }
 
-int part2(char *filename) {
-  FILE *fp = fopen(filename, "r");
-  if (fp == nullptr) {
-    fprintf(stderr, "Error: could not open file %s\n", filename);
-    return 1;
-  }
-
+int part2(StringArray *lines) {
   Array *bricks = array_new(Brick);
 
-  char buffer[BUFFER_LENGTH] = {};
-  while (fgets(buffer, BUFFER_LENGTH, fp)) {
-    size_t buffer_len = strlen(buffer);
-    buffer[buffer_len - 1] = '\0';
+  for (size_t l = 0; l < lines->size; l++) {
+    char *line = lines->items[l];
 
     int sx, sy, sz, ex, ey, ez;
-    if (sscanf(buffer, "%d,%d,%d~%d,%d,%d", &sx, &sy, &sz, &ex, &ey, &ez)) {
+    if (sscanf(line, "%d,%d,%d~%d,%d,%d", &sx, &sy, &sz, &ex, &ey, &ez)) {
       array_push(bricks, &(Brick) { .start = { sx, sy, sz }, .end = { ex, ey, ez } });
     }
   }
-  fclose(fp);
-
   //debugf(brick_array_print, bricks);
 
   int falled = fall(bricks);
@@ -212,7 +188,7 @@ int part2(char *filename) {
   bool b __attribute((unused)) = fixed(bricks);
   debug("fixed after fall: %s\n", b ? "true" : "false");
 
-  int sum = 0;
+  int result = 0;
   for (size_t i = 0; i < bricks->size; i++) {
     Array *dup = array_dup(bricks);
     array_remove(dup, i);
@@ -238,23 +214,22 @@ int part2(char *filename) {
       debug("\tff = %d\n", fs);
     }
 
-    sum += false_sum(fallen, dup->size);
+    result += false_sum(fallen, dup->size);
 
     array_free(dup);
     free(fallen);
   }
-  printf("sum = %d\n", sum);
 
   array_free(bricks);
 
-  return sum;
+  return result;
 }
 
 int main(void) {
-  assert(part1("../../inputs/2023/day22/sample") == 5);
-  assert(part1("../../inputs/2023/day22/data") == 413);
-  assert(part2("../../inputs/2023/day22/sample") == 7);
-  assert(part2("../../inputs/2023/day22/data") == 41610);
+  test_case(day22, part1, sample, 5);
+  test_case(day22, part1, data, 413);
+  test_case(day22, part2, sample, 7);
+  test_case(day22, part2, data, 41610);
 
   return 0;
 }

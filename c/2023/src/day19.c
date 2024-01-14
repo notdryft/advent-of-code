@@ -1,4 +1,3 @@
-#include <assert.h>
 #include <limits.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -9,8 +8,6 @@
 #include "commons.h"
 #include "math.h"
 #include "string.h"
-
-constexpr size_t BUFFER_LENGTH = 1024;
 
 enum RuleType {
   COMPARE_AR,
@@ -216,23 +213,17 @@ void reduce(Array *queue, Array *valid, Node *node, Ranges ranges) {
   }
 }
 
-int part1(char *filename) {
-  FILE *fp = fopen(filename, "r");
-  if (fp == nullptr) {
-    fprintf(stderr, "Error: could not open file %s\n", filename);
-    return 1;
-  }
-
-  int sum = 0;
+int part1(StringArray *lines) {
+  int result = 0;
 
   Node *root = nullptr;
   Array *nodes = array_new(Node);
 
-  char buffer[BUFFER_LENGTH] = {};
-  while (fgets(buffer, BUFFER_LENGTH, fp)) {
-    size_t buffer_len = strlen(buffer);
-    buffer[buffer_len - 1] = '\0';
-    if (buffer[0] == '\0') {
+  for (size_t l = 0; l < lines->size; l++) {
+    char *line = lines->items[l];
+    size_t line_len = strlen(line);
+
+    if (line_len == 0) {
       continue;
     }
 
@@ -244,7 +235,7 @@ int part1(char *filename) {
 
     int x = -1, m = -1, a = -1, s = -1;
 
-    if (sscanf(buffer, "%[a-z]{%[^}]}", name, str)) {
+    if (sscanf(line, "%[a-z]{%[^}]}", name, str)) {
       debug("name: %s\n", name);
       debug("rules: %s\n", str);
 
@@ -310,7 +301,7 @@ int part1(char *filename) {
       array_push(nodes, &node);
 
       string_array_free(rules);
-    } else if (sscanf(buffer, "{x=%d,m=%d,a=%d,s=%d}", &x, &m, &a, &s)) {
+    } else if (sscanf(line, "{x=%d,m=%d,a=%d,s=%d}", &x, &m, &a, &s)) {
       if (root == nullptr) {
         root = find_node(nodes, "in");
       }
@@ -320,47 +311,36 @@ int part1(char *filename) {
       if (accept_or_reject(nodes, root, x, m, a, s)) {
         debug("x = %d, m = %d, a = %d, s = %d\n", x, m, a, s);
         debug("accepted\n");
-        sum += x + m + a + s;
+        result += x + m + a + s;
       } else {
         debug("x = %d, m = %d, a = %d, s = %d\n", x, m, a, s);
         debug("rejected\n");
       }
     }
   }
-
-  fclose(fp);
-
   debugf(debug_nodes, nodes);
 
-  printf("sum = %d\n", sum);
-
-  return sum;
+  return result;
 }
 
-unsigned long long part2(char *filename) {
-  FILE *fp = fopen(filename, "r");
-  if (fp == nullptr) {
-    fprintf(stderr, "Error: could not open file %s\n", filename);
-    return 1;
-  }
-
+unsigned long long part2(StringArray *lines) {
   Array *nodes = array_new(Node);
 
-  char buffer[BUFFER_LENGTH] = {};
-  while (fgets(buffer, BUFFER_LENGTH, fp)) {
-    size_t buffer_len = strlen(buffer);
-    buffer[buffer_len - 1] = '\0';
-    if (buffer[0] == '\0') {
+  for (size_t l = 0; l < lines->size; l++) {
+    char *line = lines->items[l];
+    size_t line_len = strlen(line);
+
+    if (line_len == 0) {
       continue;
     }
 
-    char name[4];
+    char name[4] = {};
     memset(name, 0, sizeof(char) * 4);
 
     char str[40];
     memset(str, 0, sizeof(char) * 40);
 
-    if (sscanf(buffer, "%[a-z]{%[^}]}", name, str)) {
+    if (sscanf(line, "%[a-z]{%[^}]}", name, str)) {
       debug("name: %s\n", name);
       debug("rules: %s\n", str);
 
@@ -428,8 +408,6 @@ unsigned long long part2(char *filename) {
       string_array_free(rules);
     }
   }
-  fclose(fp);
-
   debugf(debug_nodes, nodes);
 
   Ranges start = {
@@ -476,7 +454,7 @@ unsigned long long part2(char *filename) {
     i++;
   }
 
-  unsigned long long sum = 0;
+  unsigned long long result = 0;
   for (size_t i = 0; i < valid->size; i++) {
     Ranges *r = array_get(valid, i);
     unsigned long long x = (r->x.max - r->x.min + 1);
@@ -485,20 +463,19 @@ unsigned long long part2(char *filename) {
     unsigned long long s = (r->s.max - r->s.min + 1);
     unsigned long long score = x * m * a * s;
     debug("%llu\n", score);
-    sum += score;
+    result += score;
   }
-  printf("sum = %llu\n", sum);
 
   free(nodes);
 
-  return sum;
+  return result;
 }
 
 int main(void) {
-  assert(part1("../../inputs/2023/day19/sample") == 19114);
-  assert(part1("../../inputs/2023/day19/data") == 367602);
-  assert(part2("../../inputs/2023/day19/sample") == 167409079868000);
-  assert(part2("../../inputs/2023/day19/data") == 125317461667458);
+  test_case(day19, part1, sample, 19114);
+  test_case(day19, part1, data, 367602);
+  test_case(day19, part2, sample, 167409079868000);
+  test_case(day19, part2, data, 125317461667458);
 
   return 0;
 }

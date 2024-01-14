@@ -1,4 +1,3 @@
-#include <assert.h>
 #include <limits.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -8,8 +7,6 @@
 #include "array.h"
 #include "commons.h"
 #include "string.h"
-
-constexpr size_t BUFFER_LENGTH = 1024;
 
 typedef struct {
   int x;
@@ -139,72 +136,26 @@ int dijkstra(char **grid, int mx, int my, int mindist, int maxdist) {
   return cost;
 }
 
-int part1(char *filename) {
-  FILE *fp = fopen(filename, "r");
-  if (fp == nullptr) {
-    fprintf(stderr, "Error: could not open file %s\n", filename);
-    return 1;
-  }
-
-  StringArray *lines = string_array_new();
-
-  char buffer[BUFFER_LENGTH] = {};
-  while (fgets(buffer, BUFFER_LENGTH, fp)) {
-    size_t buffer_len = strlen(buffer);
-    buffer[buffer_len - 1] = '\0';
-
-    string_array_push(lines, buffer);
-  }
-
-  fclose(fp);
-
+int part1(StringArray *lines) {
   int mx = strlen(lines->items[0]);
   int my = lines->size;
 
-  int cost = dijkstra(lines->items, mx, my, 1, 3);
-  printf("cost = %d\n", cost);
-
-  string_array_free(lines);
-
-  return cost;
+  return dijkstra(lines->items, mx, my, 1, 3);
 }
 
-int part2(char *filename) {
-  FILE *fp = fopen(filename, "r");
-  if (fp == nullptr) {
-    fprintf(stderr, "Error: could not open file %s\n", filename);
-    return 1;
-  }
-
-  StringArray *lines = string_array_new();
-
-  char buffer[BUFFER_LENGTH] = {};
-  while (fgets(buffer, BUFFER_LENGTH, fp)) {
-    size_t buffer_len = strlen(buffer);
-    buffer[buffer_len - 1] = '\0';
-
-    string_array_push(lines, buffer);
-  }
-
-  fclose(fp);
-
+int part2(StringArray *lines) {
   int mx = strlen(lines->items[0]);
   int my = lines->size;
 
-  int cost = dijkstra(lines->items, mx, my, 4, 10);
-  printf("cost = %d\n", cost);
-
-  string_array_free(lines);
-
-  return cost;
+  return dijkstra(lines->items, mx, my, 4, 10);
 }
 
 int main(void) {
-  assert(part1("../../inputs/2023/day17/sample1") == 102);
-  assert(part1("../../inputs/2023/day17/data") == 855);
-  assert(part2("../../inputs/2023/day17/sample1") == 94);
-  assert(part2("../../inputs/2023/day17/sample2") == 71);
-  assert(part2("../../inputs/2023/day17/data") == 980);
+  test_case(day17, part1, sample1, 102);
+  test_case(day17, part1, data, 855);
+  test_case(day17, part2, sample1, 94);
+  test_case(day17, part2, sample2, 71);
+  test_case(day17, part2, data, 980);
 
   return 0;
 }

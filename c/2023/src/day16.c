@@ -1,4 +1,3 @@
-#include <assert.h>
 #include <limits.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -7,9 +6,8 @@
 
 #include "array.h"
 #include "commons.h"
+#include "math.h"
 #include "string.h"
-
-constexpr size_t BUFFER_LENGTH = 1024;
 
 #define NORTH 1
 #define WEST 2
@@ -96,30 +94,12 @@ int traverse(char **cavern, int **beams, size_t mx, size_t my, size_t sx, size_t
   return sum;
 }
 
-int part1(char *filename) {
-  FILE *fp = fopen(filename, "r");
-  if (fp == nullptr) {
-    fprintf(stderr, "Error: could not open file %s\n", filename);
-    return 1;
-  }
-
-  StringArray *cavern = string_array_new();
-
-  char buffer[BUFFER_LENGTH] = {};
-  while (fgets(buffer, BUFFER_LENGTH, fp)) {
-    size_t buffer_len = strlen(buffer);
-    buffer[buffer_len - 1] = '\0';
-
-    string_array_push(cavern, buffer);
-  }
-
-  fclose(fp);
-
-  debugf(string_array_print_raw, cavern);
+int part1(StringArray *lines) {
+  debugf(string_array_print_raw, lines);
   debug("\n");
 
-  size_t mx = strlen(cavern->items[0]);
-  size_t my = cavern->size;
+  size_t mx = strlen(lines->items[0]);
+  size_t my = lines->size;
 
   int direction = EAST;
   size_t sx = 0, sy = 0;
@@ -129,82 +109,59 @@ int part1(char *filename) {
     beams[y] = malloc(sizeof(int) * mx);
   }
 
-  int sum = traverse(cavern->items, beams, mx, my, sx, sy, direction);
-  printf("sum = %d\n", sum);
+  int result = traverse(lines->items, beams, mx, my, sx, sy, direction);
 
   for (size_t y = 0; y < my; y++) {
     free(beams[y]);
   }
   free(beams);
-  string_array_free(cavern);
 
-  return sum;
+  return result;
 }
 
-int part2(char *filename) {
-  FILE *fp = fopen(filename, "r");
-  if (fp == nullptr) {
-    fprintf(stderr, "Error: could not open file %s\n", filename);
-    return 1;
-  }
-
-  StringArray *cavern = string_array_new();
-
-  char buffer[BUFFER_LENGTH] = {};
-  while (fgets(buffer, BUFFER_LENGTH, fp)) {
-    size_t buffer_len = strlen(buffer);
-    buffer[buffer_len - 1] = '\0';
-
-    string_array_push(cavern, buffer);
-  }
-
-  fclose(fp);
-
-  debugf(string_array_print_raw, cavern);
+int part2(StringArray *lines) {
+  debugf(string_array_print_raw, lines);
   debug("\n");
 
-  size_t mx = strlen(cavern->items[0]);
-  size_t my = cavern->size;
+  size_t mx = strlen(lines->items[0]);
+  size_t my = lines->size;
 
   int **beams = malloc(sizeof(int *) * my);
   for (size_t y = 0; y < my; y++) {
     beams[y] = malloc(sizeof(int) * mx);
   }
 
-  int max = -1;
+  int result = -1;
   for (size_t sx = 0; sx < mx; sx++) {
-    int sum = traverse(cavern->items, beams, mx, my, sx, 0, SOUTH);
-    max = sum > max ? sum : max;
+    int sum = traverse(lines->items, beams, mx, my, sx, 0, SOUTH);
+    result = max(sum, result);
   }
   for (size_t sy = 0; sy < my; sy++) {
-    int sum = traverse(cavern->items, beams, mx, my, mx - 1, sy, WEST);
-    max = sum > max ? sum : max;
+    int sum = traverse(lines->items, beams, mx, my, mx - 1, sy, WEST);
+    result = max(sum, result);
   }
   for (size_t sx = 0; sx < mx; sx++) {
-    int sum = traverse(cavern->items, beams, mx, my, sx, my - 1, NORTH);
-    max = sum > max ? sum : max;
+    int sum = traverse(lines->items, beams, mx, my, sx, my - 1, NORTH);
+    result = max(sum, result);
   }
   for (size_t sy = 0; sy < my; sy++) {
-    int sum = traverse(cavern->items, beams, mx, my, 0, sy, EAST);
-    max = sum > max ? sum : max;
+    int sum = traverse(lines->items, beams, mx, my, 0, sy, EAST);
+    result = max(sum, result);
   }
 
   for (size_t y = 0; y < my; y++) {
     free(beams[y]);
   }
   free(beams);
-  string_array_free(cavern);
 
-  printf("max = %d\n", max);
-
-  return max;
+  return result;
 }
 
 int main(void) {
-  assert(part1("../../inputs/2023/day16/sample") == 46);
-  assert(part1("../../inputs/2023/day16/data") == 6855);
-  assert(part2("../../inputs/2023/day16/sample") == 51);
-  assert(part2("../../inputs/2023/day16/data") == 7513);
+  test_case(day16, part1, sample, 46);
+  test_case(day16, part1, data, 6855);
+  test_case(day16, part2, sample, 51);
+  test_case(day16, part2, data, 7513);
 
   return 0;
 }
