@@ -1,8 +1,10 @@
 #ifndef ARRAY
 #define ARRAY
 
+#include <inttypes.h>
 #include <stdbool.h>
 #include <stddef.h>
+#include <stdio.h>
 
 #define ARRAY_DEFAULT_CAPACITY 2
 
@@ -25,18 +27,21 @@ void *array_get(Array *array, size_t index);
 #define long_array_get(array, index) *(long *) array_get(array, index)
 #define ll_array_get(array, index) *(long long *) array_get(array, index)
 #define llu_array_get(array, index) *(unsigned long long *) array_get(array, index)
+#define i64_array_get(array, index) *(int64_t *) array_get(array, index)
 
 void *array_first(Array *array);
 #define int_array_first(array) *(int *) array_first(array)
 #define long_array_first(array) *(long *) array_first(array)
 #define ll_array_first(array) *(long long *) array_first(array)
 #define llu_array_first(array) *(unsigned long long *) array_first(array)
+#define i64_array_first(array) *(int64_t *) array_first(array)
 
 void *array_last(Array *array);
 #define int_array_last(array) *(int *) array_last(array)
 #define long_array_last(array) *(long *) array_last(array)
 #define ll_array_last(array) *(long long *) array_last(array)
 #define llu_array_last(array) *(unsigned long long *) array_last(array)
+#define i64_array_last(array) *(int64_t *) array_last(array)
 
 void array_push(Array *array, void *value);
 #define array_push_rval(array, value) \
@@ -94,9 +99,34 @@ bool int_array_contains(Array *array, int expected);
 
 // pretty printers
 
-void int_array_print(Array *array);
-void long_array_print(Array *array);
-void ll_array_print(Array *array);
-void llu_array_print(Array *array);
+#define array_print_signature(prefix, type) void prefix##_array_print(Array *array)
+#define array_print(prefix, type, format) \
+  void prefix##_array_print(Array *array) { \
+    if (array->stride != sizeof(type)) { \
+      fprintf( \
+        stderr, \
+        "Error: trying to print an Array<" #type "> with sizeof(%zu) from an Array<!" #type "> with sizeof(%zu)\n", \
+        sizeof(type), \
+        array->stride \
+      ); \
+      return; \
+    } \
+    printf("Array{ capacity = %zu, size = %zu, stride = %zu, data = [", array->capacity, array->size, array->stride); \
+    for (size_t i = 0; i < array->size; i++) { \
+      type item = *(type *) array_get(array, i); \
+      if (i == array->size - 1) { \
+        printf(" %" format, item); \
+      } else { \
+        printf(" %" format ",", item); \
+      } \
+    } \
+    printf(" ] }\n"); \
+  }
+
+array_print_signature(int, int);
+array_print_signature(long, long);
+array_print_signature(ll, long long);
+array_print_signature(llu, unsigned long long);
+array_print_signature(i64, int64_t);
 
 #endif
