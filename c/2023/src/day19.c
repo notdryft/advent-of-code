@@ -476,6 +476,7 @@ int main(void) {
   test_case(day19, part1, data, 367602);
   test_case(day19, part2, sample, 167409079868000);
   test_case(day19, part2, data, 125317461667458);
+  //test_case(day19, part2, hard, 1);
 
   return 0;
 }
