@@ -6,6 +6,7 @@
 #include <stdint.h>
 
 #include "string.h"
+#include "time.h"
 
 typedef long long ll;
 typedef long double ld;
@@ -38,9 +39,19 @@ StringArray *read_lines(char filename[static 1]);
 
 #define test_case(day, part, input, expected, ...) __extension__ ({ \
   StringArray *data = read_lines("../../inputs/2023/" #day "/" #input); \
+  struct timeval start = now(); \
   i64 result = (i64) part(data __VA_OPT__(,) __VA_ARGS__); \
+  struct timeval end = now(); \
   string_array_free(data); \
-  printf(#day "/" #part ":" #input " = %" PRId64 "\n", (i64) result); \
+  printf(#day "\t" #part "\t" #input "\t%" PRId64, (i64) result); \
+  Time elapsed = interval(start, end); \
+  if (elapsed.seconds > 0) { \
+    printf("\t%" PRIu64 "s %" PRIu64 "ms\n", elapsed.seconds, elapsed.milliseconds); \
+  } else if (elapsed.milliseconds > 0) { \
+    printf("\t%" PRIu64 "ms %" PRIu64 "µs\n", elapsed.milliseconds, elapsed.microseconds); \
+  } else { \
+    printf("\t%" PRIu64 "µs\n", elapsed.microseconds); \
+  } \
   assert(result == expected); \
 })
 

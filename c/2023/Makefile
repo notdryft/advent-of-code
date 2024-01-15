@@ -26,7 +26,7 @@ all: $(patsubst %,day%,$(shell seq 1 1 $(days)))
 $(objdir)/%.o: $(srcdir)/%.c
 	$(cc) -c -fPIC -o$@ $^ $(cflags)
 
-$(libdir)/libaoc.so: $(objdir)/algos.o $(objdir)/array.o $(objdir)/commons.o $(objdir)/map.o $(objdir)/math.o $(objdir)/string.o
+$(libdir)/libaoc.so: $(objdir)/algos.o $(objdir)/array.o $(objdir)/commons.o $(objdir)/map.o $(objdir)/math.o $(objdir)/string.o $(objdir)/time.o
 	$(cc) -shared -o$@ $^
 
 %_test: $(srcdir)/%_test.c $(libdir)/libaoc.so
