@@ -377,7 +377,7 @@ long long part2(StringArray *lines) {
     array_free(q);
   }
 
-  ll_array_print(cycles);
+  debugf(ll_array_print, cycles);
 
   long long result = ll_array_get(cycles, 0);
   for (size_t i = 1; i < cycles->size; i++) {
