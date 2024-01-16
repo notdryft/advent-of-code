@@ -8,6 +8,8 @@
 #include "string.h"
 #include "time.h"
 
+// types
+
 typedef long long ll;
 typedef long double ld;
 
@@ -25,7 +27,17 @@ __extension__ typedef __uint128_t u128;
 
 __extension__ typedef __float128 f128;
 
-#ifdef DEBUG
+// logging
+
+#if defined(TRACE)
+#define trace(...) printf(__VA_ARGS__)
+#define tracef(f, ...) f(__VA_ARGS__)
+#else
+#define trace(...)
+#define tracef(f, ...)
+#endif
+
+#if defined(DEBUG) || defined(TRACE)
 #define debug(...) printf(__VA_ARGS__)
 #define debugf(f, ...) f(__VA_ARGS__)
 #else
@@ -33,9 +45,21 @@ __extension__ typedef __float128 f128;
 #define debugf(f, ...)
 #endif
 
+#if defined(INFO) || defined(DEBUG) || defined(TRACE)
+#define info(...) printf(__VA_ARGS__)
+#define infof(f, ...) f(__VA_ARGS__)
+#else
+#define info(...)
+#define infof(f, ...)
+#endif
+
+// files
+
 constexpr size_t READ_LINES_BUFFER_LENGTH = 1024*1024;
 
 StringArray *read_lines(char filename[static 1]);
+
+// test case
 
 #define test_case(day, part, input, expected, ...) __extension__ ({ \
   StringArray *data = read_lines("../../inputs/2023/" #day "/" #input); \

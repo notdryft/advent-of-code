@@ -5,6 +5,8 @@
 #include "commons.h"
 #include "string.h"
 
+// files
+
 StringArray *read_lines(char filename[static 1]) {
   FILE *fp = fopen(filename, "r");
   if (fp == nullptr) {
