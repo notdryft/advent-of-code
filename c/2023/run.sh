@@ -19,11 +19,11 @@ else
 fi
 
 if [ "$trace" = "true" ]; then
-  flags=-DTRACE=true
+  flags=-DTRACE
 elif [ "$debug" = "true" ]; then
-  flags=-DDEBUG=true
+  flags=-DDEBUG
 elif [ "$info" = "true" ]; then
-  flags=-DINFO=true
+  flags=-DINFO
 fi
 
 make_flags=CMDLINE_FLAGS=$flags
