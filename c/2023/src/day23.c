@@ -9,9 +9,9 @@
 #include "string.h"
 
 bool **seen_new(size_t mx, size_t my) {
-  bool **seen = malloc(sizeof(bool *) * my);
+  bool **seen = malloc(sizeof(*seen) * my);
   for (size_t y = 0; y < my; y++) {
-    seen[y] = calloc(mx, sizeof(bool));
+    seen[y] = calloc(mx, sizeof(**seen));
     for (size_t x = 0; x < mx ; x++) {
       seen[y][x] = false;
     }

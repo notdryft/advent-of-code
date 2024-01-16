@@ -38,7 +38,7 @@ int part1(StringArray *lines) {
       } else if (!is_digit(line[i]) && digit_so != SIZE_MAX) {
         size_t digit_eo = i;
         size_t digit_len = digit_eo - digit_so;
-        char *digit_str = calloc(digit_len + 1, sizeof(char));
+        char *digit_str = calloc(digit_len + 1, sizeof(*digit_str));
         strncpy(digit_str, line + digit_so, digit_len);
 
         size_t sy = ((long) l - 1 < 0) ? 0 : l - 1;
@@ -89,7 +89,7 @@ int part2(StringArray *lines) {
       } else if (!is_digit(line[i]) && digit_so != SIZE_MAX) {
         size_t digit_eo = i;
         size_t digit_len = digit_eo - digit_so;
-        char *digit_str = calloc(digit_len + 1, sizeof(char));
+        char *digit_str = calloc(digit_len + 1, sizeof(*digit_str));
         strncpy(digit_str, line + digit_so, digit_len);
 
         for (size_t id = digit_so; id < digit_eo; id++) {
@@ -160,7 +160,7 @@ int part2(StringArray *lines) {
             }
 
             size_t pair_len = pair_eo - pair_so;
-            char *pair_str = calloc(pair_len + 1, sizeof(char));
+            char *pair_str = calloc(pair_len + 1, sizeof(*pair_str));
             strncpy(pair_str, pline + pair_so, pair_len);
 
             for (size_t id = digit_so; id < digit_eo; id++) {

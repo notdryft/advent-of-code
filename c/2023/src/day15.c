@@ -32,10 +32,10 @@ int hash(char *str, size_t len) {
 }
 
 Map *map_new(void) {
-  Map *map = malloc(sizeof(Map));
+  Map *map = malloc(sizeof(*map));
   map->capacity = 256;
   map->size = 0;
-  map->arrays = malloc(sizeof(Array *) * map->capacity);
+  map->arrays = malloc(sizeof(*map->arrays) * map->capacity);
   for (size_t i = 0; i < map->capacity; i++) {
     map->arrays[map->size++] = array_new(BoxItem);
   }

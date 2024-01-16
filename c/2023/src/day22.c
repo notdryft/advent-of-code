@@ -99,9 +99,7 @@ int false_sum(int *ints, size_t size) {
 }
 
 int *fall2(Array *bricks) {
-  int *fallen = malloc(sizeof(int) * bricks->size);
-  memset(fallen, 0, sizeof(int) * bricks->size);
-
+  int *fallen = calloc(bricks->size, sizeof(*fallen));
   for (size_t i = 0; i < bricks->size; i++) {
     Brick *a = array_get(bricks, i);
     int minz = min(a->start.z, a->end.z);
@@ -193,7 +191,7 @@ int part2(StringArray *lines) {
     Array *dup = array_dup(bricks);
     array_remove(dup, i);
 
-    int *fallen = calloc(dup->size, sizeof(int));
+    int *fallen = calloc(dup->size, sizeof(*fallen));
 
     int *f = fall2(dup);
     int fs = false_sum(f, dup->size);

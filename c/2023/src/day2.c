@@ -49,7 +49,7 @@ int part1(StringArray *lines) {
                   break;
                 }
                 regoff_t end = match[g].rm_eo;
-                char *copy = calloc(end - start + 1, sizeof(char));
+                char *copy = calloc(end - start + 1, sizeof(*copy));
                 strncpy(copy, token3 + start, end - start);
                 if (g == 1) {
                   n = atoi(copy);
@@ -122,7 +122,7 @@ int part2(StringArray *lines) {
                   break;
                 }
                 regoff_t end = match[g].rm_eo;
-                char *copy = calloc(end - start + 1, sizeof(char));
+                char *copy = calloc(end - start + 1, sizeof(*copy));
                 strncpy(copy, token3 + start, end - start);
                 if (g == 1) {
                   n = atoi(copy);

@@ -7,9 +7,9 @@
 #include "map.h"
 
 Map *_map_new(size_t entry_stride, size_t key_stride) {
-  Map *map = malloc(sizeof(Map));
+  Map *map = malloc(sizeof(*map));
   map->capacity = MAP_CAPACITY;
-  map->table = calloc(map->capacity, sizeof(Array *));
+  map->table = calloc(map->capacity, sizeof(*map->table));
 
   map->entry_stride = entry_stride;
   map->key_stride = key_stride;

@@ -104,9 +104,9 @@ int part1(StringArray *lines) {
   int direction = EAST;
   size_t sx = 0, sy = 0;
 
-  int **beams = malloc(sizeof(int *) * my);
+  int **beams = malloc(sizeof(*beams) * my);
   for (size_t y = 0; y < my; y++) {
-    beams[y] = malloc(sizeof(int) * mx);
+    beams[y] = calloc(mx, sizeof(**beams));
   }
 
   int result = traverse(lines->items, beams, mx, my, sx, sy, direction);
@@ -126,9 +126,9 @@ int part2(StringArray *lines) {
   size_t mx = strlen(lines->items[0]);
   size_t my = lines->size;
 
-  int **beams = malloc(sizeof(int *) * my);
+  int **beams = malloc(sizeof(*beams) * my);
   for (size_t y = 0; y < my; y++) {
-    beams[y] = malloc(sizeof(int) * mx);
+    beams[y] = calloc(mx, sizeof(**beams));
   }
 
   int result = -1;

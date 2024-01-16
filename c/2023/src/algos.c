@@ -14,7 +14,7 @@ Cycle *find_longest_cycle(Array *array, size_t min_period) {
           jj++;
         }
         if (jj == array->size && jj - ii > min_period) {
-          Cycle *c = malloc(sizeof(Cycle));
+          Cycle *c = malloc(sizeof(*c));
           c->start = i;
           c->period = j - i;
           return c;

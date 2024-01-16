@@ -45,10 +45,10 @@ int contract(int **graph, size_t graph_size, bool *merged, bool *visited, int *w
 
 // https://en.wikipedia.org/wiki/Stoer%E2%80%93Wagner_algorithm
 int stoer_wagner(int **graph, size_t graph_size) {
-  int *contractions = calloc(graph_size, sizeof(int));
-  bool *merged = calloc(graph_size, sizeof(bool));
-  bool *visited = calloc(graph_size, sizeof(bool));
-  int *weights = calloc(graph_size, sizeof(int));
+  int *contractions = calloc(graph_size, sizeof(*contractions));
+  bool *merged = calloc(graph_size, sizeof(*merged));
+  bool *visited = calloc(graph_size, sizeof(*visited));
+  int *weights = calloc(graph_size, sizeof(*weights));
 
   for (size_t i = 0; i < graph_size - 1; i++) {
     contractions[i] = 1;
@@ -91,9 +91,9 @@ void set_add(StringArray *array, char *name) {
 
 int part1(StringArray *lines) {
   size_t hashes_size = HASHES;
-  int **hashes = malloc(sizeof(int *) * hashes_size);
+  int **hashes = malloc(sizeof(*hashes) * hashes_size);
   for (size_t j = 0; j < hashes_size; j++) {
-    hashes[j] = calloc(hashes_size, sizeof(int));
+    hashes[j] = calloc(hashes_size, sizeof(**hashes));
   }
   StringArray *nodes = string_array_new();
 
@@ -118,7 +118,7 @@ int part1(StringArray *lines) {
     string_array_free(split);
   }
 
-  int *permutations = calloc(hashes_size, sizeof(int));
+  int *permutations = calloc(hashes_size, sizeof(*permutations));
   // Algorithm seems to be sensible to nodes ordering?
   for (size_t i = 0; i < nodes->size; i++) {
     int h = hash(nodes->items[i]);
@@ -126,9 +126,9 @@ int part1(StringArray *lines) {
   }
 
   size_t graph_size = nodes->size;
-  int **graph = malloc(sizeof(int *) * graph_size);
+  int **graph = malloc(sizeof(*graph) * graph_size);
   for (size_t j = 0; j < graph_size; j++) {
-    graph[j] = calloc(graph_size, sizeof(int));
+    graph[j] = calloc(graph_size, sizeof(**graph));
   }
 
   for (size_t v = 0; v < hashes_size; v++) {

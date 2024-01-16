@@ -197,10 +197,12 @@ int part1(StringArray *lines) {
   }
   debug("Start at (%zu, %zu)\n", sx, sy);
 
-  int **steps = malloc(sizeof(int *) * rows);
+  int **steps = malloc(sizeof(*steps) * rows);
   for (size_t j = 0; j < rows; j++) {
-    steps[j] = malloc(sizeof(int) * cols);
-    memset(steps[j], -1, sizeof(int) * cols);
+    steps[j] = calloc(cols, sizeof(**steps));
+    for (size_t i = 0; i < cols; i++) {
+      steps[j][i] = -1;
+    }
   }
 
   steps[sy][sx] = 0;
@@ -244,9 +246,9 @@ int part2(StringArray *lines) {
   }
   debug("Start at (%zu, %zu)\n", sx, sy);
 
-  int **steps = malloc(sizeof(int *) * rows);
+  int **steps = malloc(sizeof(*steps) * rows);
   for (size_t j = 0; j < rows; j++) {
-    steps[j] = malloc(sizeof(int) * cols);
+    steps[j] = calloc(cols, sizeof(**steps));
     for (size_t i = 0; i < cols; i++) {
       steps[j][i]  = -1;
     }

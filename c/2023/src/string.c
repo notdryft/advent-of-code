@@ -78,7 +78,7 @@ char *repeat_with_delimiter(char *content, size_t times, char *delimiter) {
 }
 
 char *substring(char *content, size_t so, size_t len) {
-  char *result = calloc(len + 1, sizeof(char));
+  char *result = calloc(len + 1, sizeof(*result));
   strncpy(result, content + so, len);
   return result;
 }

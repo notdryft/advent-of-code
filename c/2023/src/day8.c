@@ -32,11 +32,11 @@ Node *find_node(Node **nodes, char *value, size_t size) {
 }
 
 Nodes *find_nodes(Node **nodes, char value, size_t size) {
-  Nodes *result = malloc(sizeof(Nodes));
+  Nodes *result = malloc(sizeof(*result));
   result->capacity = 1000;
   result->size = 0;
 
-  result->items = malloc(sizeof(Node *) * result->capacity);
+  result->items = calloc(result->capacity, sizeof(*result->items));
 
   for (size_t i = 0; i < size; i++) {
     Node *node = nodes[i];
@@ -58,7 +58,7 @@ void free_nodes(Node **nodes, size_t nodes_size) {
 int part1(StringArray *lines) {
   size_t nodes_capacity = 1000;
   size_t nodes_size = 0;
-  Node **nodes = malloc(sizeof(Node *) * nodes_capacity);
+  Node **nodes = calloc(nodes_capacity, sizeof(*nodes));
 
   char *instructions = strdup(lines->items[0]);
   for (size_t l = 1; l < lines->size; l++) {
@@ -71,14 +71,14 @@ int part1(StringArray *lines) {
     if (sscanf(line, "%3s = (%3s, %3s)", value, left_str, right_str)) {
       Node *node = find_node(nodes, value, nodes_size);
       if (node == nullptr) {
-        node = malloc(sizeof(Node));
+        node = malloc(sizeof(*node));
         strncpy(node->value, value, 4);
         nodes[nodes_size++] = node;
       }
 
       Node *left = find_node(nodes, left_str, nodes_size);
       if (left == nullptr) {
-        left = malloc(sizeof(Node));
+        left = malloc(sizeof(*left));
         strncpy(left->value, left_str, 4);
         nodes[nodes_size++] = left;
       }
@@ -86,7 +86,7 @@ int part1(StringArray *lines) {
 
       Node *right = find_node(nodes, right_str, nodes_size);
       if (right == nullptr) {
-        right = malloc(sizeof(Node));
+        right = malloc(sizeof(*right));
         strncpy(right->value, right_str, 4);
         debug("copied node value: %s\n", node->value);
         nodes[nodes_size++] = right;
@@ -143,7 +143,7 @@ int part1(StringArray *lines) {
 long long part2(StringArray *lines) {
   size_t nodes_capacity = 1000;
   size_t nodes_size = 0;
-  Node **nodes = malloc(sizeof(Node *) * nodes_capacity);
+  Node **nodes = calloc(nodes_capacity, sizeof(*nodes));
 
   char *instructions = strdup(lines->items[0]);
   for (size_t l = 0; l < lines->size; l++) {
@@ -156,14 +156,14 @@ long long part2(StringArray *lines) {
     if (sscanf(line, "%3s = (%3s, %3s)", value, left_str, right_str)) {
       Node *node = find_node(nodes, value, nodes_size);
       if (node == nullptr) {
-        node = malloc(sizeof(Node));
+        node = malloc(sizeof(*node));
         strncpy(node->value, value, 4);
         nodes[nodes_size++] = node;
       }
 
       Node *left = find_node(nodes, left_str, nodes_size);
       if (left == nullptr) {
-        left = malloc(sizeof(Node));
+        left = malloc(sizeof(*left));
         strncpy(left->value, left_str, 4);
         nodes[nodes_size++] = left;
       }
@@ -171,7 +171,7 @@ long long part2(StringArray *lines) {
 
       Node *right = find_node(nodes, right_str, nodes_size);
       if (right == nullptr) {
-        right = malloc(sizeof(Node));
+        right = malloc(sizeof(*right));
         strncpy(right->value, right_str, 4);
         debug("copied node value: %s\n", node->value);
         nodes[nodes_size++] = right;
@@ -203,7 +203,7 @@ long long part2(StringArray *lines) {
   size_t instructions_len = strlen(instructions);
   debug("instructions(%zu) = %s\n", instructions_len, instructions);
 
-  int *ghost_steps = calloc(ghost_nodes->size, sizeof(int));
+  int *ghost_steps = calloc(ghost_nodes->size, sizeof(*ghost_steps));
 
   for (size_t i = 0; i < ghost_nodes->size; i++) {
     Node *node = ghost_nodes->items[i];
