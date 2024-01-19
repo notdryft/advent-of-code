@@ -8,9 +8,10 @@ fi
 
 case $(uname -s) in
   Darwin)
-    docker build -f Dockerfile.valgrind -t valgrind:latest .
+    docker build --platform linux/amd64 -f Dockerfile.valgrind -t valgrind:latest .
     docker run -it --rm \
-      -v "$(pwd)/../..:/app" \
+      --platform linux/amd64 \
+      --volume "$(pwd)/../..:/app" \
       valgrind:latest \
       bash -c "make mrproper && make mem-$binary"
     ;;

@@ -16,6 +16,7 @@ bindir = $(topdir)/bin
 
 arch := $(shell uname -s)
 ifeq ($(arch),Linux)
+	cc = gcc
 	cflags += -Wl,-R$(libdir)
 endif
 
