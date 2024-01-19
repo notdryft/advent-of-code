@@ -25,6 +25,13 @@ char *string_array_last(StringArray *array);
 
 void string_array_push(StringArray *array, char *value);
 
+void *string_array_pop(StringArray *array);
+
+void string_array_remove_first(StringArray *array);
+void string_array_remove_last(StringArray *array);
+
+void string_array_remove(StringArray *array, size_t index);
+
 // utils
 
 char *repeat(char *content, size_t times);

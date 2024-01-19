@@ -24,9 +24,7 @@ int part1(StringArray *lines) {
     return 1;
   }
 
-  for (size_t l = 0; l < lines->size; l++) {
-    char *line = lines->items[l];
-
+  string_array_foreach (char *line, lines) {
     char *p_token_save;
     char *token = strtok_r(line, ":", &p_token_save);
     while (token != nullptr) {
@@ -96,9 +94,7 @@ int part2(StringArray *lines) {
     return 1;
   }
 
-  for (size_t l = 0; l < lines->size; l++) {
-    char *line = lines->items[l];
-
+  string_array_foreach(char *line, lines) {
     char *p_token_save;
     char *token = strtok_r(line, ":", &p_token_save);
     while (token != nullptr) {

@@ -119,9 +119,7 @@ unsigned long long part1(StringArray *lines) {
   Module *broadcast = find_or_init_module(modules, "broadcaster");
   broadcast->module_type = BROADCASTER;
 
-  for (size_t l = 0; l < lines->size; l++) {
-    char *line = lines->items[l];
-
+  string_array_foreach (char *line, lines) {
     if (strncmp(line, "broadcaster", 11) == 0 || line[0] == '%' || line[0] == '&') {
       StringArray *split = string_split(line, " -> ");
       StringArray *csplit = string_split(split->items[1], ", ");
@@ -255,9 +253,7 @@ long long part2(StringArray *lines) {
   Module *broadcast = find_or_init_module(modules, "broadcaster");
   broadcast->module_type = BROADCASTER;
 
-  for (size_t l = 0; l < lines->size; l++) {
-    char *line = lines->items[l];
-
+  string_array_foreach (char *line, lines) {
     if (strncmp(line, "broadcaster", 11) == 0 || line[0] == '%' || line[0] == '&') {
       StringArray *split = string_split(line, " -> ");
       StringArray *csplit = string_split(split->items[1], ", ");

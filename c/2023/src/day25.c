@@ -97,9 +97,7 @@ int part1(StringArray *lines) {
   }
   StringArray *nodes = string_array_new();
 
-  for (size_t l = 0; l < lines->size; l++) {
-    char *line = lines->items[l];
-
+  string_array_foreach (char *line, lines) {
     StringArray *split = string_split(line, ": ");
     StringArray *ssplit = string_split(split->items[1], " ");
 

@@ -49,6 +49,33 @@ void string_array_push(StringArray *array, char *value) {
   array->items[array->size++] = copy;
 }
 
+void *string_array_pop(StringArray *array) {
+  if (array->size == 0) {
+    return nullptr;
+  }
+
+  char *copy = strdup(array->items[0]);
+  string_array_remove_first(array);
+
+  return copy;
+}
+
+void string_array_remove_first(StringArray *array) {
+  string_array_remove(array, 0);
+}
+
+void string_array_remove_last(StringArray *array) {
+  free(array->items[--array->size]);
+}
+
+void string_array_remove(StringArray *array, size_t index) {
+  free(array->items[index]);
+  array->size--;
+
+  memmove(&array->items[index], &array->items[index + 1], array->stride * (array->size - index));
+  array->items[array->size] = nullptr;
+}
+
 // utils
 
 char *repeat(char *content, size_t times) {

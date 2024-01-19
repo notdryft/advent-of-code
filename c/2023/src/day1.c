@@ -9,13 +9,12 @@
 int part1(StringArray *lines) {
   int result = 0;
 
-  for (size_t i = 0; i < lines->size; i++) {
-    char *line = lines->items[i];
+  string_array_foreach (char *line, lines) {
     size_t line_len = strlen(line);
 
     Array *digits = array_new(int);
-    for (size_t j = 0; j < line_len; j++) {
-      int value = line[j] - '0';
+    for (size_t i = 0; i < line_len; i++) {
+      int value = line[i] - '0';
       if (value > 0 && value < 10) {
         array_push_rval(digits, value);
       }
@@ -32,8 +31,7 @@ int part1(StringArray *lines) {
 int part2(StringArray *lines) {
   int result = 0;
 
-  for (size_t l = 0; l < lines->size; l++) {
-    char *line = lines->items[l];
+  string_array_foreach (char *line, lines) {
     size_t line_len = strlen(line);
     debug("%s: %zu\n", line, line_len);
 

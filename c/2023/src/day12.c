@@ -115,11 +115,10 @@ unsigned long long find_arrangements_dp(char *springs, Array *damaged, Map *dp, 
   return arrangements;
 }
 
-int part1(StringArray *lines) {
+int part1(StringArray *records) {
   int result = 0;
 
-  for (size_t i = 0; i < lines->size; i++) {
-    char *record = string_array_get(lines, i);
+  string_array_foreach (char *record, records) {
     debug("%s\n", record);
 
     StringArray* split = string_split(record, " ");
@@ -139,11 +138,10 @@ int part1(StringArray *lines) {
   return result;
 }
 
-unsigned long long part2(StringArray *lines) {
+unsigned long long part2(StringArray *records) {
   unsigned long long result = 0;
 
-  for (size_t i = 0; i < lines->size; i++) {
-    char *record = string_array_get(lines, i);
+  string_array_foreach (char *record, records) {
     debug("%s\n", record);
 
     StringArray* split = string_split(record, " ");

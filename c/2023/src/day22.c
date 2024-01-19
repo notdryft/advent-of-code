@@ -131,9 +131,7 @@ int *fall2(Array *bricks) {
 int part1(StringArray *lines) {
   Array *bricks = array_new(Brick);
 
-  for (size_t l = 0; l < lines->size; l++) {
-    char *line = lines->items[l];
-
+  string_array_foreach (char *line, lines) {
     int sx, sy, sz, ex, ey, ez;
     if (sscanf(line, "%d,%d,%d~%d,%d,%d", &sx, &sy, &sz, &ex, &ey, &ez)) {
       array_push(bricks, &(Brick) { .start = { sx, sy, sz }, .end = { ex, ey, ez } });
@@ -168,9 +166,7 @@ int part1(StringArray *lines) {
 int part2(StringArray *lines) {
   Array *bricks = array_new(Brick);
 
-  for (size_t l = 0; l < lines->size; l++) {
-    char *line = lines->items[l];
-
+  string_array_foreach (char *line, lines) {
     int sx, sy, sz, ex, ey, ez;
     if (sscanf(line, "%d,%d,%d~%d,%d,%d", &sx, &sy, &sz, &ex, &ey, &ez)) {
       array_push(bricks, &(Brick) { .start = { sx, sy, sz }, .end = { ex, ey, ez } });

@@ -30,7 +30,8 @@ __extension__ typedef __float128 f128;
 
 // logging
 
-#if defined(TRACE)
+#ifdef TRACE
+#define DEBUG
 #define trace(...) printf(__VA_ARGS__)
 #define tracef(f, ...) f(__VA_ARGS__)
 #else
@@ -38,7 +39,8 @@ __extension__ typedef __float128 f128;
 #define tracef(f, ...)
 #endif
 
-#if defined(DEBUG) || defined(TRACE)
+#ifdef DEBUG
+#define INFO
 #define debug(...) printf(__VA_ARGS__)
 #define debugf(f, ...) f(__VA_ARGS__)
 #else
@@ -46,7 +48,7 @@ __extension__ typedef __float128 f128;
 #define debugf(f, ...)
 #endif
 
-#if defined(INFO) || defined(DEBUG) || defined(TRACE)
+#ifdef INFO
 #define info(...) printf(__VA_ARGS__)
 #define infof(f, ...) f(__VA_ARGS__)
 #else
@@ -54,11 +56,57 @@ __extension__ typedef __float128 f128;
 #define infof(f, ...)
 #endif
 
+// debug
+
+#if defined(DEBUG) || defined(TRACE)
+
+#include <string.h>
+#include <dlfcn.h>
+
+typedef void * (*mallocf) (size_t);
+
+#pragma GCC diagnostic ignored "-Wpedantic"
+void *malloc(size_t size) {
+  mallocf f = (mallocf) dlsym(RTLD_NEXT, "malloc");
+  void *p = f(size);
+  memset(p, 0xcd, size);
+
+  return p;
+}
+
+#endif
+
 // files
 
 constexpr size_t READ_LINES_BUFFER_LENGTH = 1024*1024;
 
 StringArray *read_lines(char filename[static 1]);
+
+// iterators
+
+#define macro_var(name) name ## __LINE__
+
+#define enumerate(it, i, array, size) \
+  for (size_t i = 0, _continue = 1; _continue && i < size; _continue = !_continue, i++) \
+    for (it = array[i]; _continue; _continue = !_continue)
+
+#define foreach(it, array, size) enumerate(it, macro_var(_i_), array, size)
+
+/// Array
+
+#define array_enumerate(it, i, array) \
+  for (size_t i = 0, _continue = 1; _continue && i < array->size; _continue = !_continue, i++) \
+    for (it = array_get(items, i); _continue; _continue = !_continue)
+
+#define array_foreach(it, array) array_enumerate(it, macro_var(_i_), array)
+
+/// StringArray
+
+#define string_array_enumerate(it, i, array) \
+  for (size_t i = 0, _continue = 1; _continue && i < array->size; _continue = !_continue, i++) \
+    for (it = array->items[i]; _continue; _continue = !_continue)
+
+#define string_array_foreach(it, array) string_array_enumerate(it, macro_var(_i_), array)
 
 // test case
 

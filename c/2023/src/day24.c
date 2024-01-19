@@ -263,9 +263,7 @@ bool intersects(Hailstone *a, Hailstone *b, Intersection *p) {
 int part1(StringArray *lines, i128 min, i128 max) {
   Array *hailstones = array_new(Hailstone);
 
-  for (size_t l = 0; l < lines->size; l++) {
-    char *line = lines->items[l];
-
+  string_array_foreach (char *line, lines) {
     StringArray *at_split = string_split(line, " @ ");
     StringArray *positions = string_split(at_split->items[0], ", ");
     i128 px = atoll(positions->items[0]);
@@ -324,9 +322,7 @@ int part1(StringArray *lines, i128 min, i128 max) {
 i128 part2(StringArray *lines) {
   Array *hailstones = array_new(Hailstone);
 
-  for (size_t l = 0; l < lines->size; l++) {
-    char *line = lines->items[l];
-
+  string_array_foreach (char *line, lines) {
     StringArray *at_split = string_split(line, " @ ");
     StringArray *positions = string_split(at_split->items[0], ", ");
     i128 px = atoll(positions->items[0]);

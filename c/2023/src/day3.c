@@ -26,8 +26,7 @@ bool is_gear_symbol(char c) {
 int part1(StringArray *lines) {
   int result = 0;
 
-  for (size_t l = 0; l < lines->size; l++) {
-    char *line = string_array_get(lines, l);
+  string_array_enumerate (char *line, j, lines) {
     size_t line_len = strlen(line);
     debug("%s: %zu\n", line, line_len);
 
@@ -41,8 +40,8 @@ int part1(StringArray *lines) {
         char *digit_str = calloc(digit_len + 1, sizeof(*digit_str));
         strncpy(digit_str, line + digit_so, digit_len);
 
-        size_t sy = ((long) l - 1 < 0) ? 0 : l - 1;
-        size_t ey = (l + 1 >= lines->size) ? l : l + 1;
+        size_t sy = ((long) j - 1 < 0) ? 0 : j - 1;
+        size_t ey = (j + 1 >= lines->size) ? j : j + 1;
         size_t sx = ((long) digit_so - 1 < 0) ? 0 : digit_so - 1;
         size_t ex = (digit_eo + 1 > line_len) ? digit_eo : digit_eo + 1;
 
@@ -77,8 +76,7 @@ int part2(StringArray *lines) {
   size_t lol_x = SIZE_MAX;
   size_t lol_y = SIZE_MAX;
 
-  for (size_t l = 0; l < lines->size; l++) {
-    char *line = string_array_get(lines, l);
+  string_array_enumerate (char *line, j, lines) {
     size_t line_len = strlen(line);
     debug("%s: %zu\n", line, line_len);
 
@@ -96,8 +94,8 @@ int part2(StringArray *lines) {
           line[id] = 'N';
         }
 
-        size_t sy = ((long) l - 1 < 0) ? 0 : l - 1;
-        size_t ey = (l + 1 >= lines->size) ? l : l + 1;
+        size_t sy = ((long) j - 1 < 0) ? 0 : j - 1;
+        size_t ey = (j + 1 >= lines->size) ? j : j + 1;
         size_t sx = ((long) digit_so - 1 < 0) ? 0 : digit_so - 1;
         size_t ex = (digit_eo + 1 > line_len) ? digit_eo : digit_eo + 1;
 

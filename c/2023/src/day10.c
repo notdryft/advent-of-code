@@ -176,12 +176,7 @@ int part1(StringArray *lines) {
   size_t rows = strlen(string_array_get(lines, 0));
   size_t cols = lines->size;
 
-#ifdef DEBUG
-  for (size_t j = 0; j < rows; j++) {
-    char *row = string_array_get(lines, j);
-    debug("%s\n", row);
-  }
-#endif
+  tracef(string_array_print_raw, lines);
 
   size_t sx = 0, sy = 0;
   bool stop = false;
@@ -225,12 +220,7 @@ int part2(StringArray *lines) {
   size_t cols = strlen(string_array_get(lines, 0));
   size_t rows = lines->size;
 
-#ifdef DEBUG
-  for (size_t j = 0; j < rows; j++) {
-    char *row = string_array_get(lines, j);
-    debug("%s\n", row);
-  }
-#endif
+  tracef(string_array_print_raw, lines);
 
   size_t sx = 0, sy = 0;
   bool stop = false;

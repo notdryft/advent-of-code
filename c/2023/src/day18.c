@@ -97,9 +97,7 @@ long long area_from_instructions(Array *instructions) {
 long long part1(StringArray *lines) {
   Array *instructions = array_new(Instruction);
 
-  for (size_t l = 0; l < lines->size; l++) {
-    char *line = lines->items[l];
-
+  string_array_foreach (char *line, lines) {
     char direction_str[2];
     long long distance;
 
@@ -124,9 +122,7 @@ long long part1(StringArray *lines) {
 long long part2(StringArray *lines) {
   Array *instructions = array_new(Instruction);
 
-  for (size_t l = 0; l < lines->size; l++) {
-    char *line = lines->items[l];
-
+  string_array_foreach (char *line, lines) {
     char color_str[7];
 
     if (sscanf(line, "%*s %*s (#%6s)", color_str)) {

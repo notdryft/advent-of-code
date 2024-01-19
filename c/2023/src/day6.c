@@ -14,8 +14,7 @@ int part1(StringArray *lines) {
   Array *times = array_new(int);
   Array *distances = array_new(int);
 
-  for (size_t l = 0; l < lines->size; l++) {
-    char *line = lines->items[l];
+  string_array_foreach (char *line, lines) {
     size_t line_len = strlen(line);
 
     size_t j = 0;
@@ -102,8 +101,7 @@ long long part2(StringArray *lines) {
   Array *times = array_new(long long);
   Array *distances = array_new(long long);
 
-  for (size_t l = 0; l < lines->size; l++) {
-    char *line = lines->items[l];
+  string_array_foreach (char *line, lines) {
     size_t line_len = strlen(line);
 
     size_t j = 0;

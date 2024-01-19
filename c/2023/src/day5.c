@@ -73,8 +73,7 @@ ll part1(StringArray *lines) {
   char source_type_str[100] = {};
   enum AlmanachEntryType source_type = 0;
 
-  for (size_t l = 0; l < lines->size; l++) {
-    char *line = lines->items[l];
+  string_array_foreach (char *line, lines) {
     size_t line_len = strlen(line);
 
     if (line_len == 0) {
@@ -163,8 +162,7 @@ ll part2(StringArray *lines) {
   char source_type_str[100] = {};
   enum AlmanachEntryType source_type = 0;
 
-  for (size_t l = 0; l < lines->size; l++) {
-    char *line = lines->items[l];
+  string_array_foreach (char *line, lines) {
     size_t line_len = strlen(line);
 
     if (line_len == 0) {

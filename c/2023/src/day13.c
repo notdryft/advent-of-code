@@ -73,8 +73,7 @@ int part1(StringArray *lines) {
 
   Array* patterns = array_new(int);
   array_push_rval(patterns, 0);
-  for (size_t i = 0; i < lines->size; i++) {
-    char *line = string_array_get(lines, i);
+  string_array_enumerate (char *line, i, lines) {
     if (strlen(line) == 0) {
       array_push_rval(patterns, i);
     }

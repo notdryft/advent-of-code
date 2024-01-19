@@ -60,10 +60,8 @@ int part1(StringArray *lines) {
   size_t nodes_size = 0;
   Node **nodes = calloc(nodes_capacity, sizeof(*nodes));
 
-  char *instructions = strdup(lines->items[0]);
-  for (size_t l = 1; l < lines->size; l++) {
-    char *line = lines->items[l];
-
+  char *instructions = string_array_pop(lines);
+  string_array_foreach (char *line, lines) {
     char value[4];
     char left_str[4];
     char right_str[4];
@@ -145,10 +143,8 @@ long long part2(StringArray *lines) {
   size_t nodes_size = 0;
   Node **nodes = calloc(nodes_capacity, sizeof(*nodes));
 
-  char *instructions = strdup(lines->items[0]);
-  for (size_t l = 0; l < lines->size; l++) {
-    char *line = lines->items[l];
-
+  char *instructions = string_array_pop(lines);
+  string_array_foreach (char *line, lines) {
     char value[4];
     char left_str[4];
     char right_str[4];

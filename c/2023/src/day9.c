@@ -50,9 +50,7 @@ int predict_last_rec(Array *array) {
 int part1(StringArray *lines) {
   int result = 0;
 
-  for (size_t l = 0; l < lines->size; l++) {
-    char *line = lines->items[l];
-
+  string_array_foreach (char *line, lines) {
     StringArray *line_split = string_split(line, " ");
     Array *array = string_atoi(line_split);
     string_array_free(line_split);
@@ -69,9 +67,7 @@ int part1(StringArray *lines) {
 int part2(StringArray *lines) {
   int result = 0;
 
-  for (size_t l = 0; l < lines->size; l++) {
-    char *line = lines->items[l];
-
+  string_array_foreach (char *line, lines) {
     StringArray *line_split = string_split(line, " ");
     Array *array = string_atoi(line_split);
     string_array_free(line_split);

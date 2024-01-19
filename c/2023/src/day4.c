@@ -26,8 +26,7 @@ int part1(StringArray *lines) {
   int card = 1;
   int result = 0;
 
-  for (size_t l = 0; l < lines->size; l++) {
-    char *line = lines->items[l];
+  string_array_foreach (char *line, lines) {
     size_t line_len = strlen(line);
 
     size_t colon_offset = strchr(line, ':') - line;
@@ -86,8 +85,7 @@ int part2(StringArray *lines) {
   int cards[1000] = {};
   cards[card - 1] = 0;
 
-  for (size_t l = 0; l < lines->size; l++) {
-    char *line = lines->items[l];
+  string_array_foreach (char *line, lines) {
     size_t line_len = strlen(line);
 
     cards[card - 1] += 1;

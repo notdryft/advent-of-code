@@ -105,9 +105,7 @@ void map_free(Map *map) {
 int part1(StringArray *lines) {
   int result = 0;
 
-  for (size_t l = 0; l < lines->size; l++) {
-    char *line = lines->items[l];
-
+  string_array_foreach (char *line, lines) {
     StringArray *split = string_split(line, ",");
     debug("instructions = %zu\n", split->size);
     for (size_t i = 0; i < split->size; i++) {
@@ -126,9 +124,7 @@ int part1(StringArray *lines) {
 int part2(StringArray *lines) {
   Map *map = map_new();
 
-  for (size_t l = 0; l < lines->size; l++) {
-    char *line = lines->items[l];
-
+  string_array_foreach (char *line, lines) {
     StringArray *split = string_split(line, ",");
     debug("instructions = %zu\n", split->size);
 

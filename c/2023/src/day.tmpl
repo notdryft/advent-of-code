@@ -10,12 +10,17 @@
 #include "string.h"
 
 i64 part1(StringArray *lines) {
-  //debugf(string_array_print_raw, lines);
-  //debug("\n");
+  //size_t cols = strlen(string_array_get(lines, 0));
+  //size_t rows = lines->size;
+
+  //tracef(string_array_print_raw, lines);
+  //trace("\n");
   i64 result = 0;
 
-  for (size_t l = 0; l < lines->size; l++) {
-    char *line = lines->items[l];
+  //for (size_t j = 0; j < rows; j++) {
+  //  char *row = string_array_get(lines, j);
+  //}
+  string_array_foreach (char *line, lines) {
     //size_t line_len = strlen(line);
     //debug("%s: %zu\n", line, line_len);
   }

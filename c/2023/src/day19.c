@@ -219,8 +219,7 @@ int part1(StringArray *lines) {
   Node *root = nullptr;
   Array *nodes = array_new(Node);
 
-  for (size_t l = 0; l < lines->size; l++) {
-    char *line = lines->items[l];
+  string_array_foreach (char *line, lines) {
     size_t line_len = strlen(line);
 
     if (line_len == 0) {
@@ -326,8 +325,7 @@ int part1(StringArray *lines) {
 unsigned long long part2(StringArray *lines) {
   Array *nodes = array_new(Node);
 
-  for (size_t l = 0; l < lines->size; l++) {
-    char *line = lines->items[l];
+  string_array_foreach (char *line, lines) {
     size_t line_len = strlen(line);
 
     if (line_len == 0) {
