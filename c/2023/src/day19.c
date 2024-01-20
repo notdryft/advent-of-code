@@ -72,8 +72,8 @@ void debug_nodes(Array *nodes) {
   printf(" ]\n");
 }
 
-void debug_ranges(Ranges *ranges) {
-  printf("{ next = %s, x = [%d %d], m = [%d %d], a = [%d %d], s = [%d %d] }\n", ranges->next, ranges->x.min, ranges->x.max, ranges->m.min, ranges->m.max, ranges->a.min, ranges->a.max, ranges->s.min, ranges->s.max);
+void debug_ranges(Ranges ranges) {
+  printf("{ next = %s, x = [%d %d], m = [%d %d], a = [%d %d], s = [%d %d] }\n", ranges.next, ranges.x.min, ranges.x.max, ranges.m.min, ranges.m.max, ranges.a.min, ranges.a.max, ranges.s.min, ranges.s.max);
 }
 
 void debug_array_ranges(Array *array) {
@@ -201,7 +201,7 @@ void reduce(Array *queue, Array *valid, Node *node, Ranges ranges) {
     } else if (rule->rule_type == COMPARE_AR) {
       debug("COMPARE_AR\n");
       apply_rule(rule, &ranges, &copy);
-      debugf(debug_ranges, &copy);
+      debugf(debug_ranges, copy);
       if (rule->action == A) array_push(valid, &ranges);
     } else if (rule->rule_type == COMPARE_NODE) {
       debug("COMPARE_NODE\n");
@@ -226,11 +226,8 @@ int part1(StringArray *lines) {
       continue;
     }
 
-    char name[4];
-    memset(name, 0, sizeof(char) * 4);
-
-    char str[40];
-    memset(str, 0, sizeof(char) * 40);
+    char name[4] = {};
+    char str[40] = {};
 
     int x = -1, m = -1, a = -1, s = -1;
 
@@ -319,6 +316,12 @@ int part1(StringArray *lines) {
   }
   debugf(debug_nodes, nodes);
 
+  for (size_t i = 0; i < nodes->size; i++) {
+    Node *node = array_get(nodes, i);
+    array_free(node->rules);
+  }
+  array_free(nodes);
+
   return result;
 }
 
@@ -333,10 +336,7 @@ unsigned long long part2(StringArray *lines) {
     }
 
     char name[4] = {};
-    memset(name, 0, sizeof(char) * 4);
-
-    char str[40];
-    memset(str, 0, sizeof(char) * 40);
+    char str[40] = {};
 
     if (sscanf(line, "%[a-z]{%[^}]}", name, str)) {
       debug("name: %s\n", name);
@@ -445,10 +445,7 @@ unsigned long long part2(StringArray *lines) {
     }
     Node *node = find_node(nodes, ranges->next);
     reduce(queue, valid, node, *ranges);
-    //debugf(debug_array_ranges, queue);
-    //debugf(debug_array_ranges, valid);
-    //debug("-------\n");
-    //if (i==2) exit(1);
+    free(ranges);
     i++;
   }
 
@@ -464,7 +461,13 @@ unsigned long long part2(StringArray *lines) {
     result += score;
   }
 
-  free(nodes);
+  for (size_t i = 0; i < nodes->size; i++) {
+    Node *node = array_get(nodes, i);
+    array_free(node->rules);
+  }
+  array_free(nodes);
+  array_free(queue);
+  array_free(valid);
 
   return result;
 }
