@@ -6,6 +6,10 @@
 
 #include "commons.h"
 
+#ifdef __linux
+#define strtok_r(...) __strtok_r(__VA_ARGS__)
+#endif
+
 constexpr size_t GROUPS = 3; // ignoring the last group
 
 int part1(StringArray *lines) {
