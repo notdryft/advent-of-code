@@ -68,11 +68,14 @@ void array_priority_push(Array *array, Vec2 *u) {
     array_push(array, u);
   } else {
     size_t i = 0;
-    Vec2 *v;
-    do {
-      v = array_get(array, i++);
-    } while (v->step < u->step && i <= array->size);
-    array_insert(array, i - 1, u);
+    while (i < array->size) {
+      Vec2 *v = array_get(array, i);
+      if (v->step > u->step) {
+        break;
+      }
+      i++;
+    }
+    array_insert(array, i, u);
   }
 }
 

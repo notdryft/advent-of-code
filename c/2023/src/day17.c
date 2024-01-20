@@ -24,11 +24,14 @@ void array_priority_push(Array *array, Q *value) {
     array_push(array, value);
   } else {
     size_t i = 0;
-    Q *other;
-    do {
-      other = array_get(array, i++);
-    } while (other->cost < value->cost && i <= array->size);
-    array_insert(array, i - 1, value);
+    while (i < array->size) {
+      Q *other = array_get(array, i);
+      if (other->cost > value->cost) {
+        break;
+      }
+      i++;
+    }
+    array_insert(array, i, value);
   }
 }
 

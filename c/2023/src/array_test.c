@@ -100,11 +100,14 @@ void array_priority_push(Array *array, Item *value) {
     array_push(array, value);
   } else {
     size_t i = 0;
-    Item *other;
-    do {
-      other = array_get(array, i++);
-    } while (other->a < value->a && i <= array->size);
-    array_insert(array, i - 1, value);
+    while (i < array->size) {
+      Item *other = array_get(array, i);
+      if (other->a > value->a) {
+        break;
+      }
+      i++;
+    }
+    array_insert(array, i, value);
   }
 }
 
