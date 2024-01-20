@@ -1,9 +1,10 @@
 cc = gcc-13
 cflags = -O5 -pedantic -std=c2x -Wall -Werror -Wextra -Wvla
+#cflags += -g
 #cflags += -Wpadded
 
 rm = @rm
-rmflags = -vf
+rmflags = -rfv
 
 vg = valgrind
 vflags = --leak-check=full --leak-resolution=high --show-leak-kinds=all --track-origins=yes --vgdb=no
