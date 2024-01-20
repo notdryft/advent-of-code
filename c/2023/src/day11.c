@@ -93,11 +93,16 @@ unsigned long long part1(StringArray *lines) {
   size_t p = galaxies_size * (galaxies_size - 1) / 2;
   debug("galaxies = %zu, pairs = %zu\n", galaxies_size, p);
 
+  size_t pairs_capacity = 10000;
   size_t pairs_size = 0;
-  Pair *pairs = malloc(sizeof(*pairs) * 10000);
+  Pair *pairs = malloc(sizeof(*pairs) * pairs_capacity);
   for (size_t i = 0; i < galaxies_size - 1; i++) {
     for (size_t j = i + 1; j < galaxies_size; j++) {
       Pair pair = { .a = galaxies[i], .b = galaxies[j] };
+      if (pairs_size + 1 > pairs_capacity) {
+        pairs_capacity *= 2;
+        pairs = realloc(pairs, sizeof(*pairs) * pairs_capacity);
+      }
       pairs[pairs_size++] = pair;
       debug("pairing { %zu: (%zu, %zu) } with  { %zu: (%zu, %zu) }\n", pair.a.ordinal, pair.a.x, pair.a.y, pair.b.ordinal, pair.b.x, pair.b.y);
     }
@@ -170,11 +175,16 @@ unsigned long long part2(StringArray *lines) {
   size_t p = galaxies_size * (galaxies_size - 1) / 2;
   debug("galaxies = %zu, pairs = %zu\n", galaxies_size, p);
 
+  size_t pairs_capacity = 10000;
   size_t pairs_size = 0;
-  Pair *pairs = malloc(sizeof(*pairs) * 10000);
+  Pair *pairs = malloc(sizeof(*pairs) * pairs_capacity);
   for (size_t i = 0; i < galaxies_size - 1; i++) {
     for (size_t j = i + 1; j < galaxies_size; j++) {
       Pair pair = { .a = galaxies[i], .b = galaxies[j] };
+      if (pairs_size + 1 > pairs_capacity) {
+        pairs_capacity *= 2;
+        pairs = realloc(pairs, sizeof(*pairs) * pairs_capacity);
+      }
       pairs[pairs_size++] = pair;
       debug("pairing { %zu: (%zu, %zu) } with  { %zu: (%zu, %zu) }\n", pair.a.ordinal, pair.a.x, pair.a.y, pair.b.ordinal, pair.b.x, pair.b.y);
     }
