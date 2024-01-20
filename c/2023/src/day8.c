@@ -55,16 +55,22 @@ void free_nodes(Node **nodes, size_t nodes_size) {
   free(nodes);
 }
 
+void free_nodes_result(Nodes *nodes) {
+  free(nodes->items);
+  free(nodes);
+}
+
 int part1(StringArray *lines) {
   size_t nodes_capacity = 1000;
   size_t nodes_size = 0;
   Node **nodes = calloc(nodes_capacity, sizeof(*nodes));
 
   char *instructions = string_array_pop(lines);
+  free(string_array_pop(lines)); // empty line
   string_array_foreach (char *line, lines) {
-    char value[4];
-    char left_str[4];
-    char right_str[4];
+    char value[4] = {};
+    char left_str[4] = {};
+    char right_str[4] = {};
 
     if (sscanf(line, "%3s = (%3s, %3s)", value, left_str, right_str)) {
       Node *node = find_node(nodes, value, nodes_size);
@@ -144,10 +150,11 @@ long long part2(StringArray *lines) {
   Node **nodes = calloc(nodes_capacity, sizeof(*nodes));
 
   char *instructions = string_array_pop(lines);
+  free(string_array_pop(lines)); // empty line
   string_array_foreach (char *line, lines) {
-    char value[4];
-    char left_str[4];
-    char right_str[4];
+    char value[4] = {};
+    char left_str[4] = {};
+    char right_str[4] = {};
 
     if (sscanf(line, "%3s = (%3s, %3s)", value, left_str, right_str)) {
       Node *node = find_node(nodes, value, nodes_size);
@@ -233,6 +240,7 @@ long long part2(StringArray *lines) {
   free(instructions);
   free(ghost_steps);
   free_nodes(nodes, nodes_size);
+  free_nodes_result(ghost_nodes);
 
   return result;
 }
