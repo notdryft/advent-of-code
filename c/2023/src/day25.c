@@ -77,6 +77,7 @@ int stoer_wagner(int **graph, size_t graph_size) {
 
   defer:
   free(contractions);
+  free(merged);
   free(visited);
   free(weights);
 
