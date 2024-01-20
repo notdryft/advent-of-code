@@ -234,14 +234,15 @@ ll part2(StringArray *lines) {
         while (ranges->size > 0) {
           Range *r = array_pop(ranges);
           apply_range(waiting, done, entry, r);
+          free(r);
         }
-        free(ranges);
+        array_free(ranges);
         ranges = waiting;
       }
     }
     Array *tmp = array_concat(done, ranges);
-    free(done);
-    free(ranges);
+    array_free(done);
+    array_free(ranges);
     ranges = tmp;
   }
 
