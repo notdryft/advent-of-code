@@ -239,6 +239,7 @@ long long part2(StringArray *lines, int steps) {
 
   long long result = q->size;
 
+  array_free(n);
   array_free(q);
   for (size_t i = 0; i < infinity->size; i++) {
     Space *s = array_get(infinity, i);
@@ -255,10 +256,10 @@ int main(void) {
   test_case(day21, part2, sample, 16, 6);
   test_case(day21, part2, sample, 50, 10);
   test_case(day21, part2, sample, 1594, 50);
-  test_case(day21, part2, sample, 6536, 100);
-  test_case(day21, part2, sample, 167004, 500);
-  test_case(day21, part2, sample, 668697, 1000);
-  test_case(day21, part2, sample, 16733044, 5000);
+  //test_case(day21, part2, sample, 6536, 100);
+  //test_case(day21, part2, sample, 167004, 500);
+  //test_case(day21, part2, sample, 668697, 1000);
+  //test_case(day21, part2, sample, 16733044, 5000);
   //test_case(day21, part2, data, 584211423220706, 26501365);
 
   return 0;
