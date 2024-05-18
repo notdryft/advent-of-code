@@ -12,11 +12,7 @@ while true; do
   esac
 done
 
-if [[ $1 =~ [0-9]+ ]]; then
-  binary="day$1"
-else
-  binary="${1}_test"
-fi
+binary="day$1"
 
 if [ "$trace" = "true" ]; then
   flags=-DTRACE
@@ -27,6 +23,13 @@ elif [ "$info" = "true" ]; then
 fi
 
 make_flags=CMDLINE_FLAGS=$flags
+
+case "$(uname -s)" in
+  Darwin)
+    DYLD_LIBRARY_PATH=$(pwd)/../libaoc/lib:$DYLD_LIBRARY_PATH
+    export DYLD_LIBRARY_PATH
+    ;;
+esac
 
 make mrproper && \
   make "$binary" "$make_flags" && \

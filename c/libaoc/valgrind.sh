@@ -12,7 +12,7 @@ while true; do
   esac
 done
 
-binary="day$1"
+binary="${1}_test"
 
 if [ "$trace" = "true" ]; then
   flags=-DTRACE

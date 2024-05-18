@@ -12,7 +12,7 @@ while true; do
   esac
 done
 
-binary="day$1"
+binary="${1}_test"
 
 if [ "$trace" = "true" ]; then
   flags=-DTRACE
@@ -24,16 +24,6 @@ fi
 
 make_flags=CMDLINE_FLAGS=$flags
 
-case $(uname -s) in
-  Darwin)
-    docker build --platform linux/amd64 -f Dockerfile.valgrind -t valgrind:latest .
-    docker run -it --rm \
-      --platform linux/amd64 \
-      --volume "$(pwd)/../..:/app" \
-      valgrind:latest \
-      bash -c "make mrproper && make mem-$binary $make_flags"
-    ;;
-  Linux)
-    make mrproper && make "mem-$binary" "$make_flags"
-    ;;
-esac
+make mrproper && \
+  make "$binary" "$make_flags" && \
+  "./bin/$binary"
