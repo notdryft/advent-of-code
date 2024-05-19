@@ -1,4 +1,4 @@
-FROM fedora:39
+FROM fedora:40
 
 RUN dnf --refresh upgrade -y && \
     dnf group install "Development Tools" -y && \
