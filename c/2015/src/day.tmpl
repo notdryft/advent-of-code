@@ -1,0 +1,38 @@
+#include <stdbool.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include "array.h"
+#include "commons.h"
+#include "math.h"
+#include "map.h"
+#include "string.h"
+
+i64 part1(StringArray *lines) {
+  //size_t cols = strlen(string_array_get(lines, 0));
+  //size_t rows = lines->size;
+
+  //tracef(string_array_print_raw, lines);
+  //trace("\n");
+  i64 result = 0;
+
+  //for (size_t j = 0; j < rows; j++) {
+  //  char *row = string_array_get(lines, j);
+  //}
+  string_array_foreach (char *line, lines) {
+    //size_t line_len = strlen(line);
+    //debug("%s: %zu\n", line, line_len);
+  }
+
+  return result;
+}
+
+int main(void) {
+  test_case(day$day, part1, sample, 0);
+  //test_case(day$day, part1, data, 0);
+  //test_case(day$day, part2, sample, 0);
+  //test_case(day$day, part2, data, 0);
+
+  return 0;
+}

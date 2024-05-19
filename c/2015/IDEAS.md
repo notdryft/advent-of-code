@@ -25,12 +25,12 @@ ifeq ($(arch),Linux)
 	libext = so
 endif
 
-year = 2023
 days = 25
 
-cflags += -DAOC_YEAR=$(year)
-
 all: $(patsubst %,day%,$(shell seq 1 1 $(days)))
+
+$(objdir)/%.o: $(srcdir)/%.c
+	$(cc) -c -fPIC -o$@ $^ $(cflags)
 
 day%: $(srcdir)/day%.c
 	$(cc) $(libaoc) -lm -lquadmath -o$(bindir)/$@ $< $(cflags) $(CMDLINE_FLAGS)
@@ -46,4 +46,4 @@ clean:
 
 mrproper: clean
 	$(rm) $(rmflags) \
-		$(bindir)/day*
+		$(bindir)/day* \

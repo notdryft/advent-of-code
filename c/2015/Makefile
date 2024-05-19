@@ -25,8 +25,8 @@ ifeq ($(arch),Linux)
 	libext = so
 endif
 
-year = 2023
-days = 25
+year = 2015
+days = 1
 
 cflags += -DAOC_YEAR=$(year)
 
@@ -46,4 +46,4 @@ clean:
 
 mrproper: clean
 	$(rm) $(rmflags) \
-		$(bindir)/day*
+		$(bindir)/day* \

@@ -110,8 +110,11 @@ StringArray *read_lines(char filename[static 1]);
 
 // test case
 
+#define STR_HELPER(x) #x
+#define STR(x) STR_HELPER(x)
+
 #define test_case(day, part, input, expected, ...) __extension__ ({ \
-  StringArray *data = read_lines("../../inputs/2023/" #day "/" #input); \
+  StringArray *data = read_lines("../../inputs/" STR(AOC_YEAR) "/" STR(day) "/" STR(input)); \
   struct timeval start = now(); \
   i64 result = (i64) part(data __VA_OPT__(,) __VA_ARGS__); \
   struct timeval end = now(); \
