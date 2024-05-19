@@ -16,3 +16,4 @@ curl \
 day=$day envsubst < src/day.tmpl > "src/day$day.c"
 
 gsed -i"" "s/days = [0-9]\+/days = $day/" Makefile
+gsed -i"" "s/{1\.\.[0-9]\+}/{1..$day}/" check.sh
