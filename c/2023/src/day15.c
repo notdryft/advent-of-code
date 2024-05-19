@@ -53,7 +53,7 @@ int map_array_find(Array *array, char *instruction, size_t len) {
   return -1;
 }
 
-void map_add(Map *map, char *instruction, size_t len, int focal) {
+void map_put(Map *map, char *instruction, size_t len, int focal) {
   int h = hash(instruction, len);
   Array *array = map->arrays[h];
   int index = map_array_find(array, instruction, len);
@@ -139,7 +139,7 @@ int part2(StringArray *lines) {
         len -= 2;
         debug("After \"%s=%d\" (%zu):\n", instruction, focal, len);
 
-        map_add(map, instruction, len, focal);
+        map_put(map, instruction, len, focal);
       } else if (instruction[len - 1] == '-') {
         instruction[len - 1] = '\0';
         len--;

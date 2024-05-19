@@ -13,6 +13,7 @@ Map *_map_new(size_t entry_stride, size_t key_stride) {
 
   map->entry_stride = entry_stride;
   map->key_stride = key_stride;
+  map->size = 0;
 
   return map;
 }
@@ -51,14 +52,14 @@ u32 _map_hash(Map *map, const void *entry) {
   return hash % map->capacity;
 }
 
-void *map_get(Map *map, void *entry) {
-  u32 hash = _map_hash(map, entry);
+void *map_get(Map *map, void *key) {
+  u32 hash = _map_hash(map, key);
 
   Array *htable = map->table[hash];
   if (htable != nullptr) {
     for (size_t i = 0; i < htable->size; i++) {
       void *item = array_get(htable, i);
-      if (memcmp(entry, item, map->key_stride) == 0) {
+      if (memcmp(key, item, map->key_stride) == 0) {
         return item;
       }
     }
@@ -67,14 +68,14 @@ void *map_get(Map *map, void *entry) {
   return nullptr;
 }
 
-bool map_contains_key(Map *map, void *entry) {
-  u32 hash = _map_hash(map, entry);
+bool map_contains_key(Map *map, void *key) {
+  u32 hash = _map_hash(map, key);
 
   Array *htable = map->table[hash];
   if (htable != nullptr) {
     for (size_t i = 0; i < htable->size; i++) {
       void *item = array_get(htable, i);
-      if (memcmp(entry, item, map->key_stride) == 0) {
+      if (memcmp(key, item, map->key_stride) == 0) {
         return true;
       }
     }
@@ -91,15 +92,21 @@ void map_put(Map *map, void *entry) {
     map->table[hash] = _array_new(map->entry_stride);
   }
 
+  bool contains_key = false;
+
   size_t index = 0;
   Array *htable = map->table[hash];
   while (index < htable->size) {
     void *item = array_get(map->table[hash], index);
     if (memcmp(entry, item, map->key_stride) == 0) {
+      contains_key = true;
       break;
     }
     index++;
   }
 
-  array_set(map->table[hash], index, entry);
+  if (!contains_key) {
+    array_set(map->table[hash], index, entry);
+    map->size++;
+  }
 }
