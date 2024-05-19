@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 
 make mrproper && \
+  make all CMDLINE_FLAGS=-DTRACE && \
   make all CMDLINE_FLAGS=-DDEBUG && \
+  make all CMDLINE_FLAGS=-DTRACE && \
   make all
 
 case "$(uname -s)" in
