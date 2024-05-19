@@ -18,6 +18,9 @@ libaocdir = $(topdir)/../libaoc
 libaoc = -iquote $(libaocdir)/include -L$(libaocdir)/lib -laoc
 libext = dylib
 
+brewdir = $(shell brew --prefix)
+brewflags = -I$(brewdir)/include -L$(brewdir)/lib
+
 arch := $(shell uname -s)
 ifeq ($(arch),Linux)
 	cc = gcc
@@ -26,7 +29,7 @@ ifeq ($(arch),Linux)
 endif
 
 year = 2015
-days = 3
+days = 4
 
 cflags += -DAOC_YEAR=$(year)
 
@@ -34,6 +37,9 @@ all: $(patsubst %,day%,$(shell seq 1 1 $(days)))
 
 day%: $(srcdir)/day%.c
 	$(cc) $(libaoc) -lm -lquadmath -o$(bindir)/$@ $< $(cflags) $(CMDLINE_FLAGS)
+
+day4: $(srcdir)/day4.c
+	$(cc) $(brewflags) $(libaoc) -lcrypto -lm -lquadmath -lssl -o$(bindir)/$@ $< $(cflags) $(CMDLINE_FLAGS)
 
 mem-day%: day%
 	$(vg) $(vflags) $(bindir)/$^
