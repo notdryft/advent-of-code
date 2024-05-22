@@ -72,7 +72,7 @@ int dijkstra(char **grid, int mx, int my, int mindist, int maxdist) {
   int cost = -1;
 
   while (q->size > 0) {
-    Q *current = array_pop(q);
+    Q *current = array_shift(q);
     int x = current->state.x;
     int y = current->state.y;
     int dd = current->state.direction;

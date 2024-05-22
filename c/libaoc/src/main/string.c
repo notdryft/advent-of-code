@@ -49,13 +49,24 @@ void string_array_push(StringArray *array, char *value) {
   array->items[array->size++] = copy;
 }
 
-void *string_array_pop(StringArray *array) {
+void *string_array_shift(StringArray *array) {
   if (array->size == 0) {
     return nullptr;
   }
 
   char *copy = strdup(array->items[0]);
   string_array_remove_first(array);
+
+  return copy;
+}
+
+void *string_array_pop(StringArray *array) {
+  if (array->size == 0) {
+    return nullptr;
+  }
+
+  char *copy = strdup(array->items[array->size - 1]);
+  string_array_remove_last(array);
 
   return copy;
 }

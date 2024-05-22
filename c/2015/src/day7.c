@@ -161,7 +161,7 @@ void connect_circuit(Array *wires, u16 *board, bool *triggered) {
     tracef(print_wires, wires, board);
     trace("<<<<<<<<<\n");
 
-    Wire *wire = array_pop(wires);
+    Wire *wire = array_shift(wires);
     enum Gate gate = wire->gate;
     i16 lhs = wire->lhs;
     i16 rhs = wire->rhs;

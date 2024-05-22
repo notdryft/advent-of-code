@@ -65,8 +65,8 @@ int part1(StringArray *lines) {
   size_t nodes_size = 0;
   Node **nodes = calloc(nodes_capacity, sizeof(*nodes));
 
-  char *instructions = string_array_pop(lines);
-  free(string_array_pop(lines)); // empty line
+  char *instructions = string_array_shift(lines);
+  free(string_array_shift(lines)); // empty line
   string_array_foreach (char *line, lines) {
     char value[4] = {};
     char left_str[4] = {};
@@ -149,8 +149,8 @@ long long part2(StringArray *lines) {
   size_t nodes_size = 0;
   Node **nodes = calloc(nodes_capacity, sizeof(*nodes));
 
-  char *instructions = string_array_pop(lines);
-  free(string_array_pop(lines)); // empty line
+  char *instructions = string_array_shift(lines);
+  free(string_array_shift(lines)); // empty line
   string_array_foreach (char *line, lines) {
     char value[4] = {};
     char left_str[4] = {};

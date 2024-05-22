@@ -232,7 +232,7 @@ ll part2(StringArray *lines) {
       if (entry->source_type == entry_type) {
         Array *waiting = array_new(Range);
         while (ranges->size > 0) {
-          Range *r = array_pop(ranges);
+          Range *r = array_shift(ranges);
           apply_range(waiting, done, entry, r);
           free(r);
         }

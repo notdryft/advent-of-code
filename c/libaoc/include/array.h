@@ -50,6 +50,7 @@ void array_push(Array *array, void *value);
     array_push(array, &tmp); \
   } while (0)
 
+void *array_shift(Array *array);
 void *array_pop(Array *array);
 
 void array_set(Array *array, size_t index, void *value);

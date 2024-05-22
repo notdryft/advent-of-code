@@ -25,6 +25,7 @@ char *string_array_last(StringArray *array);
 
 void string_array_push(StringArray *array, char *value);
 
+void *string_array_shift(StringArray *array);
 void *string_array_pop(StringArray *array);
 
 void string_array_remove_first(StringArray *array);

@@ -170,7 +170,7 @@ unsigned long long part1(StringArray *lines) {
     Array *q = array_new(Signal);
     array_push(q, &(Signal) { .source = nullptr, .signal_type = LOW, .destination = find_module(modules, "broadcaster") });
     while (q->size > 0) {
-      Signal *s = array_pop(q);
+      Signal *s = array_shift(q);
       if (s->destination->module_type == OUTPUT) {
         goto defer;
       } else if (s->destination->module_type == BROADCASTER) {
@@ -312,7 +312,7 @@ long long part2(StringArray *lines) {
     Array *q = array_new(Signal);
     array_push(q, &(Signal) { .source = nullptr, .signal_type = LOW, .destination = find_module(modules, "broadcaster") });
     while (q->size > 0) {
-      Signal *s = array_pop(q);
+      Signal *s = array_shift(q);
       if (s->destination->module_type == OUTPUT) {
         goto defer;
       } else if (s->destination->module_type == BROADCASTER) {

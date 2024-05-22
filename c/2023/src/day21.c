@@ -101,7 +101,7 @@ long long part1(StringArray *lines, int steps) {
       }
     }
 
-    Vec2 *u = array_pop(q);
+    Vec2 *u = array_shift(q);
     lines->items[u->y][u->x] = '.';
     if (u->y > 0 && lines->items[u->y - 1][u->x] == '.') {
       lines->items[u->y - 1][u->x] = 'O';
@@ -161,7 +161,7 @@ long long part2(StringArray *lines, int steps) {
       }
     }
 
-    Vec2 *u = array_pop(q);
+    Vec2 *u = array_shift(q);
     long long ix = (u->x < 0) ? -((-u->x - 1 + mx) / mx) : u->x / mx;
     long long iy = (u->y < 0) ? -((-u->y - 1 + my) / my) : u->y / my;
     StringArray *imap = find_map_or_dup(infinity, lines, ix, iy);

@@ -56,7 +56,7 @@ void array_push(Array *array, void *value) {
   array->size++;
 }
 
-void *array_pop(Array *array) {
+void *array_shift(Array *array) {
   if (array->size == 0) {
     return nullptr;
   }
@@ -65,6 +65,19 @@ void *array_pop(Array *array) {
   memcpy(copy, array->items, array->stride);
 
   array_remove_first(array);
+
+  return copy;
+}
+
+void *array_pop(Array *array) {
+  if (array->size == 0) {
+    return nullptr;
+  }
+
+  void *copy = malloc(array->stride);
+  memcpy(copy, (u8 *) array->items + array->stride * (array->size - 1), array->stride);
+
+  array_remove_last(array);
 
   return copy;
 }

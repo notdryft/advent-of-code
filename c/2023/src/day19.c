@@ -434,7 +434,7 @@ unsigned long long part2(StringArray *lines) {
 
   int i = 0;
   while (queue->size > 0) {
-    Ranges *ranges = array_pop(queue);
+    Ranges *ranges = array_shift(queue);
     if (
       ranges->x.max < ranges->x.min ||
       ranges->m.max < ranges->m.min ||
