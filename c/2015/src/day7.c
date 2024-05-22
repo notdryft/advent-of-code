@@ -159,7 +159,6 @@ void connect_circuit(Array *wires, u16 *board, bool *triggered) {
   while (wires->size > 0) {
     trace(">>>>>>>>>\n");
     tracef(print_wires, wires, board);
-    trace("<<<<<<<<<\n");
 
     Wire *wire = array_shift(wires);
     enum Gate gate = wire->gate;
@@ -172,62 +171,78 @@ void connect_circuit(Array *wires, u16 *board, bool *triggered) {
         if (triggered[lhs]) {
           board[target] = board[lhs];
           triggered[target] = true;
+          trace("result: %hu -> %s\n", board[target], (char[3]) reverse_hash(target));
         } else {
           array_push(wires, wire);
+          trace("result: push\n");
         }
       } else {
         board[target] = -lhs;
         triggered[target] = true;
+        trace("result: %hu -> %s\n", board[target], (char[3]) reverse_hash(target));
       }
     } else if (gate == AND) {
       if (lhs > 0) {
         if (triggered[lhs] && triggered[rhs]) {
           board[target] = board[lhs] & board[rhs];
           triggered[target] = true;
+          trace("result: %hu -> %s\n", board[target], (char[3]) reverse_hash(target));
         } else {
           array_push(wires, wire);
+          trace("result: push\n");
         }
       } else {
         if (triggered[rhs]) {
           u16 lhsv = -lhs;
           board[target] = lhsv & board[rhs];
           triggered[target] = true;
+          trace("result: %hu -> %s\n", board[target], (char[3]) reverse_hash(target));
         } else {
           array_push(wires, wire);
+          trace("result: push\n");
         }
       }
     } else if (gate == OR) {
-      if (triggered[lhs] || triggered[rhs]) {
+      if (triggered[lhs] && triggered[rhs]) {
         board[target] = board[lhs] | board[rhs];
         triggered[target] = true;
+        trace("result: %hu -> %s\n", board[target], (char[3]) reverse_hash(target));
       } else {
         array_push(wires, wire);
+        trace("result: push\n");
       }
     } else if (gate == NOT) {
       if (triggered[lhs]) {
         board[target] = ~board[lhs];
         triggered[target] = true;
+        trace("result: %hu -> %s\n", board[target], (char[3]) reverse_hash(target));
       } else {
         array_push(wires, wire);
+        trace("result: push\n");
       }
     } else if (gate == LSHIFT) {
       u16 rhsv = -rhs;
       if (triggered[lhs]) {
         board[target] = board[lhs] << rhsv;
         triggered[target] = true;
+        trace("result: %hu -> %s\n", board[target], (char[3]) reverse_hash(target));
       } else {
         array_push(wires, wire);
+        trace("result: push\n");
       }
     } else if (gate == RSHIFT) {
       u16 rhsv = -rhs;
       if (triggered[lhs]) {
         board[target] = board[lhs] >> rhsv;
         triggered[target] = true;
+        trace("result: %hu -> %s\n", board[target], (char[3]) reverse_hash(target));
       } else {
         array_push(wires, wire);
+        trace("result: push\n");
       }
     }
     free(wire);
+    trace("<<<<<<<<<\n");
   }
 }
 
@@ -239,7 +254,7 @@ i64 part1(StringArray *lines) {
   string_array_foreach (char *line, lines) {
     connect_wires(wires, line);
   }
-  array_sort(wires, wire_cmp); // FIXME bug when not sorted??
+  array_sort(wires, wire_cmp); // sorting still makes it faster
   debugf(print_wires, wires, board);
 
   connect_circuit(wires, board, triggered);
@@ -262,7 +277,7 @@ i64 part2(StringArray *lines) {
   string_array_foreach (char *line, lines) {
     connect_wires(wires, line);
   }
-  array_sort(wires, wire_cmp); // FIXME bug when not sorted??
+  array_sort(wires, wire_cmp); // sorting still makes it faster
   debugf(print_wires, wires, board);
 
   Array *second = array_dup(wires);
