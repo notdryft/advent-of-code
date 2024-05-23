@@ -138,6 +138,15 @@ StringArray *string_array_dup(StringArray *array) {
   return dup;
 }
 
+FindResult string_array_find(StringArray *array, char *value) {
+  for (size_t i = 0; i < array->size; i++) {
+    if (strcmp(array->items[i], value) == 0) {
+      return (FindResult) { .index = i, .found = true };
+    }
+  }
+  return (FindResult) { .found = false };
+}
+
 StringArray *string_array_repeat(StringArray *array, size_t times) {
   StringArray *repeated = string_array_new();
   for (size_t i = 0; i < times; i++) {

@@ -96,7 +96,7 @@ StringArray *read_lines(char filename[static 1]);
 
 #define array_enumerate(it, i, array) \
   for (size_t i = 0, _continue = 1; _continue && i < array->size; _continue = !_continue, i++) \
-    for (it = array_get(items, i); _continue; _continue = !_continue)
+    for (it = array_get(array, i); _continue; _continue = !_continue)
 
 #define array_foreach(it, array) array_enumerate(it, macro_var(_i_), array)
 

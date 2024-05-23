@@ -12,6 +12,11 @@ typedef struct {
   char **items;
 } StringArray;
 
+typedef struct {
+  size_t index;
+  bool found;
+} FindResult;
+
 StringArray *string_array_new(void);
 void string_array_free(StringArray *array);
 
@@ -41,6 +46,7 @@ char *substring(char *content, size_t pos, size_t len);
 
 bool string_array_contains(StringArray *array, char *value);
 StringArray *string_array_dup(StringArray *array);
+FindResult string_array_find(StringArray *array, char *value);
 StringArray *string_array_repeat(StringArray *array, size_t times);
 StringArray *string_array_subset(StringArray *array, size_t start, size_t end);
 StringArray *string_split(char *content, char *delimiter);
