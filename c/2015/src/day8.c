@@ -74,10 +74,10 @@ i64 part2(StringArray *lines) {
 }
 
 int main(void) {
-  //test_case(day8, part1, sample, 12);
-  //test_case(day8, part1, data, 0);
-  //test_case(day8, part2, sample, 19);
-  test_case(day8, part2, data, 0);
+  test_case(day8, part1, sample, 12);
+  test_case(day8, part1, data, 1371);
+  test_case(day8, part2, sample, 19);
+  test_case(day8, part2, data, 2117);
 
   return 0;
 }
