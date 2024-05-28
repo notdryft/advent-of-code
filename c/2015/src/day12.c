@@ -133,15 +133,13 @@ i64 part2(StringArray *lines) {
     Json root = { .children = array_new(Json) };
     tracef(print_json, root);
 
-    size_t stack_capacity = 1000;
-    size_t stack_size = 0;
-    Array **stack = calloc(stack_capacity, sizeof(Array **));
-    stack[stack_size++] = root.children;
+    Array *stack = array_new(Array *);
+    array_push_pointer(stack, root.children);
 
     for (size_t i = 0; i < line_len; i++) {
       trace("reading: %c\n", line[i]);
 
-      Array *current = stack[stack_size - 1];
+      Array *current = array_last_pointer(stack);
       if (line[i] == ':' && line[i + 1] == '"' && line[i + 2] == 'r' && line[i + 3] == 'e' && line[i + 4] == 'd') {
         i += 4;
 
@@ -150,9 +148,9 @@ i64 part2(StringArray *lines) {
         Json node = { .children = array_new(Json) };
         array_push_rval(current, node);
 
-        stack[stack_size++] = node.children;
+        array_push_pointer(stack, node.children);
       } else if (line[i] == '}') {
-        stack_size--;
+        array_remove_last(stack);
       } else if (is_part_of_digit(line[i])) {
         char *p = &line[i];
         size_t len = i;

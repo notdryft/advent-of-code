@@ -28,6 +28,12 @@ void *array_get(Array *array, size_t index) {
   return (u8 *) array->items + array->stride * index;
 }
 
+void *array_get_pointer(Array *array, size_t index) {
+  void *tmp;
+  memcpy(&tmp, (u8 *) array->items + array->stride * index, array->stride);
+  return tmp;
+}
+
 void *array_first(Array *array) {
   if (array->size > 0) {
     return array->items;
@@ -37,7 +43,14 @@ void *array_first(Array *array) {
 
 void *array_last(Array *array) {
   if (array->size > 0) {
-    return (u8 *) array->items + array->stride * (array->size - 1);
+    return array_get(array, array->size - 1);
+  }
+  return nullptr;
+}
+
+void *array_last_pointer(Array *array) {
+  if (array->size > 0) {
+    return array_get_pointer(array, array->size - 1);
   }
   return nullptr;
 }
@@ -53,6 +66,15 @@ void array_push(Array *array, void *value) {
   }
 
   memcpy((u8 *) array->items + array->stride * array->size, value, array->stride);
+  array->size++;
+}
+
+void array_push_pointer(Array *array, void *value) {
+  if (array->size + 1 > array->capacity) {
+    _array_resize(array);
+  }
+
+  memcpy((u8 *) array->items + array->stride * array->size, &value, array->stride);
   array->size++;
 }
 

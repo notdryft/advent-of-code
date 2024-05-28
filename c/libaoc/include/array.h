@@ -23,6 +23,7 @@ void array_free(Array *array);
 // gets
 
 void *array_get(Array *array, size_t index);
+void *array_get_pointer(Array *array, size_t index);
 #define int_array_get(array, index) *(int *) array_get(array, index)
 #define long_array_get(array, index) *(long *) array_get(array, index)
 #define ll_array_get(array, index) *(long long *) array_get(array, index)
@@ -37,6 +38,7 @@ void *array_first(Array *array);
 #define i64_array_first(array) *(int64_t *) array_first(array)
 
 void *array_last(Array *array);
+void *array_last_pointer(Array *array);
 #define int_array_last(array) *(int *) array_last(array)
 #define long_array_last(array) *(long *) array_last(array)
 #define ll_array_last(array) *(long long *) array_last(array)
@@ -44,6 +46,7 @@ void *array_last(Array *array);
 #define i64_array_last(array) *(int64_t *) array_last(array)
 
 void array_push(Array *array, void *value);
+void array_push_pointer(Array *array, void *value);
 #define array_push_rval(array, value) \
   do { \
     __auto_type tmp = value; \
