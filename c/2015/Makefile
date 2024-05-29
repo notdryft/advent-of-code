@@ -29,7 +29,7 @@ ifeq ($(arch),Linux)
 endif
 
 year = 2015
-days = 15
+days = 16
 
 cflags += -DAOC_YEAR=$(year)
 
