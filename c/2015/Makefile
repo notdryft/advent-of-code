@@ -52,4 +52,4 @@ clean:
 
 mrproper: clean
 	$(rm) $(rmflags) \
-		$(bindir)/day* \
+		$(bindir)/day*
