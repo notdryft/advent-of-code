@@ -35,7 +35,7 @@ i64 part1(StringArray *lines) {
       i64 a = atoll(left);
       i64 b = atoll(right);
 
-      debug("%.*s\n", match[0].rm_eo - match[0].rm_so, p + match[0].rm_so);
+      debug("%.*s\n", (int) (match[0].rm_eo - match[0].rm_so), p + match[0].rm_so);
       debug("%s %s\n", left, right);
       debug("%lld %lld\n", a, b);
 
