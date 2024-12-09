@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
 make mrproper && \
-  make all CMDLINE_FLAGS=-DTRACE && \
-  make all CMDLINE_FLAGS=-DDEBUG && \
-  make all CMDLINE_FLAGS=-DTRACE && \
-  make all
+  make -j"$(nproc)" all CMDLINE_FLAGS=-DTRACE && \
+  make -j"$(nproc)" all CMDLINE_FLAGS=-DDEBUG && \
+  make -j"$(nproc)" all CMDLINE_FLAGS=-DTRACE && \
+  make -j"$(nproc)" all
 
 case "$(uname -s)" in
   Darwin)
