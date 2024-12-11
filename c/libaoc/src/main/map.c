@@ -105,8 +105,8 @@ void map_put(Map *map, void *entry) {
     index++;
   }
 
+  array_set(map->table[hash], index, entry);
   if (!contains_key) {
-    array_set(map->table[hash], index, entry);
     map->size++;
   }
 }
