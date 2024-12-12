@@ -9,3 +9,4 @@ day 8:
 day 9:
 day 10:
 day 11:
+day 12: check corners in a box around the shape, 4 by 4 to reduce cases to test
