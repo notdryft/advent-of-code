@@ -15,3 +15,4 @@ day 14: entropy? fisher information?
 day 15:
 day 16:
 day 17:
+day 18: binary search
