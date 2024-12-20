@@ -17,3 +17,4 @@ day 16:
 day 17:
 day 18: binary search
 day 19: trie? dp
+day 20: manhattan distance into diamond range
