@@ -20,3 +20,4 @@ day 19: trie? dp
 day 20: manhattan distance into diamond range
 day 21:
 day 22: don't put large arrays into functions or else...
+day 23: clique problem?
