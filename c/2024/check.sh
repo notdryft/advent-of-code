@@ -13,6 +13,6 @@ case "$(uname -s)" in
     ;;
 esac
 
-for day in {1..23}; do
+for day in {1..24}; do
   "./bin/day$day"
 done
