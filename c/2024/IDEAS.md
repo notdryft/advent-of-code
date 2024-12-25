@@ -22,3 +22,4 @@ day 21:
 day 22: don't put large arrays into functions or else...
 day 23: clique problem?
 day 24:
+day 25:
